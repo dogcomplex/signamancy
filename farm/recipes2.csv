@@ -1,0 +1,643 @@
+ID,Recipe
+
+// META: 💳 we want to have recipes affect available recipes, so each recipe is itself an inventory item and can be limited in use
+// e.g. ID_Stock_Item, 💳 => 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳%
+// we want Menus to be represented as recipes, so we can have a menu of menus
+// navigation:  so long as it loops, who cares. loop through a list === set union
+// eventually we want to associate clicks and inputs with actions, giving each a time cost (at which point list navigation order matters)
+// Max/min: Min: 0 naturally set.  Max: set as default resource quantity, trade potential for actual
+
+// STRATEGIES:
+// - if a resource has only one demanding it, then no-brainer to use it
+// - diversity, try out all resources
+// - greedy on 💰, 💧 etc (liquidity?)
+// - backwards calculation from goal
+// - back + forward calculation, look for middle meeting points
+// - assume maximum resources, find all shortest paths, then remove resource assumptions til starting point is found 
+// - combine branching paths by looking at common resource requirements with high priority (e.g. all need 💰)
+// - shorten recipe paths into a single recipe, always compute just one step
+// - trim recipes one at a time, generating possibilities (as new 2-step recipes) then remove it from set
+
+// META RULES:
+// ID_ADD, 🟩 🟩 => 🟩2 // add two of same resource
+// ID_OR, 🟥 => 🔴 | ⭕ // map to one of many resource options
+// ID_OR_1 => 🟥 => 🔴 // implicit form of ID_OR option 1
+// ID_OR_2 => 🟥 => ⭕ // implicit form of ID_OR option 2
+// ID_AND, 🟨 🟦 => 🟩 // combine multiple resources to a new one requiring both
+// ID_VARIABLE, 🟩*🟥 ===  🟩🟥 => 🟩🔴 | 🟩⭕ // shorthand for multiple recipes (note is this multiplication?) 
+// ID_VARIABLE_1 => 🟩🟥 => 🟩🔴 // implicit form of ID_MULT option 1
+// ID_VARIABLE_1 => 🟩🟥 => 🟩⭕ // implicit form of ID_MULT option 2
+// ID_MULI_VAR => 🟩*🟥*🟥  === 🟩🟥🟥 => 🟩🔴🔴 | 🟩🔴⭕ | 🟩⭕🔴 | 🟩⭕⭕ // multi var
+// ID_ZERO, 🟩0 => // zero a resource to remove it
+// ID_ONE, 🟩 => 🟩1 // implicit always able to add a resource
+// ID_REQUIREMENT 🟩2 => 🟩2 🟦 // require at least n of a resource to produce something else
+// ID_RANGE, 🟨 => 🟩0-5 // probabilistic range of resources (uniform)
+// ID_TRIANGULAR_RANGE_NEGATIVE, 🟨 🟩0-5 => 🟩0-5 // probabilistic range of resources cost/reward (triangular distribution)
+// ID_TRIANGULAR_RANGE_POSITIVE, 🟨 => 🟩0-5 🟩0-5 // probabilistic range of resources reward (triangular distribution)
+// ID_NORMAL_RANGE, 🟨 🟩0-3σ-5 // probabilistic normal range (z=3 standard deviations σ, 99.7% coverage between 0-5)
+// ID_NORMAL_RANGE_STANDARD, 🟨 => 🟩0-σ-5 // probabilistic normal range (z=1 standard deviation σ, mean (min+max)/2 68% coverage between 0-5)
+// ID_RANGE_NORMAL_APPROX, 🟨M => 🟩min-Zσ-M*max // mean = M*(max+min)/2  σ = sqrt(M*(max-min)^2/12)   z_min = -sqrt(3)*M*(M*(max + min) - 2*min)/sqrt(M*(max - min)**2)  (complicated but its a constant time approx, sufficiently accurate when M > 30)
+// ID_CHANCE_50_50, 🟨 => 🟩% 🟦% // probabilistic chance of a resource (50% chance of 1 resource)
+// ID_CHANCE_30, 🟨 => 🟩%30 // 30% chance of 1 resource, (70% of nothing)
+// ID_CHANCE_30_70, 🟨 => 🟩%70 🟦%30 // 70% chance of one resource, 30% of the other resource
+// ID_ALL, 🟨X => 🟩 // uses ALL resources to produce (valid with 0+)
+// ID_ALL_MIN, 🟨X 🟨2 => 🟩 // uses ALL resources to produce (valid with 2+)
+// ID_ALL_BUT, 🟨X => 🟨2 🟩 // uses ALL resources to produce (valid with 0+), leaves 2 behind
+// ID_MAX, 🟨X 🟨100 => 🟨100 // eats anything above 100 (relies on being applied tho...)
+
+// FUCK YEAH WE CRACKED TIME (TIME == MODE, or MEMORY):
+// ID_MODE: 
+// ID_GROW, 🌞 🌱 => 🌞 🌞🌱 // apply time to an item (PACK).  need one of these for every recipe that grows
+// ID_HARVEST, 🌛 🌞🌱  => 🌛 🌳 // (UNPACK). need one of these for every recipe that harvests!
+// ID_DUSK, 🌞 => 🌛 // ⏰ to actually add cost of days
+// ID_DAWN, 🌛 ⏰ => 🌞 // ⏰ to actually add cost of new days
+// ID_DAY_USED (TIME COST EXAMPLE), 🌞 🌱 => 🌛 🌳 (actual valid, cuz it's possible steps), 🌞 🌱 => 🌞 🌞🌱, 🌞 => 🌛, 🌛 🌞🌱  => 🌛 🌳
+  // DAY'S GROWTH (only applied to a single recipe here, but could be baked this way for any # of them)
+  // but then.... 🌞 🌱 => 🌛 🌳, 🌛 ⏰ => 🌞 also valid, so...  ⏰ 🌞 🌱 => 🌞 🌳 valid... which kinda works because it means you spent the whole day (time) doing that
+// ID_2_DAY_USED, ⏰2 🌞 🌱 => 🌞 🌳 // time cost example.  net effect, waste 2 days just to grow a tree
+  // ID_GROW, 🌞 🌱 => 🌞🌱
+  // ID_HARVEST, 🌛 🌞🌱 => 🌛 🌳 
+  // ID_GROW2, 🌞 🌳 => 🌞 🌞🍂🌳
+  // ID_HARVEST2, 🌛 🌞🍂🌳 => 🌛 🍂🌳  // this sucks.  would mean 2*n intermediate unique recipes for n length
+  // ATTEMPT2:  what about.... 🌛 🌞🍂🌳 => 🌛 🍂🌳
+  // ID_PLANT, 🌞 🌱 => 🌞🌱
+  // ...generalized process where anything with leading 🌞 just keeps growing (prepending 🌞) until its harvested
+  // ID_HARVEST_GENERAL, 🌛 🌞*🎁 => 🌛 🌛🌞*🎁  e.g. 🌛 🌞🌱 => 🌛 🌛🌞🌱
+  // ID_GROW_GENERAL, 🌞 🌛*🎁 => 🌞 🌞🌛*🎁, e.g. 🌞 🌛🌞🌱 => 🌞 🌞🌛🌞🌱 // not sure these would work, cuz cant have 🎁 include 🌞 prepended stuff
+  // ID_HARVEST2, 🌞 🌞🌛🌞🌱 => 🌛 🍂🌳 // manual, means 2 days of growth 
+  // best we can do so far.... "automated" but ugly with very long recipe ids
+  // I GIVE UP.  Maybe just have to make a custom time cost for things that are really old if you dont want to do intermediate step recipes
+  // i.e. skip through the whole thing by producing ⏰🌳 directly every night, require ⏰🌳100 => 🌳
+  // maybe grow step to plant seed, then grow adds time, then time min to harvest
+  // problem is time needs to be 1 PER item, so cant have two trees growing 50 years to make ⏰🌳100.  time is a mode/path/pattern not quantity.
+
+
+ID_Welcome_Menu, 👋📁 => 💫📁 | ⏭📁 | ⚙📁 | ❌📁 // new game, continue, settings, quit
+ID_New_Game_Menu, 💫📁 => 💚💫 | 💛💫 | 🧡💫 | 👋📁  // easy, medium, hard, back 
+ID_New_Game_Easy, 💚💫 => 💫 // TODO: modify these to set different starting resources and goals
+ID_New_Game_Medium, 💛💫 => 💫
+ID_New_Game_Hard, 🧡💫 => 💫
+ID_Continue_Menu, ⏭📁 => 💫📁 // TODO capture intricacies of continue, quit, etc
+ID_Settings_Menu, ⚙📁 => 🎵📁 | 👂📁 | 👋📁
+ID_BGM_Menu, 🎵📁 => 🔉🎵📁 | 🔊🎵📁 | 👋📁
+ID_BGM_Volume_Up, 🔉🎵📁 ⬆🎵5 => 🎵📁 🎵5  // trade 5 max music for 5 actual music
+ID_BGM_Volume_Down, 🔊🎵📁 🎵5 => 🎵📁 ⬆🎵5
+ID_SFX_Menu, 👂📁 => 🔉👂📁 | 🔊👂📁 | 👋📁
+ID_SFX_Volume_Up, 🔉👂📁 ⬆👂5 => 👂📁 👂5
+ID_SFX_Volume_Down, 🔊👂📁 👂5 => 👂📁 ⬆👂5
+ID_Quit_Menu, ❌📁 =>  // TODO do actual quit as game end
+
+// TODO add click costs to all things which have it (time)
+// TODO model in game menu (8 tool slots, inventory slots, shop/build/crafting menus, etc
+// TODO model recipe acquisition (e.g. buy recipe, find recipe, etc) to menu navigation (already done with shop)
+// recipe use is basically just one additional variable on both sides of each recipe (the recipe itself)
+// - unless one-time recipe in which case it's spent
+
+// META:  AI MTSC of this needs to maintain a memory (what gets fed into context of each LLM search).  This is itself an inventory (which can be a set of recipes)
+// - e.g. it should know all menus and available options, 
+// - its current inventory relevant to current choices
+// - what it remembers of second-order information like prices/recipes stuff, upcoming choices, etc
+// these have to be genetically-set, i.e. they're part of what makes a node unique and determines reward.  they are a subset of total information.  
+// - there is a hard max (that's hard to gauge), but also a performance max (less info is better)
+// - the AI should be able to learn to ignore certain things (e.g. if it's not using a tool, it should ignore it)
+// this stuff only needs to be done during exploration phase, otherwise it goes with best so far
+// order matters though... probably.  for feeding to AI. hurts ability to represent efficiently tho
+// memory should be an inventory. recipes can be resources.
+// - do we want the system to be able to add/remove recipes from memory?  if so, then we can store current inventory as a recipe itself
+
+// META REWARDS: think about whether rewards should be the same for outcome as outcome + intent...
+
+// IDEA: we only care about player choices.  the rest are auto-expanded possibilities
+// so limit to just the list of things player can interact with and their perceived effects
+
+// Interactions:
+// menu (main, ESC, tabs)
+// tools => world (trees, bushes, ground, water, rocks, etc)
+// items => locations (organize)
+// items => sell
+// shop buy items
+// roll, lock shop
+// mouseover info
+// build menu
+// upgrade menu
+// next day
+// ID_Use_Item, ✋🎁 
+
+
+// ID_Player_Actions, ✋ => ✋⚒ | ...
+  // ID_Use_Tool, ✋⚒ => ✋*⚒ // TODO modify tool recipes to require user input
+    // each tool is an option
+  
+
+  // use item (bake, ferment, preserve, plant seed, place animal, windmill/loom/seedmaker/cheese/mayo/etc)
+  // craft upgrades, bottles, jars
+  // craft and place building
+  // choose feat,
+  // end day
+  // buy item
+  // sell item
+  // roll shop, lock shop
+  // organize inventory
+
+  // strategy = recipe randomly selecting between strategies best (weights)
+  // some % exploit optimal, some % explore
+
+// AI Discovery
+// You are playing a game and discovering the rules as you go.  Most of this is mapping out the graph of state transitions.
+// These usually take the form of a change in location or a change in inventory.  We are interested in recording these changes as simply as possible.
+// We use the following example format, picking the most relevant state name for each causal state transition.
+
+First_Start => Start_App + BGM_Volume * 100 + SFX_Volume * 100 + Player_Input*1000
+Start_App => Start_Menu
+
+Start_Menu => New_Game | Continue | Settings | Quit
+Player_Input => Click | Click_RMB | Press_ESC // Note: mouse movements are a free action
+
+New_Game + Click => Easy | Medium | Hard | Back
+Continue + Click + Game_Saved => Start_Game + Game_Saved // only has an action if game is saved
+Settings + Click => BGM_Volume_Menu | SFX_Volume_Menu | Back
+Quit => Close_App
+
+Easy => Start_Game
+Medium => Start_Game
+Hard => Start_Game
+Back => Start_Menu
+
+BGM_Volume_Menu + Click + BGM_Volume_Max * 5 => BGM_Volume * 5 + Settings_Menu // creates 5 BGM_Volume ticks (losing max potential)
+BGM_Volume_Menu + BGM_Volume * 5 + Click_RMB => BGM_Volume_Max * 5 + Settings_Menu // removes 5 BGM_Volume ticks (gaining max potential)
+SFX_Menu + Click + SFX_Volume_Max * 5 => SFX_Volume * 5 + Settings_Menu
+SFX_Menu + SFX_Volume * 5 + Click_RMB => SFX_Volume_Max * 5 + Settings_Menu
+
+Close_App => Start_App // we ignore non-app environments for now
+
+Start_Game => World + World_Screen + Debt + Monday + Starting_Tools
+
+// ID_Items, 🎁 => ⚒ | 🌄 | 🌍⚙ | ⚒🤍 | 🔲 | 🐙 | ♣ | 🌱 | 🍈 | 🧃 | 🥃🎁 | 🔥🎁 | 🤠 | 🦌 | 🦌🎁 
+// ID_Tools, ⚒ => 🪓 | ⛏ | 🔰 | ♠ | 🚿 | 🎣 | 🔨
+  // ID_Axes, 🪓 => 🪓🥌 | 🪓🥉 | 🪓🥈 | 🪓🥇
+  // ID_Pickaxes, ⛏ => ⛏🥌 | ⛏🥉 | ⛏🥈 | ⛏🥇
+  // ID_Hoes, 🔰 => 🔰🥌 | 🔰🥉 | 🔰🥈 | 🔰🥇
+  // ID_Shovels, ♠ => ♠🥌 | ♠🥉 | ♠🥈 | ♠🥇
+  // ID_Watering_Cans, 🚿 => 🚿🥌 | 🚿🥉 | 🚿🥈 | 🚿🥇
+  // ID_Fishing_Rods, 🎣 => 🎣🥌 | 🎣🥉 | 🎣🥈 | 🎣🥇
+  // ID_Hammers, 🔨 => 🔨🥌 | 🔨🥉 | 🔨🥈 | 🔨🥇
+// ID_Environment_Objects, 🌎 => 🌳 | 🍀 | ⛰️
+  // ID_Trees, 🌳 => 🌳🌳 | 🌳🍎 | 🌳🍊
+  // ID_Bushes, 🍀 => 🍀🍀 | 🍀🍇 | 🍀🍎 | 🍀🍊
+  // ID_Grid_Square, 🔳 => 🟩 | 🟨 | 🟨🕳 | 🟧 | 🟧🕳 | ❎ | 🟦 | ⏹
+  // ID_Buildable_Land, ⬜ => 🟩 | 🟨 | 🟧 | ❎
+  // ID_Deposits, ⛰️ => 🤏*🌄 | ⛰️*🌄 | 🗻*🌄
+    // ID_Rock_Deposits, 🌄🥌 => 🤏🥌 | ⛰️🥌 | 🗻🥌 // special case, small medium large stones
+    // ID_Coal_Deposits, 🌄🖤 => ⛰️🖤 | 🗻🖤 
+    // ID_Copper_Deposits, 🌄🥉 => ⛰️🥉 | 🗻🥉
+    // ID_Iron_Deposits, 🌄🥈 => ⛰️🥈 | 🗻🥈
+    // ID_Gold_Deposits, 🌄🥇 => ⛰️🥇 | 🗻🥇
+// ID_Ores, 🌄 => 🥌 | 🥉 | 🥈 | 🥇 | 🖤
+// ID_Containers, ⚒🤍 => 🤍🥃 | 🤍🍼
+// ID_Buildings, 🏠 => ⚙🐝 | ⚙🥅 |  ⚙🥃 | ⚙🧀 | ⚙🧵 | ⚙🧂 | ⚙➕ | ⚙🌱 | ⚙🚿 | ⚙🤖 | ⚙🚧
+// ID_Ore_Bars, 🔲 => 🔲🥉 | 🔲🥈 | 🔲🥇
+// ID_Fish, 🐙 => 🐟 | 🐠 | 🦀 | 🦐 | 🐡 | 🦈
+// ID_Baked_Goods, 🔥🎁 => 🔲 | 🤍 | 🍞 | 🔥🥩 | 🔥🥚
+  // ID_Baked_Fish, 🔥🐙 => 🔥*🐙
+// ID_Juices, 🧃 => 🧃*🍈
+// ID_Preserves, 🥃 => 🥃☘ | 🥃🐙
+  // ID_Vegetable_Preserves, 🥃☘ => 🥃*☘ // except wheat  
+  // ID_Fish_Preserves, 🥃🐙 => 🥃*🐙
+// ID_Vegetables, ♣ => 💜 | 🥕 | ❤ | 🥬 | 💚 | 🤍 | 🎃 | 🥔 | 🍒 | 🌻 | 🌾 // todo map out ♣ from recipes
+  // ID_Seeds, 🌱 => 🌱*♣
+// ID_Fruits, 🍈 => 🍎 | 🍊 | 🍇
+// ID_Products, 🤠 => 🍯 | 🧀 | 👕 | 🥃🌾 | 🥃🥚
+// ID_Natural_Resources, 🌍⚙ => ⌛ | 🤎 | 🌿 | 🥌
+// ID_Animals, 🦌 => 🐄 | 🐔 | 🐑 | 🐖 
+// ID_Animal_Items, 🦌🎁 => 🦌⚙ | 🦌🥩
+// ID_Animal_Products, 🦌⚙ => 🥛 | 💩 | 🍄 | 🥚
+// ID_Animal_Butchery_Products, 🦌🥩 => 🥩 | 🐮 | 👞 | 🍂
+// ID_Item_Recipes, 💳🎁 => 💳*🎁
+// ID_Feats, ⭐🎁 => ⭐💪 | ⭐🍎 | ⭐⛏ | ⭐🐄 | ⭐🙆‍♂️
+
+
+// ID_Tool_Hit, 🎯⚒ => 🎯*⚒
+// ID_Weekday, ☀ => ☀1️⃣ | ☀2️⃣ | ☀3️⃣ | ☀4️⃣ | ☀5️⃣ | ☀6️⃣ | ☀7️⃣
+
+ID_Start, 💫 => ✅1️⃣ ☀1️⃣ ⏹1296 💫⚒
+ID_Starting_Tools, 💫⚒ => 🔰 🪓 ⛏ ♠ 🚿 🎣 🔨
+ID_Grass_Regrow, 🟨 🌞 => 🟩
+ID_Hole_Refill, 🕳 🌞 => 🟨
+ID_Hole_Refill_Wet, 🟧🕳 🌞 => 🟧
+
+ID_Grid_Spawn,⏹ => 🟩%24.5 🟦%5 🌳%10 🌳🍎%10 🌳🍊%10 🍀%5 🍀🍇%5 🍀🍎%5 🍀🍊%5 ⛰️%2 ⛰️⛰️%2 ⛰️🖤%2 ⛰️🥉%2 ⛰️🥈%2 ⛰️🥇%1🗻%2 🗻🖤%2 🗻🥉%2 🗻🥈%2 🗻🥇%0.5
+ID_Fish_Tick,🎣🎯 => 🐟%10 🐠%8 🐡%6 🦀%4 🦐%2 🦈%1
+
+ID_Monday,💧X ❎X 💳X ☀1️⃣ 🛒X => ☀2️⃣ 🌞 💧225 🛒
+ID_Tuesday,💧X ❎X 💳X ☀2️⃣ 🛒X => ☀3️⃣ ⭐🎲 🌞 💧225 🛒
+ID_Wednesday,💧X ❎X 💳X ☀3️⃣ 🛒X => ☀4️⃣ 🌞 💧225 🛒
+ID_Thursday,💧X ❎X 💳X ☀4️⃣ 🛒X => ☀5️⃣ 🌞 💧225 🛒
+ID_Friday,💧X ❎X 💳X ☀5️⃣ 🛒X => ☀6️⃣ 🌞 💧225 🛒
+ID_Saturday,💧X ❎X 💳X ☀6️⃣ ✅ 🛒X => ☀7️⃣ 🌞 💧225 🛒
+ID_Sunday,💧X ❎X 💳X ☀7️⃣ 🛒X => ☀1️⃣ 📅 🌞 💧225 🛒
+
+ID_Rent1, ✅1️⃣ 💰1000 => ✅ ✅2️⃣ 
+// ID_Rent_N, ✅[🔢] 💰2500*2**n => ✅ ✅[🔢+1]
+ID_Rent2, ✅2️⃣ 💰2500 => ✅ ✅3️⃣
+ID_Rent3, ✅3️⃣ 💰5000 => ✅ ✅4️⃣
+ID_Rent4, ✅4️⃣ 💰10000 => ✅ ✅5️⃣
+ID_Rent5, ✅5️⃣ 💰20000 => ✅ ✅6️⃣
+ID_Rent6, ✅6️⃣ 💰40000 => ✅ ✅7️⃣
+ID_Rent7, ✅7️⃣ 💰80000 => ✅ ✅8️⃣
+ID_Rent8, ✅8️⃣ 💰160000 => ✅ ✅9️⃣
+ID_Rent9, ✅9️⃣ 💰320000 => ✅ ✅🔟
+ID_Rent10, ✅🔟 💰640000 => ✅ ✅🔟1️⃣
+ID_Rent11, ✅🔟1️⃣ 💰1280000 => ✅ ✅🔟2️⃣
+ID_Rent12, ✅🔟2️⃣ 💰2560000 => ✅ ✅🔟3️⃣
+ID_Rent13, ✅🔟3️⃣ 💰5120000 => ✅ ✅🔟4️⃣
+ID_Rent14, ✅🔟4️⃣ 💰10240000 => ✅ ✅🔟5️⃣
+ID_Rent15, ✅🔟5️⃣ 💰20480000 => ✅ ✅🔟6️⃣
+
+
+ID_Shop_Stock, 🛒 => 💳8-80
+
+
+ID_Chop_Axe,🪓 💧4 => 🪓 🪓🎯 // deprecated for ID_Use_Axe_Stone
+// ID_Chop_Axe_Stone,🪓🥌 💧4 => 🪓🥌 🪓🎯
+ID_Chop_Axe_Copper,🪓🥉 💧3 => 🪓🥉 🪓🎯
+ID_Chop_Axe_Iron,🪓🥈 💧2 => 🪓🥈 🪓🎯
+ID_Chop_Axe_Gold,🪓🥇 💧 => 🪓🥇 🪓🎯
+ID_Pick_Pickaxe,⛏ 💧5 => ⛏ ⛏🎯
+ID_Pick_Pickaxe_Copper,⛏🥉 💧4 => ⛏🥉 ⛏🎯
+ID_Pick_Pickaxe_Iron,⛏🥈 💧3 => ⛏🥈 ⛏🎯
+ID_Pick_Pickaxe_Gold,⛏🥇 💧2 => ⛏🥇 ⛏🎯
+ID_Hoe_Grass,🟩 🔰 💧2 => 🟨 🔰 🔰🎯
+ID_Hoe_Grass_Copper,🟩3 🔰🥉 💧2 => 🟨3 🔰🥉 🔰🎯3
+ID_Hoe_Grass_Iron,🟩6 🔰🥈 💧2 => 🟨6 🔰🥈 🔰🎯6
+ID_Hoe_Grass_Gold,🟩9 🔰🥇 💧2 => 🟨9 🔰🥇 🔰🎯9
+ID_Hoe_Hit,🔰🎯 => 🌿0-1
+ID_Shovel_Dirt,🟨 ♠ 💧2 => ♠ 🕳 ♠🎯
+ID_Shovel_Dirt_Copper,🟨3 ♠🥉 💧3 => ♠🥉 🕳3 ♠🎯3
+ID_Shovel_Dirt_Iron,🟨6 ♠🥈 💧 => ♠🥈 🕳6 ♠🎯6
+ID_Shovel_Dirt_Gold,🟨9 ♠🥇 💧2 => ♠🥇 🕳9 ♠🎯9
+ID_Shovel_Wet_Dirt,🟧 ♠ 💧2 => ♠ 🟧🕳 ♠🎯
+ID_Shovel_Dirt_Copper,🟧3 ♠🥉 💧3 => ♠🥉 🟧🕳3 ♠🎯3
+ID_Shovel_Dirt_Iron,🟧6 ♠🥈 💧 => ♠🥈 🟧🕳6 ♠🎯6
+ID_Shovel_Dirt_Gold,🟧9 ♠🥇 💧2 => ♠🥇 🟧🕳9 ♠🎯9
+ID_Shovel_Hit,♠🎯 => ⌛0-1
+ID_Water_Dirt,🟨 🚿 💧 => 🟧 🚿
+ID_Water_Dirt_Copper,🟨3 🚿🥉 💧 => 🟧3 🚿🥉
+ID_Water_Dirt_Iron,🟨6 🚿🥈 💧2 => 🟧6 🚿🥈
+ID_Water_Dirt_Gold,🟨9 🚿🥇 💧3 => 🟧9 🚿🥇
+ID_Water_Hole,🕳 🚿 💧 => 🟧🕳 🚿
+ID_Water_Hole_Copper,🕳3 🚿🥉 💧 => 🟧🕳3 🚿🥉
+ID_Water_Hole_Iron,🕳6 🚿🥈 💧2 => 🟧🕳6 🚿🥈
+ID_Water_Hole_Gold,🕳9 🚿🥇 💧3 => 🟧🕳9 🚿🥇
+ID_Rod_Fish,🟦 🎣 💧4 => 🎣 🟦 🎣🎯
+ID_Rod_Fish_Copper,🟦3 🎣🥉 💧6 => 🎣🥉 🟦3 🎣🎯3
+ID_Rod_Fish_Iron,🟦6 🎣🥈 💧3 => 🎣🥈 🟦6 🎣🎯6
+ID_Rod_Fish_Gold,🟦9 🎣🥇 💧5 => 🎣🥇 🟦9 🎣🎯9
+ID_Hammer_Hit,🔨 💧8 => 🔨 🔨🎯
+ID_Hammer_Hit_Copper,🔨🥉 💧6 => 🔨🥉 🔨🎯
+ID_Hammer_Hit_Iron,🔨🥈 💧4 => 🔨🥈 🔨🎯
+ID_Hammer_Hit_Gold,🔨🥇 💧2 => 🔨🥇 🔨🎯
+
+ID_Chop_Tree,🌳 🪓🎯3 => 🟤 🤎1-3
+ID_Chop_Apple_Tree,🌳🍎 🪓🎯3 => 🟤 🍎1-3 🤎1-3
+ID_Chop_Orange_Tree,🌳🍊 🪓🎯3 => 🟤 🍊1-3 🤎1-3
+ID_Chop_Stump,🟤 🪓🎯3 => 🟩 🤎1-3
+ID_Chop_Bush,🍀 🪓🎯 => 🤎1-3 🟩
+ID_Chop_Bush_Apple,🍀🍎 🪓🎯 => 🤎1-3 🍎0-2 🟩
+ID_Chop_Bush_Berry,🍀🍇 🪓🎯 => 🤎1-3 🍇0-2 🟩
+ID_Chop_Bush_Orange,🍀🍊 🪓🎯 => 🤎1-3 🍊0-2 🟩
+ID_Pick_Stone_Small,⛰️ ⛏🎯 => 🥌1-3 🟩
+ID_Pick_Stone,⛰️⛰️ ⛏🎯2 => 🥌2-4 🟩
+ID_Pick_Stone_Large,🗻 ⛏🎯4 => 🥌4-6 🟩
+ID_Pick_Coal,⛰️🖤 ⛏🎯2 => 🖤2-4 🟩
+ID_Pick_Coal_Large,🗻🖤 ⛏🎯5 => 🖤4-6 🟩
+ID_Pick_Copper,⛰️🥉 ⛏🎯2 => 🥉2-4 🟩
+ID_Pick_Copper_Large,🗻🥉 ⛏🎯5 => 🥉4-6 🟩
+ID_Pick_Iron,⛰️🥈 ⛏🎯2 => 🥈2-4 🟩
+ID_Pick_Iron_Large,🗻🥈 ⛏🎯5 => 🥈4-6 🟩
+ID_Pick_Gold,⛰️🥇 ⛏🎯2 => 🥇2-4 🟩
+ID_Pick_Gold_Large,🗻🥇 ⛏🎯5 => 🥇4-6 🟩
+
+
+ID_Copper_Hoe,🔰 🔲🥉 => 🔰🥉
+ID_Iron_Hoe,🔰 🔲🥈 => 🔰🥈
+ID_Gold_Hoe,🔰 🔲🥇 => 🔰🥇
+ID_Copper_Shovel,♠ 🔲🥉 => ♠🥉
+ID_Iron_Shovel,♠ 🔲🥈 => ♠🥈
+ID_Gold_Shovel,♠ 🔲🥇 => ♠🥇
+ID_Copper_Axe,🪓 🔲🥉 => 🪓🥉
+ID_Iron_Axe,🪓 🔲🥈 => 🪓🥈
+ID_Gold_Axe,🪓 🔲🥇 => 🪓🥇
+ID_Copper_Pickaxe,⛏ 🔲🥉 => ⛏🥉
+ID_Iron_Pickaxe,⛏ 🔲🥈 => ⛏🥈
+ID_Gold_Pickaxe,⛏ 🔲🥇 => ⛏🥇
+ID_Copper_Watering_Can,🚿 🔲🥉 => 🚿🥉
+ID_Iron_Watering_Can,🚿 🔲🥈 => 🚿🥈
+ID_Gold_Watering_Can,🚿 🔲🥇 => 🚿🥇
+ID_Copper_Fishing_Rod,🎣 🔲🥉 => 🎣🥉
+ID_Iron_Fishing_Rod,🎣 🔲🥈 => 🎣🥈
+ID_Gold_Fishing_Rod,🎣 🔲🥇 => 🎣🥇
+ID_Copper_Hammer,🔨 🔲🥉 => 🔨🥉
+ID_Iron_Hammer,🔨 🔲🥈 => 🔨🥈
+ID_Gold_Hammer,🔨 🔲🥇 => 🔨🥇
+
+ID_Build_Jar,🤍 => 🥃
+ID_Build_Bottle,🤍 => 🍼
+
+ID_Build_Beehive,🟩 🤎15 🔨🎯3 => 🐝⚙
+ID_Build_Fishtrap,🟦 🤎5 👕2 🔨🎯2 => 🥅⚙
+ID_Build_Keg,🟩 🤎10 🔨🎯2 => 🍺⚙
+ID_Build_Furnace,🟩 🥌5 🔨🎯2 => 🔥⚙
+ID_Build_Preserves,🟩 🤎10 🔨🎯2 => 🥃⚙
+ID_Build_Cheese_Maker,🟩4 🥌10 🔲🥈2 🔨🎯5 => 🧀⚙
+ID_Build_Loom,🟩6 🤎10 🥌5 🔨🎯4 => 🧵⚙
+ID_Build_Mayonaise_Maker,🟩4 🔲🥈2 🥉3 🔨🎯4 => 🧂⚙
+ID_Build_Windmill,🟩 🤎15 🥌10 🔨🎯8 => ➕
+ID_Build_Seed_Machine,🟩4 🤎5 🔲🥈2 🔨🎯7 => 🌱⚙
+ID_Build_Sprinkler,🟩 🥌3 🥉 🔨🎯2 => 🚿⚙
+ID_Build_Scarecrow,🟩 🤎5 🌿8 🔨🎯2 => 🤖
+ID_Build_Fence,🟩 🤎2 🔨🎯 => 🚧
+
+ID_Day_Beehive_Honey,🌞 🐝 => 🐝 🍯
+ID_Day_Fishtrap_Fish,🌞 🥅 => 🥅 🎣🎯
+ID_Day_Cheese,🌞 🧀⚙ 🥛 => 🧀⚙ 🧀
+ID_Day_Loom_Fabric,🌞 🧵⚙ 🐏 => 🧵⚙ 👕
+ID_Day_Loom_Hide,🌞 🧵⚙ 🐮 => 🧵⚙ 👞
+ID_Day_Mayonaise,🌞 🧂⚙ 🥚 => 🧂⚙ 🥃🥚
+ID_Day_Windmill_Flour,🌞 ➕ ☘🌾 => ➕ 🥃🌾
+ID_Day_Sprinkle,🌞 🚿⚙ 🟨104 => 🚿⚙ 🟧104 // TODO up to 104 not requirement
+ID_Day_Scarecrow,🌞 🤖 => 🤖 ❎48
+
+ID_Day_Keg_Apple,🌞 🍺⚙ 🍎 => 🍺⚙ 🧃🍎
+ID_Day_Keg_Berry,🌞 🍺⚙ 🍇 => 🍺⚙ 🧃🍇
+ID_Day_Keg_Orange,🌞 🍺⚙ 🍊 => 🍺⚙ 🧃🍊
+
+
+ID_Day_Preserves_Parsnip,🌞 🥃⚙ ☘💜 🥃 => 🥃⚙ 🥃💜
+ID_Day_Preserves_Carrot,🌞 🥃⚙ ☘🥕 🥃 => 🥃⚙ 🥃🥕
+ID_Day_Preserves_Beetroot,🌞 🥃⚙ ☘❤ 🥃 => 🥃⚙ 🥃❤
+ID_Day_Preserves_Cabbage,🌞 🥃⚙ ☘🥬 🥃 => 🥃⚙ 🥃🥬
+ID_Day_Preserves_Kale,🌞 🥃⚙ ☘💚 🥃 => 🥃⚙ 🥃💚
+ID_Day_Preserves_Cauliflower,🌞 🥃⚙ ☘🤍 🥃 => 🥃⚙ 🥃🤍
+ID_Day_Preserves_Pumpkin,🌞 🥃⚙ ☘🎃 🥃 => 🥃⚙ 🥃🎃
+ID_Day_Preserves_Potato,🌞 🥃⚙ ☘🥔 🥃 => 🥃⚙ 🥃🥔
+ID_Day_Preserves_Radish,🌞 🥃⚙ ☘🍒 🥃 => 🥃⚙ 🥃🍒
+ID_Day_Preserves_Sunflower,🌞 🥃⚙ ☘🌻 🥃 => 🥃⚙ 🥃🌻
+ID_Day_Preserves_Fish_Sardine,🌞 🥃⚙ 🐟 🥃 => 🥃⚙ 🥃🐟
+ID_Day_Preserves_Fish_Halibut,🌞 🥃⚙ 🐠 🥃 => 🥃⚙ 🥃🐠
+ID_Day_Preserves_Fish_Bullhead,🌞 🥃⚙ 🐡 🥃 => 🥃⚙ 🥃🐡
+ID_Day_Preserves_Fish_Carp,🌞 🥃⚙ 🦀 🥃 => 🥃⚙ 🥃🦀
+ID_Day_Preserves_Fish_Red_Mullet,🌞 🥃⚙ 🦐 🥃 => 🥃⚙ 🥃🦐
+ID_Day_Preserves_Fish_Sturgeon,🌞 🥃⚙ 🦈 🥃 => 🥃⚙ 🥃🦈
+
+ID_Day_Baked_Copper,🌞 🔥⚙ 🖤 🥉 => 🔥⚙ 🔲🥉
+ID_Day_Baked_Iron,🌞 🔥⚙ 🖤 🥈 => 🔥⚙ 🔲🥈
+ID_Day_Baked_Gold,🌞 🔥⚙ 🖤 🥇 => 🔥⚙ 🔲🥇
+ID_Day_Baked_Glass,🌞 🔥⚙ 🖤 ⌛ => 🔥⚙ 🤍
+ID_Day_Baked_Bread,🌞 🔥⚙ 🖤 🥃🌾 => 🔥⚙ 🍞
+ID_Day_Baked_Roasted_Meat,🌞 🔥⚙ 🖤 🥩 => 🔥⚙ 🔥🥩
+ID_Day_Baked_Boiled_Egg,🌞 🔥⚙ 🖤 🥚 => 🔥⚙ 🔥🥚
+
+ID_Day_Baked_Fish_Sardine,🌞 🔥⚙ 🐟 => 🔥⚙ 🔥🐟
+ID_Day_Baked_Fish_Halibut,🌞 🔥⚙ 🐠 => 🔥⚙ 🔥🐠
+ID_Day_Baked_Fish_Bullhead,🌞 🔥⚙ 🐡 => 🔥⚙ 🔥🐡
+ID_Day_Baked_Fish_Carp,🌞 🔥⚙ 🦀 => 🔥⚙ 🔥🦀
+ID_Day_Baked_Fish_Red_Mullet,🌞 🔥⚙ 🦐 => 🔥⚙ 🔥🦐
+ID_Day_Baked_Fish_Sturgeon,🌞 🔥⚙ 🦈 => 🔥⚙ 🔥🦈
+
+
+ID_Grow_Parsnip, 🌱💜 🟧🕳 🌞 ❎ =>🌱💜 🌱💜🎯 🟨🕳
+ID_Grow_Carrot, 🌱🥕 🟧🕳 🌞 ❎ =>🌱🥕 🌱🥕🎯 🟨🕳
+ID_Grow_Beetroot, 🌱❤ 🟧🕳 🌞 ❎ =>🌱❤ 🌱❤🎯 🟨🕳
+ID_Grow_Cabbage, 🌱🥬 🟧🕳 🌞 ❎ =>🌱🥬 🌱🥬🎯 🟨🕳
+ID_Grow_Kale, 🌱💚 🟧🕳 🌞 ❎ =>🌱💚 🌱💚🎯 🟨🕳
+ID_Grow_Cauliflower, 🌱🤍 🟧🕳 🌞 ❎ =>🌱🤍 🌱🤍🎯 🟨🕳
+ID_Grow_Pumpkin, 🌱🎃 🟧🕳 🌞 ❎ =>🌱🎃 🌱🎃🎯 🟨🕳
+ID_Grow_Potato, 🌱🥔 🟧🕳 🌞 ❎ =>🌱🥔 🌱🥔🎯 🟨🕳
+ID_Grow_Radish,🌱🍒 🟧🕳 🌞 ❎ => 🌱🍒 🌱🍒🎯 🟨🕳
+ID_Grow_Sunflower, 🌱🌻 🟧🕳 🌞 ❎ => 🌱🌻 🌱🌻🎯 🟨🕳
+ID_Grow_Wheat, 🌱🌾 🟧🕳 🌞 ❎ => 🌱🌾 🌱🌾🎯 🟨🕳
+
+ID_Harvest_Parsnip,🌱💜 🌱💜🎯2 => ♣💜
+ID_Harvest_Carrot,🌱🥕 🌱🥕🎯3 => ♣🥕
+ID_Harvest_Beetroot,🌱❤ 🌱❤🎯4 => ♣❤
+ID_Harvest_Cabbage,🌱🥬 🌱🥬🎯3 => ♣🥬
+ID_Harvest_Kale,🌱💚 🌱💚🎯4 => ♣💚
+ID_Harvest_Cauliflower,🌱🤍 🌱🤍🎯4 => ♣🤍
+ID_Harvest_Pumpkin,🌱🎃 🌱🎃🎯4 => ♣🎃
+ID_Harvest_Potato,🌱🥔 🌱🥔🎯3 => ♣🥔
+ID_Harvest_Radish,🌱🍒 🌱🍒🎯3 => ♣🍒
+ID_Harvest_Sunflower,🌱🌻 🌱🌻🎯6 => ♣🌻
+ID_Harvest_Wheat,🌱🌾 🌱🌾🎯3 => ♣🌾
+
+ID_Sell_Copper_Ore,🥉 => 💰10-25
+ID_Sell_Iron_Ore,🥈 => 💰20-40
+ID_Sell_Gold_Ore,🥇 => 💰30-50
+ID_Sell_Coal,🖤 => 💰10-15
+
+
+ID_Sell_Copper_Bar,🔲🥉 => 💰50-80
+ID_Sell_Iron,🔲🥈 => 💰70-120
+ID_Sell_Gold,🔲🥇 => 💰100-200
+ID_Sell_Glass,🤍 => 💰10-15
+ID_Sell_Bread,🍞 => 💰90-145
+ID_Sell_Roasted_Meat,🔥🥩 => 💰60-190
+ID_Sell_Boiled_Egg,🔥🥚 => 💰80-160
+
+ID_Sell_Berry,🍇 => 💰5-10
+ID_Sell_Orange,🍊 => 💰5-10
+ID_Sell_Apple,🍎 => 💰5-10
+
+ID_Sell_Berry_Juice,🧃🍇 => 💰45-120
+ID_Sell_Orange_Juice,🧃🍊 => 💰45-120
+ID_Sell_Apple_Juice,🧃🍎 => 💰45-120
+
+ID_Sell_Parsnip,☘💜 => 💰5-10
+ID_Sell_Carrot,☘🥕 => 💰6-12
+ID_Sell_Beetroot,☘❤ => 💰10-18
+ID_Sell_Cabbage,☘🥬 => 💰8-15
+ID_Sell_Kale,☘💚 => 💰25-40
+ID_Sell_Cauliflower,☘🤍 => 💰25-40
+ID_Sell_Pumpkin,☘🎃 => 💰40-80
+ID_Sell_Potato,☘🥔 => 💰4-10
+ID_Sell_Radish,☘🍒 => 💰8-15
+ID_Sell_Sunflower,☘🌻 => 💰40-80
+ID_Sell_Wheat,☘🌾 => 💰8-12
+
+ID_Sell_Preserves_Parsnip,🥃💜 => 💰20-95
+ID_Sell_Preserves_Carrot,🥃🥕 => 💰25-85
+ID_Sell_Preserves_Beetroot,🥃❤ => 💰35-95
+ID_Sell_Preserves_Cabbage,🥃🥬 => 💰30-95
+ID_Sell_Preserves_Kale,🥃💚 => 💰70-140
+ID_Sell_Preserves_Cauliflower,🥃🤍 => 💰70-140
+ID_Sell_Preserves_Pumpkin,🥃🎃 => 💰90-190
+ID_Sell_Preserves_Potato,🥃🥔 => 💰20-95
+ID_Sell_Preserves_Radish,🥃🍒 => 💰30-95
+ID_Sell_Preserves_Sunflower,🥃🌻 => 💰30-95
+
+ID_Sell_Sardine, 🐟 => 💰10-20
+ID_Sell_Halibut, 🐠 => 💰25-35
+ID_Sell_Bullhead, 🐡 => 💰40-50
+ID_Sell_Carp, 🦀 => 💰55-65
+ID_Sell_Red_Mullet, 🦐 => 💰70-80
+ID_Sell_Sturgeon, 🦈 => 💰90-95
+
+ID_Sell_Preserves_Fish_Sardine,🥃🐟 => 💰60-90
+ID_Sell_Preserves_Fish_Halibut,🥃🐠 => 💰90-130
+ID_Sell_Preserves_Fish_Bullhead,🥃🐡 => 💰110-150
+ID_Sell_Preserves_Fish_Carp,🥃🦀 => 💰150-180
+ID_Sell_Preserves_Fish_Red_Mullet,🥃🦐 => 💰170-230
+ID_Sell_Preserves_Fish_Sturgeon,🥃🦈 => 💰200-300
+
+ID_Sell_Baked_Fish_Sardine,🔥🐟 => 💰45-60
+ID_Sell_Baked_Fish_Halibut,🔥🐠 => 💰60-90
+ID_Sell_Baked_Fish_Bullhead,🔥🐡 => 💰80-120
+ID_Sell_Baked_Fish_Carp,🔥🦀 => 💰100-150
+ID_Sell_Baked_Fish_Red_Mullet,🔥🦐 => 💰120-160
+ID_Sell_Baked_Fish_Sturgeon,🔥🦈 => 💰150-210
+
+ID_Sell_Honey,🍯 => 💰20-45
+ID_Sell_Milk,🥛 => 💰60-90
+ID_Sell_Cheese,🧀 => 💰90-180
+ID_Sell_Wool,🐑 => 💰40-60
+ID_Sell_Cloth,👕 => 💰70-160
+ID_Sell_Flour,🥃🌾 => 💰30-55
+ID_Sell_Egg,🥚 => 💰40-75
+ID_Sell_Mayonaise,🥃🥚 => 💰75-160
+ID_Sell_Meat,🥩 => 💰25-80
+ID_Sell_Fertilizer,💩 => 💰3-5
+ID_Sell_Truffle,🍄 => 💰50-90
+ID_Sell_Hide,🐮 => 💰30-45
+ID_Sell_Leather,👞 => 💰80-150
+ID_Sell_Feather,🍂 => 💰60-90
+
+ID_Sell_Sand, ⌛ => 💰1-2
+ID_Sell_Jar, 🥃 => 💰10-20
+ID_Sell_Bottle, 🍼 => 💰10-20
+ID_Sell_Wood, 🤎 => 💰15-20
+ID_Sell_Grass, 🌿 => 💰15-25
+ID_Sell_Stone, 🥌 => 💰15-25
+
+
+ID_Sell_Cow, 🐄 => 💰200
+ID_Sell_Chicken, 🐔 => 💰200
+ID_Sell_Sheep, 🐑 => 💰200
+ID_Sell_Pig, 🐖 => 💰200
+
+ID_Feed_Cow_Wheat, 🌞 🐄 ☘🌾 => 🐄 🥛
+ID_Feed_Cow_Kale, 🌞 🐄 ☘🥬 => 🐄 🥛
+ID_Feed_Cow_Radish, 🌞 🐄 ☘🍒 => 🐄 🥛
+
+ID_Feed_Chicken_Carrot, 🌞 🐔 ☘🥕 => 🐔 🥚
+ID_Feed_Chicken_Parsnip, 🌞 🐔 ☘💜 => 🐔 🥚
+ID_Feed_Chicken_Cauliflower, 🌞 🐔 ☘🥦 => 🐔 🥚
+
+ID_Feed_Sheep_Wheat, 🌞 🐑 ☘🌾 => 🐑 🐏
+ID_Feed_Sheep_Parsnip, 🌞 🐑 ☘💜 => 🐑 🐏
+ID_Feed_Sheep_Carrot, 🌞 🐑 ☘🥕 => 🐑 🐏
+
+ID_Feed_Pig_Potato, 🌞 🐖 ☘🥔 => 🐖 💩0-2 🍄
+ID_Feed_Pig_Pumpkin, 🌞 🐖 ☘🎃 => 🐖 💩0-2 🍄
+ID_Feed_Pig_Radish, 🌞 🐖 ☘🍒 => 🐖 💩0-2 🍄
+
+ID_Butcher_Cow, 🐄 => 🥩 🐮
+ID_Butcher_Chicken, 🐔 => 🥩 🍂
+ID_Butcher_Sheep, 🐑 => 🥩
+ID_Butcher_Pig, 🐖 => 🥩
+
+
+ID_Buy_Parsnip_Seed,🌱💜💳 💰15 => 🌱💜
+ID_Buy_Carrot_Seed,🌱🥕💳 💰15 => 🌱🥕
+ID_Buy_Beetroot_Seed,🌱❤💳 💰20 => 🌱❤
+ID_Buy_Cabbage_Seed,🌱🥬💳 💰20 => 🌱🥬
+ID_Buy_Kale_Seed,🌱💚💳 💰30 => 🌱💚
+ID_Buy_Cauliflower_Seed,🌱🤍💳 💰30 => 🌱🤍
+ID_Buy_Pumpkin_Seed,🌱🎃💳 💰25 => 🌱🎃
+ID_Buy_Potato_Seed,🌱🥔💳 💰15 => 🌱🥔
+ID_Buy_Radish_Seed,🌱🍒💳 💰15 => 🌱🍒
+ID_Buy_Sunflower_Seed,🌱🌻💳 💰30 => 🌱🌻
+ID_Buy_Wheat_Seed,🌱🌾💳 💰15 => 🌱🌾
+ID_Buy_Wood,🤎💳 💰30 => 🤎
+ID_Buy_Stone,🥌💳 💰40 => 🥌
+
+ID_Buy_Cow,🐄💳 💰200 => 🐄
+ID_Buy_Chicken,🐔💳 💰200 => 🐔
+ID_Buy_Sheep,🐑💳 💰200 => 🐑
+ID_Buy_Pig,🐖💳 💰200 => 🐖
+
+
+ID_Stock_Item, 💳 => 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳%
+ID_Shop_Reroll,💰100 🌱💜💳X 🌱🥕💳X 🌱❤💳X 🌱🥬💳X 🌱💚💳X 🌱🤍💳X 🌱🎃💳X 🌱🥔💳X 🌱🍒💳X 🌱🌻💳X 🌱🌾💳X 🤎💳X 🥌💳X 🖤💳X 🥉💳X 🥈💳X 🥇💳X 🐄💳X 🐔💳X 🐑💳X 🐖💳X => 🛒
+
+ID_Feat_Roll,⭐🎲 💳⭐💪X 💳⭐🍎X 💳⭐⛏X 💳⭐🐄X 💳⭐🙆‍♂️X 💳⭐X ⭐X => 💳⭐3 ⭐
+ID_Feat_Stock,💳⭐ => 💳⭐💪%20 💳⭐🍎%20 💳⭐⛏%20 💳⭐🐄%20 💳⭐🙆‍♂️%20
+
+ID_Buy_Feat_Steroids,💳⭐💪 💳⭐🍎X 💳⭐⛏X 💳⭐🐄X 💳⭐🙆‍♂️X ⭐X 💳⭐X => ⭐💪
+ID_Buy_Feat_Fruit_Expert,💳⭐🍎 💳⭐💪X 💳⭐⛏X 💳⭐🐄X 💳⭐🙆‍♂️X ⭐X 💳⭐X => ⭐🍎
+ID_Buy_Feat_Miner,💳⭐⛏ 💳⭐💪X 💳⭐🍎X 💳⭐🐄X 💳⭐🙆‍♂️X ⭐X 💳⭐X => ⭐⛏
+ID_Buy_Feat_Animal_Lover,💳⭐🐄 💳⭐💪X 💳⭐🍎X 💳⭐⛏X 💳⭐🙆‍♂️X ⭐X 💳⭐X => ⭐🐄
+ID_Buy_Feat_Muscle_Head,💳⭐🙆‍♂️ 💳⭐💪X 💳⭐🍎X 💳⭐⛏X 💳⭐🐄X ⭐X 💳⭐X => ⭐🙆‍♂️
+
+ID_Feat_Fruit_Expert, ⭐🍎 🛒 => ⭐🍎 💳16-160
+ID_Feat_Fruit_Expert_Sell_Berry,⭐🍎 🍇 => ⭐🍎 💰10-20
+ID_Feat_Fruit_Expert_Sell_Orange,⭐🍎 🍊 => ⭐🍎 💰10-20
+ID_Feat_Fruit_Expert_Sell_Apple,⭐🍎 🍎 => ⭐🍎 💰10-20
+
+ID_Feat_Lazy_Miner, ⭐⛏ 🛒 => ⭐⛏ 💳16-160
+ID_Feat_Lazy_Miner_Stock_Item, ⭐⛏ 💳 =>⭐⛏ 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳% 🖤💳% 🥉💳% 🥈💳% 🥇💳% 
+
+ID_Feat_Animal_Lover, ⭐🐄 🛒 => ⭐🐄 💳16-160
+ID_Feat_Animal_Lover_Stock_Item, ⭐🐄 💳 => ⭐🐄 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳% 🐄💳% 🐔💳% 🐑💳% 🐖💳%
+
+ID_Feat_Steroids_Harvest_Parsnip, 🌱💜🎯 ⭐💪 => ♣💜 ⭐💪
+ID_Feat_Steroids_Harvest_Carrot, 🌱🥕🎯2 ⭐💪 => ♣🥕 ⭐💪
+ID_Feat_Steroids_Harvest_Beetroot, 🌱❤🎯3 ⭐💪 => ♣❤ ⭐💪
+ID_Feat_Steroids_Harvest_Cabbage, 🌱🥬🎯2 ⭐💪 => ♣🥬 ⭐💪
+ID_Feat_Steroids_Harvest_Kale, 🌱💚🎯3 ⭐💪 => ♣💚 ⭐💪
+ID_Feat_Steroids_Harvest_Cauliflower, 🌱🤍🎯3 ⭐💪 => ♣🤍 ⭐💪
+ID_Feat_Steroids_Harvest_Pumpkin, 🌱🎃🎯3 ⭐💪 => ♣🎃 ⭐💪
+ID_Feat_Steroids_Harvest_Potato, 🌱🥔🎯2 ⭐💪 => ♣🥔 ⭐💪
+ID_Feat_Steroids_Harvest_Radish, 🌱🍒🎯2 ⭐💪 => ♣🍒 ⭐💪
+ID_Feat_Steroids_Harvest_Sunflower, 🌱🌻🎯5 ⭐💪 => ♣🌻 ⭐💪
+ID_Feat_Steroids_Harvest_Wheat, 🌱🌾🎯2 ⭐💪 => ♣🌾 ⭐💪
+
+ID_Feat_Muscle_Head, ⭐🙆‍♂️ 🌞 => ⭐🙆‍♂️ 💧100
+
+ID_Feat_Triple_Upgrade_2_Sell_Parsnip,⭐3️⃣ ☘💜 => ⭐3️⃣ 💰20-40
+ID_Feat_Triple_Upgrade_2_Sell_Kale,⭐3️⃣ ☘💚 => ⭐3️⃣ 💰100-160
+ID_Feat_Triple_Upgrade_2_Sell_Cauliflower,⭐3️⃣ ☘🤍 => ⭐3️⃣ 💰100-160
+
+ID_Feat_Wheat_Heart_Sell_Wheat,⭐🌾 ☘🌾 =>⭐🌾 💰12-18
+ID_Feat_Wheat_Heart_Sell_Flour,⭐🌾 🥃🌾 =>⭐🌾 💰45-78
+ID_Feat_Wheat_Heart_Sell_Bread,⭐🌾 🍞 =>⭐🌾 💰135-218
+
+
+ID_Feat_Performance_Chop_Axe,⭐💧 🪓 💧3 =>⭐💧 🪓🎯
+ID_Feat_Performance_Chop_Axe_Copper,⭐💧 🪓🥉 💧2 =>⭐💧 🪓🎯
+ID_Feat_Performance_Chop_Axe_Iron,⭐💧 🪓🥈 💧 =>⭐💧 🪓🎯
+ID_Feat_Performance_Pick_Pickaxe,⭐💧 ⭐💧 ⛏ 💧4 =>⭐💧 ⛏🎯
+ID_Feat_Performance_Pick_Pickaxe_Copper,⭐💧 ⛏🥉 💧3 =>⭐💧 ⛏🎯
+ID_Feat_Performance_Pick_Pickaxe_Iron,⭐💧 ⛏🥈 💧2 =>⭐💧 ⛏🎯
+ID_Feat_Performance_Pick_Pickaxe_Gold,⭐💧 ⛏🥇 💧 =>⭐💧 ⛏🎯
+ID_Feat_Performance_Hoe_Grass,⭐💧 🟩 🔰 💧 =>⭐💧 🟨 🔰🎯
+ID_Feat_Performance_Hoe_Grass_Copper,⭐💧 🟩3 🔰🥉 💧 =>⭐💧 🟨3 🔰🎯3
+ID_Feat_Performance_Hoe_Grass_Iron,⭐💧 🟩6 🔰🥈 💧 =>⭐💧 🟨6 🔰🎯6
+ID_Feat_Performance_Hoe_Grass_Gold,⭐💧 🟩9 🔰🥇 💧 =>⭐💧 🟨9 🔰🎯9
+ID_Feat_Performance_Shovel_Dirt,⭐💧 🟨 ♠ 💧 =>⭐💧 🕳 ♠🎯
+ID_Feat_Performance_Shovel_Dirt_Copper,⭐💧 🟨3 ♠🥉 💧2 =>⭐💧 🕳3 ♠🎯3
+ID_Feat_Performance_Shovel_Dirt_Gold,⭐💧 🟨9 ♠🥇 💧 =>⭐💧 🕳9 ♠🎯9
+ID_Feat_Performance_Water_Dirt_Iron,⭐💧 🟨6 🚿🥈 💧 =>⭐💧 🟧6 🚿🥈
+ID_Feat_Performance_Water_Dirt_Gold,⭐💧 🟨9 🚿🥇 💧2 =>⭐💧 🟧9 🚿🥇
+ID_Feat_Performance_Water_Hole_Iron,⭐💧 🕳6 🚿🥈 💧 =>⭐💧 🟧🕳6 🚿🥈
+ID_Feat_Performance_Water_Hole_Gold,⭐💧 🕳9 🚿🥇 💧2 =>⭐💧 🟧🕳9 🚿🥇
+ID_Feat_Performance_Rod_Fish,⭐💧 🟦 🎣 💧3 =>⭐💧 🟦 🎣🎯
+ID_Feat_Performance_Rod_Fish_Copper,⭐💧 🟦3 🎣🥉 💧5 =>⭐💧 🟦3 🎣🎯3
+ID_Feat_Performance_Rod_Fish_Iron,⭐💧 🟦6 🎣🥈 💧2 =>⭐💧 🟦6 🎣🎯6
+ID_Feat_Performance_Rod_Fish_Gold,⭐💧 🟦9 🎣🥇 💧4 =>⭐💧 🟦9 🎣🎯9
+ID_Feat_Performance_Hammer_Hit,⭐💧 🔨 💧7 =>⭐💧 🔨🎯
+ID_Feat_Performance_Hammer_Hit_Copper,⭐💧 🔨🥉 💧5 =>⭐💧 🔨🎯
+ID_Feat_Performance_Hammer_Hit_Iron,⭐💧 🔨🥈 💧3 =>⭐💧 🔨🎯
+ID_Feat_Performance_Hammer_Hit_Gold,⭐💧 🔨🥇 💧 =>⭐💧 🔨🎯
+
+ID_Example_C ⭐🎁 => ⭐💪 | ⭐🍎 | ⭐⛏ | ⭐🐄 | ⭐🙆‍♂️ | ⭐📝
+ ⭐📝 => ⭐💪 | ⭐🍎 | ⭐⛏ | ⭐🐄 | ⭐🙆‍♂️ | ⭐📝 | ⭐🐛
+ID_Example_Complex_Formula_2, ☯ => ☯0-σ-10% ✡123%

@@ -63,6 +63,13 @@ The classic gameboy game, implemented up til the first rival battle:
 - Menu navigation
 - Player movement
 
+### Another Farm Roguelike
+Another harvest moon style farming sim game with complex crafting mechanics and high rent demands that forces competent min-maxing:
+- Farming
+- Fishing
+- Mining
+- Crafting
+- Shopping
 
 \```
 # Example Rules

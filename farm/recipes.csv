@@ -1,0 +1,417 @@
+ID,Recipe
+
+
+ID_Start, 💫 => ✅1️⃣ ☀1️⃣ ⏹1296 🔰 🪓 ⛏ ♠ 🚿 🎣 🔨
+ID_Grass_Regrow, 🟨 🌞 => 🟩
+ID_Hole_Refill, 🕳 🌞 => 🟨
+ID_Hole_Refill_Wet, 🟧🕳 🌞 => 🟧
+
+ID_Grid_Spawn,⏹ => 🟩%24.5 🟦%5 🌳%10 🌳🍎%10 🌳🍊%10 🍀%5 🍀🍇%5 🍀🍎%5 🍀🍊%5 ⛰️%2 ⛰️⛰️%2 ⛰️🖤%2 ⛰️🥉%2 ⛰️🥈%2 ⛰️🥇%1 🗻%2 🗻🖤%2 🗻🥉%2 🗻🥈%2 🗻🥇%0.5
+ID_Fish_Tick,🎣🎯 => 🐟%10 🐠%8 🐡%6 🦀%4 🦐%2 🦈%1
+
+ID_Monday,💧X ❎X 💳X ☀1️⃣ 🛒X => ☀2️⃣ 🌞 💧225 🛒
+ID_Tuesday,💧X ❎X 💳X ☀2️⃣ 🛒X => ☀3️⃣ ⭐🎲 🌞 💧225 🛒
+ID_Wednesday,💧X ❎X 💳X ☀3️⃣ 🛒X => ☀4️⃣ 🌞 💧225 🛒
+ID_Thursday,💧X ❎X 💳X ☀4️⃣ 🛒X => ☀5️⃣ 🌞 💧225 🛒
+ID_Friday,💧X ❎X 💳X ☀5️⃣ 🛒X => ☀6️⃣ 🌞 💧225 🛒
+ID_Saturday,💧X ❎X 💳X ☀6️⃣ ✅ 🛒X => ☀7️⃣ 🌞 💧225 🛒
+ID_Sunday,💧X ❎X 💳X ☀7️⃣ 🛒X => ☀1️⃣ 📅 🌞 💧225 🛒
+
+ID_Rent1, ✅1️⃣ 💰1000 => ✅ ✅2️⃣ 
+ID_Rent2, ✅2️⃣ 💰2500 => ✅ ✅3️⃣
+ID_Rent3, ✅3️⃣ 💰5000 => ✅ ✅4️⃣
+ID_Rent4, ✅4️⃣ 💰10000 => ✅ ✅5️⃣
+ID_Rent5, ✅5️⃣ 💰20000 => ✅ ✅6️⃣
+ID_Rent6, ✅6️⃣ 💰40000 => ✅ ✅7️⃣
+ID_Rent7, ✅7️⃣ 💰80000 => ✅ ✅8️⃣
+ID_Rent8, ✅8️⃣ 💰160000 => ✅ ✅9️⃣
+ID_Rent9, ✅9️⃣ 💰320000 => ✅ ✅🔟
+ID_Rent10, ✅🔟 💰640000 => ✅ ✅🔟1️⃣
+ID_Rent11, ✅🔟1️⃣ 💰1280000 => ✅ ✅🔟2️⃣
+ID_Rent12, ✅🔟2️⃣ 💰2560000 => ✅ ✅🔟3️⃣
+ID_Rent13, ✅🔟3️⃣ 💰5120000 => ✅ ✅🔟4️⃣
+ID_Rent14, ✅🔟4️⃣ 💰10240000 => ✅ ✅🔟5️⃣
+ID_Rent15, ✅🔟5️⃣ 💰20480000 => ✅ ✅🔟6️⃣
+
+
+ID_Shop_Stock, 🛒 => 💳8-80
+
+ID_Chop_Axe,🪓 💧4 => 🪓 🪓🎯
+ID_Chop_Axe_Copper,🪓🥉 💧3 => 🪓🥉 🪓🎯
+ID_Chop_Axe_Iron,🪓🥈 💧2 => 🪓🥈 🪓🎯
+ID_Chop_Axe_Gold,🪓🥇 💧 => 🪓🥇 🪓🎯
+ID_Pick_Pickaxe,⛏ 💧5 => ⛏ ⛏🎯
+ID_Pick_Pickaxe_Copper,⛏🥉 💧4 => ⛏🥉 ⛏🎯
+ID_Pick_Pickaxe_Iron,⛏🥈 💧3 => ⛏🥈 ⛏🎯
+ID_Pick_Pickaxe_Gold,⛏🥇 💧2 => ⛏🥇 ⛏🎯
+ID_Hoe_Grass,🟩 🔰 💧2 => 🟨 🔰 🔰🎯
+ID_Hoe_Grass_Copper,🟩3 🔰🥉 💧2 => 🟨3 🔰🥉 🔰🎯3
+ID_Hoe_Grass_Iron,🟩6 🔰🥈 💧2 => 🟨6 🔰🥈 🔰🎯6
+ID_Hoe_Grass_Gold,🟩9 🔰🥇 💧2 => 🟨9 🔰🥇 🔰🎯9
+ID_Hoe_Hit,🔰🎯 => 🌿0-1
+ID_Shovel_Dirt,🟨 ♠ 💧2 => ♠ 🕳 ♠🎯
+ID_Shovel_Dirt_Copper,🟨3 ♠🥉 💧3 => ♠🥉 🕳3 ♠🎯3
+ID_Shovel_Dirt_Iron,🟨6 ♠🥈 💧 => ♠🥈 🕳6 ♠🎯6
+ID_Shovel_Dirt_Gold,🟨9 ♠🥇 💧2 => ♠🥇 🕳9 ♠🎯9
+ID_Shovel_Wet_Dirt,🟧 ♠ 💧2 => ♠ 🟧🕳 ♠🎯
+ID_Shovel_Dirt_Copper,🟧3 ♠🥉 💧3 => ♠🥉 🟧🕳3 ♠🎯3
+ID_Shovel_Dirt_Iron,🟧6 ♠🥈 💧 => ♠🥈 🟧🕳6 ♠🎯6
+ID_Shovel_Dirt_Gold,🟧9 ♠🥇 💧2 => ♠🥇 🟧🕳9 ♠🎯9
+ID_Shovel_Hit,♠🎯 => ⌛0-1
+ID_Water_Dirt,🟨 🚿 💧 => 🟧 🚿
+ID_Water_Dirt_Copper,🟨3 🚿🥉 💧 => 🟧3 🚿🥉
+ID_Water_Dirt_Iron,🟨6 🚿🥈 💧2 => 🟧6 🚿🥈
+ID_Water_Dirt_Gold,🟨9 🚿🥇 💧3 => 🟧9 🚿🥇
+ID_Water_Hole,🕳 🚿 💧 => 🟧🕳 🚿
+ID_Water_Hole_Copper,🕳3 🚿🥉 💧 => 🟧🕳3 🚿🥉
+ID_Water_Hole_Iron,🕳6 🚿🥈 💧2 => 🟧🕳6 🚿🥈
+ID_Water_Hole_Gold,🕳9 🚿🥇 💧3 => 🟧🕳9 🚿🥇
+ID_Rod_Fish,🟦 🎣 💧4 => 🎣 🟦 🎣🎯
+ID_Rod_Fish_Copper,🟦3 🎣🥉 💧6 => 🎣🥉 🟦3 🎣🎯3
+ID_Rod_Fish_Iron,🟦6 🎣🥈 💧3 => 🎣🥈 🟦6 🎣🎯6
+ID_Rod_Fish_Gold,🟦9 🎣🥇 💧5 => 🎣🥇 🟦9 🎣🎯9
+ID_Hammer_Hit,🔨 💧8 => 🔨 🔨🎯
+ID_Hammer_Hit_Copper,🔨🥉 💧6 => 🔨🥉 🔨🎯
+ID_Hammer_Hit_Iron,🔨🥈 💧4 => 🔨🥈 🔨🎯
+ID_Hammer_Hit_Gold,🔨🥇 💧2 => 🔨🥇 🔨🎯
+
+ID_Chop_Tree,🌳 🪓🎯3 => 🟤 🤎1-3
+ID_Chop_Apple_Tree,🌳🍎 🪓🎯3 => 🟤 🍎1-3 🤎1-3
+ID_Chop_Orange_Tree,🌳🍊 🪓🎯3 => 🟤 🍊1-3 🤎1-3
+ID_Chop_Stump,🟤 🪓🎯3 => 🟩 🤎1-3
+ID_Chop_Bush,🍀 🪓🎯 => 🤎1-3 🟩
+ID_Chop_Bush_Apple,🍀🍎 🪓🎯 => 🤎1-3 🍎0-2 🟩
+ID_Chop_Bush_Berry,🍀🍇 🪓🎯 => 🤎1-3 🍇0-2 🟩
+ID_Chop_Bush_Orange,🍀🍊 🪓🎯 => 🤎1-3 🍊0-2 🟩
+ID_Pick_Stone_Small,⛰️ ⛏🎯 => 🥌1-3 🟩
+ID_Pick_Stone,⛰️⛰️ ⛏🎯2 => 🥌2-4 🟩
+ID_Pick_Stone_Large,🗻 ⛏🎯4 => 🥌4-6 🟩
+ID_Pick_Coal,⛰️🖤 ⛏🎯2 => 🖤2-4 🟩
+ID_Pick_Coal_Large,🗻🖤 ⛏🎯5 => 🖤4-6 🟩
+ID_Pick_Copper,⛰️🥉 ⛏🎯2 => 🥉2-4 🟩
+ID_Pick_Copper_Large,🗻🥉 ⛏🎯5 => 🥉4-6 🟩
+ID_Pick_Iron,⛰️🥈 ⛏🎯2 => 🥈2-4 🟩
+ID_Pick_Iron_Large,🗻🥈 ⛏🎯5 => 🥈4-6 🟩
+ID_Pick_Gold,⛰️🥇 ⛏🎯2 => 🥇2-4 🟩
+ID_Pick_Gold_Large,🗻🥇 ⛏🎯5 => 🥇4-6 🟩
+
+
+ID_Copper_Hoe,🔰 🔲🥉 => 🔰🥉
+ID_Iron_Hoe,🔰 🔲🥈 => 🔰🥈
+ID_Gold_Hoe,🔰 🔲🥇 => 🔰🥇
+ID_Copper_Shovel,♠ 🔲🥉 => ♠🥉
+ID_Iron_Shovel,♠ 🔲🥈 => ♠🥈
+ID_Gold_Shovel,♠ 🔲🥇 => ♠🥇
+ID_Copper_Axe,🪓 🔲🥉 => 🪓🥉
+ID_Iron_Axe,🪓 🔲🥈 => 🪓🥈
+ID_Gold_Axe,🪓 🔲🥇 => 🪓🥇
+ID_Copper_Pickaxe,⛏ 🔲🥉 => ⛏🥉
+ID_Iron_Pickaxe,⛏ 🔲🥈 => ⛏🥈
+ID_Gold_Pickaxe,⛏ 🔲🥇 => ⛏🥇
+ID_Copper_Watering_Can,🚿 🔲🥉 => 🚿🥉
+ID_Iron_Watering_Can,🚿 🔲🥈 => 🚿🥈
+ID_Gold_Watering_Can,🚿 🔲🥇 => 🚿🥇
+ID_Copper_Fishing_Rod,🎣 🔲🥉 => 🎣🥉
+ID_Iron_Fishing_Rod,🎣 🔲🥈 => 🎣🥈
+ID_Gold_Fishing_Rod,🎣 🔲🥇 => 🎣🥇
+ID_Copper_Hammer,🔨 🔲🥉 => 🔨🥉
+ID_Iron_Hammer,🔨 🔲🥈 => 🔨🥈
+ID_Gold_Hammer,🔨 🔲🥇 => 🔨🥇
+
+ID_Build_Jar,🤍 => 🥃
+ID_Build_Bottle,🤍 => 🍼
+ID_Build_Beehive,🟩 🤎15 🔨🎯3 => 🐝
+ID_Build_Fishtrap,🟦 🤎5 👕2 🔨🎯2 => 🥅
+ID_Build_Keg,🟩 🤎10 🔨🎯2 => 🍺⚙
+ID_Build_Furnace,🟩 🥌5 🔨🎯2 => 🔥⚙
+ID_Build_Preserves,🟩 🤎10 🔨🎯2 => 🥫⚙
+ID_Build_Cheese_Maker,🟩4 🥌10 🔲🥈2 🔨🎯5 => 🧀⚙
+ID_Build_Loom,🟩6 🤎10 🥌5 🔨🎯4 => 🧵⚙
+ID_Build_Mayonaise_Maker,🟩4 🔲🥈2 🥉3 🔨🎯4 => 🧂⚙
+ID_Build_Windmill,🟩 🤎15 🥌10 🔨🎯8 => ➕
+ID_Build_Seed_Machine,🟩4 🤎5 🔲🥈2 🔨🎯7 => 🌱⚙
+ID_Build_Sprinkler,🟩 🥌3 🥉 🔨🎯2 => 🚿⚙
+ID_Build_Scarecrow,🟩 🤎5 🌿8 🔨🎯2 => 🤖
+ID_Build_Fence,🟩 🤎2 🔨🎯 => 🚧
+
+ID_Day_Beehive_Honey,🌞 🐝 => 🐝 🍯
+ID_Day_Fishtrap_Fish,🌞 🥅 => 🥅 🎣🎯
+ID_Day_Cheese,🌞 🧀⚙ 🥛 => 🧀⚙ 🧀
+ID_Day_Loom_Fabric,🌞 🧵⚙ 🐏 => 🧵⚙ 👕
+ID_Day_Loom_Hide,🌞 🧵⚙ 🐮 => 🧵⚙ 👞
+ID_Day_Mayonaise,🌞 🧂⚙ 🥚 => 🧂⚙ 🥃🥚
+ID_Day_Windmill_Flour,🌞 ➕ ☘🌾 => ➕ 🥃🌾
+ID_Day_Sprinkle,🌞 🚿⚙ 🟨104 => 🚿⚙ 🟧104
+ID_Day_Scarecrow,🌞 🤖 => 🤖 ❎48
+
+ID_Day_Keg_Apple,🌞 🍺⚙ 🍎 => 🍺⚙ 🧃🍎
+ID_Day_Keg_Berry,🌞 🍺⚙ 🍇 => 🍺⚙ 🧃🍇
+ID_Day_Keg_Orange,🌞 🍺⚙ 🍊 => 🍺⚙ 🧃🍊
+
+ID_Day_Preserves_Parsnip,🌞 🥫⚙ ☘💜 🥃 => 🥫⚙ 🥃💜
+ID_Day_Preserves_Carrot,🌞 🥫⚙ ☘🥕 🥃 => 🥫⚙ 🥃🥕
+ID_Day_Preserves_Beetroot,🌞 🥫⚙ ☘❤ 🥃 => 🥫⚙ 🥃❤
+ID_Day_Preserves_Cabbage,🌞 🥫⚙ ☘🥬 🥃 => 🥫⚙ 🥃🥬
+ID_Day_Preserves_Kale,🌞 🥫⚙ ☘💚 🥃 => 🥫⚙ 🥃💚
+ID_Day_Preserves_Cauliflower,🌞 🥫⚙ ☘🤍 🥃 => 🥫⚙ 🥃🤍
+ID_Day_Preserves_Pumpkin,🌞 🥫⚙ ☘🎃 🥃 => 🥫⚙ 🥃🎃
+ID_Day_Preserves_Potato,🌞 🥫⚙ ☘🥔 🥃 => 🥫⚙ 🥃🥔
+ID_Day_Preserves_Radish,🌞 🥫⚙ ☘🍒 🥃 => 🥫⚙ 🥃🍒
+ID_Day_Preserves_Sunflower,🌞 🥫⚙ ☘🌻 🥃 => 🥫⚙ 🥃🌻
+ID_Day_Preserves_Fish_Sardine,🌞 🥫⚙ 🐟 🥃 => 🥫⚙ 🥃🐟
+ID_Day_Preserves_Fish_Halibut,🌞 🥫⚙ 🐠 🥃 => 🥫⚙ 🥃🐠
+ID_Day_Preserves_Fish_Bullhead,🌞 🥫⚙ 🐡 🥃 => 🥫⚙ 🥃🐡
+ID_Day_Preserves_Fish_Carp,🌞 🥫⚙ 🦀 🥃 => 🥫⚙ 🥃🦀
+ID_Day_Preserves_Fish_Red_Mullet,🌞 🥫⚙ 🦐 🥃 => 🥫⚙ 🥃🦐
+ID_Day_Preserves_Fish_Sturgeon,🌞 🥫⚙ 🦈 🥃 => 🥫⚙ 🥃🦈
+
+
+ID_Day_Baked_Copper,🌞 🔥⚙ 🖤 🥉 => 🔥⚙ 🔲🥉
+ID_Day_Baked_Iron,🌞 🔥⚙ 🖤 🥈 => 🔥⚙ 🔲🥈
+ID_Day_Baked_Gold,🌞 🔥⚙ 🖤 🥇 => 🔥⚙ 🔲🥇
+ID_Day_Baked_Glass,🌞 🔥⚙ 🖤 ⌛ => 🔥⚙ 🤍
+ID_Day_Baked_Bread,🌞 🔥⚙ 🖤 🥃🌾 => 🔥⚙ 🍞
+ID_Day_Baked_Roasted_Meat,🌞 🔥⚙ 🖤 🥩 => 🔥⚙ 🔥🥩
+ID_Day_Baked_Boiled_Egg,🌞 🔥⚙ 🖤 🥚 => 🔥⚙ 🔥🥚
+
+ID_Day_Baked_Fish_Sardine,🌞 🔥⚙ 🐟 => 🔥⚙ 🔥🐟
+ID_Day_Baked_Fish_Halibut,🌞 🔥⚙ 🐠 => 🔥⚙ 🔥🐠
+ID_Day_Baked_Fish_Bullhead,🌞 🔥⚙ 🐡 => 🔥⚙ 🔥🐡
+ID_Day_Baked_Fish_Carp,🌞 🔥⚙ 🦀 => 🔥⚙ 🔥🦀
+ID_Day_Baked_Fish_Red_Mullet,🌞 🔥⚙ 🦐 => 🔥⚙ 🔥🦐
+ID_Day_Baked_Fish_Sturgeon,🌞 🔥⚙ 🦈 => 🔥⚙ 🔥🦈
+
+
+ID_Grow_Parsnip, 🌱💜 🟧🕳 🌞 ❎ =>🌱💜 🌱💜🎯 🟨🕳
+ID_Grow_Carrot, 🌱🥕 🟧🕳 🌞 ❎ =>🌱🥕 🌱🥕🎯 🟨🕳
+ID_Grow_Beetroot, 🌱❤ 🟧🕳 🌞 ❎ =>🌱❤ 🌱❤🎯 🟨🕳
+ID_Grow_Cabbage, 🌱🥬 🟧🕳 🌞 ❎ =>🌱🥬 🌱🥬🎯 🟨🕳
+ID_Grow_Kale, 🌱💚 🟧🕳 🌞 ❎ =>🌱💚 🌱💚🎯 🟨🕳
+ID_Grow_Cauliflower, 🌱🤍 🟧🕳 🌞 ❎ =>🌱🤍 🌱🤍🎯 🟨🕳
+ID_Grow_Pumpkin, 🌱🎃 🟧🕳 🌞 ❎ =>🌱🎃 🌱🎃🎯 🟨🕳
+ID_Grow_Potato, 🌱🥔 🟧🕳 🌞 ❎ =>🌱🥔 🌱🥔🎯 🟨🕳
+ID_Grow_Radish,🌱🍒 🟧🕳 🌞 ❎ => 🌱🍒 🌱🍒🎯 🟨🕳
+ID_Grow_Sunflower, 🌱🌻 🟧🕳 🌞 ❎ => 🌱🌻 🌱🌻🎯 🟨🕳
+ID_Grow_Wheat, 🌱🌾 🟧🕳 🌞 ❎ => 🌱🌾 🌱🌾🎯 🟨🕳
+
+ID_Harvest_Parsnip,🌱💜 🌱💜🎯2 => ♣💜
+ID_Harvest_Carrot,🌱🥕 🌱🥕🎯3 => ♣🥕
+ID_Harvest_Beetroot,🌱❤ 🌱❤🎯4 => ♣❤
+ID_Harvest_Cabbage,🌱🥬 🌱🥬🎯3 => ♣🥬
+ID_Harvest_Kale,🌱💚 🌱💚🎯4 => ♣💚
+ID_Harvest_Cauliflower,🌱🤍 🌱🤍🎯4 => ♣🤍
+ID_Harvest_Pumpkin,🌱🎃 🌱🎃🎯4 => ♣🎃
+ID_Harvest_Potato,🌱🥔 🌱🥔🎯3 => ♣🥔
+ID_Harvest_Radish,🌱🍒 🌱🍒🎯3 => ♣🍒
+ID_Harvest_Sunflower,🌱🌻 🌱🌻🎯6 => ♣🌻
+ID_Harvest_Wheat,🌱🌾 🌱🌾🎯3 => ♣🌾
+
+
+ID_Sell_Copper_Ore,🥉 => 💰10-25
+ID_Sell_Iron_Ore,🥈 => 💰20-40
+ID_Sell_Gold_Ore,🥇 => 💰30-50
+ID_Sell_Coal,🖤 => 💰10-15
+
+ID_Sell_Copper_Bar,🔲🥉 => 💰50-80
+ID_Sell_Iron,🔲🥈 => 💰70-120
+ID_Sell_Gold,🔲🥇 => 💰100-200
+ID_Sell_Glass,🤍 => 💰10-15
+ID_Sell_Bread,🍞 => 💰90-145
+ID_Sell_Roasted_Meat,🔥🥩 => 💰60-190
+ID_Sell_Boiled_Egg,🔥🥚 => 💰80-160
+
+ID_Sell_Berry,🍇 => 💰5-10
+ID_Sell_Orange,🍊 => 💰5-10
+ID_Sell_Apple,🍎 => 💰5-10
+
+ID_Sell_Berry_Juice,🧃🍇 => 💰45-120
+ID_Sell_Orange_Juice,🧃🍊 => 💰45-120
+ID_Sell_Apple_Juice,🧃🍎 => 💰45-120
+
+ID_Sell_Parsnip,☘💜 => 💰5-10
+ID_Sell_Carrot,☘🥕 => 💰6-12
+ID_Sell_Beetroot,☘❤ => 💰10-18
+ID_Sell_Cabbage,☘🥬 => 💰8-15
+ID_Sell_Kale,☘💚 => 💰25-40
+ID_Sell_Cauliflower,☘🤍 => 💰25-40
+ID_Sell_Pumpkin,☘🎃 => 💰40-80
+ID_Sell_Potato,☘🥔 => 💰4-10
+ID_Sell_Radish,☘🍒 => 💰8-15
+ID_Sell_Sunflower,☘🌻 => 💰40-80
+ID_Sell_Wheat,☘🌾 => 💰8-12
+
+ID_Sell_Preserves_Parsnip,🥃💜 => 💰20-95
+ID_Sell_Preserves_Carrot,🥃🥕 => 💰25-85
+ID_Sell_Preserves_Beetroot,🥃❤ => 💰35-95
+ID_Sell_Preserves_Cabbage,🥃🥬 => 💰30-95
+ID_Sell_Preserves_Kale,🥃💚 => 💰70-140
+ID_Sell_Preserves_Cauliflower,🥃🤍 => 💰70-140
+ID_Sell_Preserves_Pumpkin,🥃🎃 => 💰90-190
+ID_Sell_Preserves_Potato,🥃🥔 => 💰20-95
+ID_Sell_Preserves_Radish,🥃🍒 => 💰30-95
+ID_Sell_Preserves_Sunflower,🥃🌻 => 💰30-95
+
+ID_Sell_Sardine, 🐟 => 💰10-20
+ID_Sell_Halibut, 🐠 => 💰25-35
+ID_Sell_Bullhead, 🐡 => 💰40-50
+ID_Sell_Carp, 🦀 => 💰55-65
+ID_Sell_Red_Mullet, 🦐 => 💰70-80
+ID_Sell_Sturgeon, 🦈 => 💰90-95
+
+ID_Sell_Preserves_Fish_Sardine,🥃🐟 => 💰60-90
+ID_Sell_Preserves_Fish_Halibut,🥃🐠 => 💰90-130
+ID_Sell_Preserves_Fish_Bullhead,🥃🐡 => 💰110-150
+ID_Sell_Preserves_Fish_Carp,🥃🦀 => 💰150-180
+ID_Sell_Preserves_Fish_Red_Mullet,🥃🦐 => 💰170-230
+ID_Sell_Preserves_Fish_Sturgeon,🥃🦈 => 💰200-300
+
+ID_Sell_Baked_Fish_Sardine,🔥🐟 => 💰45-60
+ID_Sell_Baked_Fish_Halibut,🔥🐠 => 💰60-90
+ID_Sell_Baked_Fish_Bullhead,🔥🐡 => 💰80-120
+ID_Sell_Baked_Fish_Carp,🔥🦀 => 💰100-150
+ID_Sell_Baked_Fish_Red_Mullet,🔥🦐 => 💰120-160
+ID_Sell_Baked_Fish_Sturgeon,🔥🦈 => 💰150-210
+
+ID_Sell_Honey,🍯 => 💰20-45
+ID_Sell_Milk,🥛 => 💰60-90
+ID_Sell_Cheese,🧀 => 💰90-180
+ID_Sell_Wool,🐑 => 💰40-60
+ID_Sell_Cloth,👕 => 💰70-160
+ID_Sell_Flour,🥃🌾 => 💰30-55
+ID_Sell_Egg,🥚 => 💰40-75
+ID_Sell_Mayonaise,🥃🥚 => 💰75-160
+ID_Sell_Meat,🥩 => 💰25-80
+ID_Sell_Fertilizer,💩 => 💰3-5
+ID_Sell_Truffle,🍄 => 💰50-90
+ID_Sell_Hide,🐮 => 💰30-45
+ID_Sell_Leather,👞 => 💰80-150
+ID_Sell_Feather,🍂 => 💰60-90
+
+ID_Sell_Sand, ⌛ => 💰1-2
+ID_Sell_Jar, 🥃 => 💰10-20
+ID_Sell_Bottle, 🍼 => 💰10-20
+ID_Sell_Wood, 🤎 => 💰15-20
+ID_Sell_Grass, 🌿 => 💰15-25
+ID_Sell_Stone, 🥌 => 💰15-25
+
+
+ID_Sell_Cow, 🐄 => 💰200
+ID_Sell_Chicken, 🐔 => 💰200
+ID_Sell_Sheep, 🐑 => 💰200
+ID_Sell_Pig, 🐖 => 💰200
+
+ID_Feed_Cow_Wheat, 🌞 🐄 ☘🌾 => 🐄 🥛
+ID_Feed_Cow_Kale, 🌞 🐄 ☘🥬 => 🐄 🥛
+ID_Feed_Cow_Radish, 🌞 🐄 ☘🍒 => 🐄 🥛
+
+ID_Feed_Chicken_Carrot, 🌞 🐔 ☘🥕 => 🐔 🥚
+ID_Feed_Chicken_Parsnip, 🌞 🐔 ☘💜 => 🐔 🥚
+ID_Feed_Chicken_Cauliflower, 🌞 🐔 ☘🥦 => 🐔 🥚
+
+ID_Feed_Sheep_Wheat, 🌞 🐑 ☘🌾 => 🐑 🐏
+ID_Feed_Sheep_Parsnip, 🌞 🐑 ☘💜 => 🐑 🐏
+ID_Feed_Sheep_Carrot, 🌞 🐑 ☘🥕 => 🐑 🐏
+
+ID_Feed_Pig_Potato, 🌞 🐖 ☘🥔 => 🐖 💩0-2 🍄
+ID_Feed_Pig_Pumpkin, 🌞 🐖 ☘🎃 => 🐖 💩0-2 🍄
+ID_Feed_Pig_Radish, 🌞 🐖 ☘🍒 => 🐖 💩0-2 🍄
+
+ID_Butcher_Cow, 🐄 => 🥩 🐮
+ID_Butcher_Chicken, 🐔 => 🥩 🍂
+ID_Butcher_Sheep, 🐑 => 🥩
+ID_Butcher_Pig, 🐖 => 🥩
+
+
+
+ID_Buy_Parsnip_Seed,🌱💜💳 💰15 => 🌱💜
+ID_Buy_Carrot_Seed,🌱🥕💳 💰15 => 🌱🥕
+ID_Buy_Beetroot_Seed,🌱❤💳 💰20 => 🌱❤
+ID_Buy_Cabbage_Seed,🌱🥬💳 💰20 => 🌱🥬
+ID_Buy_Kale_Seed,🌱💚💳 💰30 => 🌱💚
+ID_Buy_Cauliflower_Seed,🌱🤍💳 💰30 => 🌱🤍
+ID_Buy_Pumpkin_Seed,🌱🎃💳 💰25 => 🌱🎃
+ID_Buy_Potato_Seed,🌱🥔💳 💰15 => 🌱🥔
+ID_Buy_Radish_Seed,🌱🍒💳 💰15 => 🌱🍒
+ID_Buy_Sunflower_Seed,🌱🌻💳 💰30 => 🌱🌻
+ID_Buy_Wheat_Seed,🌱🌾💳 💰15 => 🌱🌾
+ID_Buy_Wood,🤎💳 💰30 => 🤎
+ID_Buy_Stone,🥌💳 💰40 => 🥌
+
+ID_Buy_Cow,🐄💳 💰200 => 🐄
+ID_Buy_Chicken,🐔💳 💰200 => 🐔
+ID_Buy_Sheep,🐑💳 💰200 => 🐑
+ID_Buy_Pig,🐖💳 💰200 => 🐖
+
+
+ID_Stock_Item, 💳 => 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳%
+ID_Shop_Reroll,💰100 🌱💜💳X 🌱🥕💳X 🌱❤💳X 🌱🥬💳X 🌱💚💳X 🌱🤍💳X 🌱🎃💳X 🌱🥔💳X 🌱🍒💳X 🌱🌻💳X 🌱🌾💳X 🤎💳X 🥌💳X 🖤💳X 🥉💳X 🥈💳X 🥇💳X 🐄💳X 🐔💳X 🐑💳X 🐖💳X => 🛒
+
+ID_Feat_Roll,⭐🎲 ⭐💳💪X ⭐💳🍎X ⭐💳⛏X ⭐💳🐄X ⭐💳🙆‍♂️X ⭐💳X ⭐X => ⭐💳3 ⭐
+ID_Feat_Stock,⭐💳 => ⭐💳💪%20 ⭐💳🍎%20 ⭐💳⛏%20 ⭐💳🐄%20 ⭐💳🙆‍♂️%20
+
+ID_Buy_Feat_Steroids,⭐💳💪 ⭐💳🍎X ⭐💳⛏X ⭐💳🐄X ⭐💳🙆‍♂️X ⭐X ⭐💳X => ⭐💪
+ID_Buy_Feat_Fruit_Expert,⭐💳🍎 ⭐💳💪X ⭐💳⛏X ⭐💳🐄X ⭐💳🙆‍♂️X ⭐X ⭐💳X => ⭐🍎
+ID_Buy_Feat_Miner,⭐💳⛏ ⭐💳💪X ⭐💳🍎X ⭐💳🐄X ⭐💳🙆‍♂️X ⭐X ⭐💳X => ⭐⛏
+ID_Buy_Feat_Animal_Lover,⭐💳🐄 ⭐💳💪X ⭐💳🍎X ⭐💳⛏X ⭐💳🙆‍♂️X ⭐X ⭐💳X => ⭐🐄
+ID_Buy_Feat_Muscle_Head,⭐💳🙆‍♂️ ⭐💳💪X ⭐💳🍎X ⭐💳⛏X ⭐💳🐄X ⭐X ⭐💳X => ⭐🙆‍♂️
+
+ID_Feat_Fruit_Expert, ⭐🍎 🛒 => ⭐🍎 💳16-160
+ID_Feat_Fruit_Expert_Sell_Berry,⭐🍎 🍇 => ⭐🍎 💰10-20
+ID_Feat_Fruit_Expert_Sell_Orange,⭐🍎 🍊 => ⭐🍎 💰10-20
+ID_Feat_Fruit_Expert_Sell_Apple,⭐🍎 🍎 => ⭐🍎 💰10-20
+
+ID_Feat_Lazy_Miner, ⭐⛏ 🛒 => ⭐⛏ 💳16-160
+ID_Feat_Lazy_Miner_Stock_Item, ⭐⛏ 💳 =>⭐⛏ 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳% 🖤💳% 🥉💳% 🥈💳% 🥇💳% 
+
+ID_Feat_Animal_Lover, ⭐🐄 🛒 => ⭐🐄 💳16-160
+ID_Feat_Animal_Lover_Stock_Item, ⭐🐄 💳 => ⭐🐄 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳% 🐄💳% 🐔💳% 🐑💳% 🐖💳%
+
+ID_Feat_Steroids_Harvest_Parsnip, 🌱💜🎯 ⭐💪 => ♣💜 ⭐💪
+ID_Feat_Steroids_Harvest_Carrot, 🌱🥕🎯2 ⭐💪 => ♣🥕 ⭐💪
+ID_Feat_Steroids_Harvest_Beetroot, 🌱❤🎯3 ⭐💪 => ♣❤ ⭐💪
+ID_Feat_Steroids_Harvest_Cabbage, 🌱🥬🎯2 ⭐💪 => ♣🥬 ⭐💪
+ID_Feat_Steroids_Harvest_Kale, 🌱💚🎯3 ⭐💪 => ♣💚 ⭐💪
+ID_Feat_Steroids_Harvest_Cauliflower, 🌱🤍🎯3 ⭐💪 => ♣🤍 ⭐💪
+ID_Feat_Steroids_Harvest_Pumpkin, 🌱🎃🎯3 ⭐💪 => ♣🎃 ⭐💪
+ID_Feat_Steroids_Harvest_Potato, 🌱🥔🎯2 ⭐💪 => ♣🥔 ⭐💪
+ID_Feat_Steroids_Harvest_Radish, 🌱🍒🎯2 ⭐💪 => ♣🍒 ⭐💪
+ID_Feat_Steroids_Harvest_Sunflower, 🌱🌻🎯5 ⭐💪 => ♣🌻 ⭐💪
+ID_Feat_Steroids_Harvest_Wheat, 🌱🌾🎯2 ⭐💪 => ♣🌾 ⭐💪
+
+ID_Feat_Muscle_Head, ⭐🙆‍♂️ 🌞 => ⭐🙆‍♂️ 💧100
+
+ID_Feat_Triple_Upgrade_2_Sell_Parsnip,⭐3️⃣ ☘💜 => ⭐3️⃣ 💰20-40
+ID_Feat_Triple_Upgrade_2_Sell_Kale,⭐3️⃣ ☘💚 => ⭐3️⃣ 💰100-160
+ID_Feat_Triple_Upgrade_2_Sell_Cauliflower,⭐3️⃣ ☘🤍 => ⭐3️⃣ 💰100-160
+
+ID_Feat_Wheat_Heart_Sell_Wheat,⭐🌾 ☘🌾 =>⭐🌾 💰12-18
+ID_Feat_Wheat_Heart_Sell_Flour,⭐🌾 🥃🌾 =>⭐🌾 💰45-78
+ID_Feat_Wheat_Heart_Sell_Bread,⭐🌾 🍞 =>⭐🌾 💰135-218
+
+
+ID_Feat_Performance_Chop_Axe,⭐💧 🪓 💧3 =>⭐💧 🪓🎯
+ID_Feat_Performance_Chop_Axe_Copper,⭐💧 🪓🥉 💧2 =>⭐💧 🪓🎯
+ID_Feat_Performance_Chop_Axe_Iron,⭐💧 🪓🥈 💧 =>⭐💧 🪓🎯
+ID_Feat_Performance_Pick_Pickaxe,⭐💧 ⭐💧 ⛏ 💧4 =>⭐💧 ⛏🎯
+ID_Feat_Performance_Pick_Pickaxe_Copper,⭐💧 ⛏🥉 💧3 =>⭐💧 ⛏🎯
+ID_Feat_Performance_Pick_Pickaxe_Iron,⭐💧 ⛏🥈 💧2 =>⭐💧 ⛏🎯
+ID_Feat_Performance_Pick_Pickaxe_Gold,⭐💧 ⛏🥇 💧 =>⭐💧 ⛏🎯
+ID_Feat_Performance_Hoe_Grass,⭐💧 🟩 🔰 💧 =>⭐💧 🟨 🔰🎯
+ID_Feat_Performance_Hoe_Grass_Copper,⭐💧 🟩3 🔰🥉 💧 =>⭐💧 🟨3 🔰🎯3
+ID_Feat_Performance_Hoe_Grass_Iron,⭐💧 🟩6 🔰🥈 💧 =>⭐💧 🟨6 🔰🎯6
+ID_Feat_Performance_Hoe_Grass_Gold,⭐💧 🟩9 🔰🥇 💧 =>⭐💧 🟨9 🔰🎯9
+ID_Feat_Performance_Shovel_Dirt,⭐💧 🟨 ♠ 💧 =>⭐💧 🕳 ♠🎯
+ID_Feat_Performance_Shovel_Dirt_Copper,⭐💧 🟨3 ♠🥉 💧2 =>⭐💧 🕳3 ♠🎯3
+ID_Feat_Performance_Shovel_Dirt_Gold,⭐💧 🟨9 ♠🥇 💧 =>⭐💧 🕳9 ♠🎯9
+ID_Feat_Performance_Water_Dirt_Iron,⭐💧 🟨6 🚿🥈 💧 =>⭐💧 🟧6 🚿🥈
+ID_Feat_Performance_Water_Dirt_Gold,⭐💧 🟨9 🚿🥇 💧2 =>⭐💧 🟧9 🚿🥇
+ID_Feat_Performance_Water_Hole_Iron,⭐💧 🕳6 🚿🥈 💧 =>⭐💧 🟧🕳6 🚿🥈
+ID_Feat_Performance_Water_Hole_Gold,⭐💧 🕳9 🚿🥇 💧2 =>⭐💧 🟧🕳9 🚿🥇
+ID_Feat_Performance_Rod_Fish,⭐💧 🟦 🎣 💧3 =>⭐💧 🟦 🎣🎯
+ID_Feat_Performance_Rod_Fish_Copper,⭐💧 🟦3 🎣🥉 💧5 =>⭐💧 🟦3 🎣🎯3
+ID_Feat_Performance_Rod_Fish_Iron,⭐💧 🟦6 🎣🥈 💧2 =>⭐💧 🟦6 🎣🎯6
+ID_Feat_Performance_Rod_Fish_Gold,⭐💧 🟦9 🎣🥇 💧4 =>⭐💧 🟦9 🎣🎯9
+ID_Feat_Performance_Hammer_Hit,⭐💧 🔨 💧7 =>⭐💧 🔨🎯
+ID_Feat_Performance_Hammer_Hit_Copper,⭐💧 🔨🥉 💧5 =>⭐💧 🔨🎯
+ID_Feat_Performance_Hammer_Hit_Iron,⭐💧 🔨🥈 💧3 =>⭐💧 🔨🎯
+ID_Feat_Performance_Hammer_Hit_Gold,⭐💧 🔨🥇 💧 =>⭐💧 🔨🎯

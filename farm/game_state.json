@@ -1,0 +1,5913 @@
+{
+    "inventory": {
+        "\ud83d\udcab": 0,
+        "\u27051\ufe0f\u20e3": 2,
+        "\u26001\ufe0f\u20e3": 2,
+        "\u23f9": 2592.0,
+        "\ud83d\udd30": 2,
+        "\ud83e\ude93": 2,
+        "\u26cf": 2,
+        "\u2660": 2,
+        "\ud83d\udebf": 2,
+        "\ud83c\udfa3": 2,
+        "\ud83d\udd28": 2
+    },
+    "sun_queue": [],
+    "recipes": {
+        "ID_Start": {
+            "inputs": {
+                "\ud83d\udcab": 0
+            },
+            "outputs": {
+                "\u27051\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\u26001\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\u23f9": [
+                    "fixed",
+                    1296.0
+                ],
+                "\ud83d\udd30": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\ude93": [
+                    "fixed",
+                    1
+                ],
+                "\u26cf": [
+                    "fixed",
+                    1
+                ],
+                "\u2660": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udebf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udfa3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd28": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grass_Regrow": {
+            "inputs": {
+                "\ud83d\udfe8": 0,
+                "\ud83c\udf1e": 0
+            },
+            "outputs": {
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Hole_Refill": {
+            "inputs": {
+                "\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0
+            },
+            "outputs": {
+                "\ud83d\udfe8": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Hole_Refill_Wet": {
+            "inputs": {
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0
+            },
+            "outputs": {
+                "\ud83d\udfe7": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grid_Spawn": {
+            "inputs": {
+                "\u23f9": 0
+            },
+            "outputs": {
+                "\ud83d\udfe9": [
+                    "prob",
+                    0.245
+                ],
+                "\ud83d\udfe6": [
+                    "prob",
+                    0.05
+                ],
+                "\ud83c\udf33": [
+                    "prob",
+                    0.1
+                ],
+                "\ud83c\udf33\ud83c\udf4e": [
+                    "prob",
+                    0.1
+                ],
+                "\ud83c\udf33\ud83c\udf4a": [
+                    "prob",
+                    0.1
+                ],
+                "\ud83c\udf40": [
+                    "prob",
+                    0.05
+                ],
+                "\ud83c\udf40\ud83c\udf47": [
+                    "prob",
+                    0.05
+                ],
+                "\ud83c\udf40\ud83c\udf4e": [
+                    "prob",
+                    0.05
+                ],
+                "\ud83c\udf40\ud83c\udf4a": [
+                    "prob",
+                    0.05
+                ],
+                "\u26f0\ufe0f": [
+                    "prob",
+                    0.02
+                ],
+                "\u26f0\ufe0f\u26f0\ufe0f": [
+                    "prob",
+                    0.02
+                ],
+                "\u26f0\ufe0f\ud83d\udda4": [
+                    "prob",
+                    0.02
+                ],
+                "\u26f0\ufe0f\ud83e\udd49": [
+                    "prob",
+                    0.02
+                ],
+                "\u26f0\ufe0f\ud83e\udd48": [
+                    "prob",
+                    0.02
+                ],
+                "\u26f0\ufe0f\ud83e\udd47": [
+                    "prob",
+                    0.01
+                ],
+                "\ud83d\uddfb": [
+                    "prob",
+                    0.02
+                ],
+                "\ud83d\uddfb\ud83d\udda4": [
+                    "prob",
+                    0.02
+                ],
+                "\ud83d\uddfb\ud83e\udd49": [
+                    "prob",
+                    0.02
+                ],
+                "\ud83d\uddfb\ud83e\udd48": [
+                    "prob",
+                    0.02
+                ],
+                "\ud83d\uddfb\ud83e\udd47": [
+                    "prob",
+                    0.005
+                ]
+            }
+        },
+        "ID_Fish_Tick": {
+            "inputs": {
+                "\ud83c\udfa3\ud83c\udfaf": 0
+            },
+            "outputs": {
+                "\ud83d\udc1f": [
+                    "prob",
+                    0.1
+                ],
+                "\ud83d\udc20": [
+                    "prob",
+                    0.08
+                ],
+                "\ud83d\udc21": [
+                    "prob",
+                    0.06
+                ],
+                "\ud83e\udd80": [
+                    "prob",
+                    0.04
+                ],
+                "\ud83e\udd90": [
+                    "prob",
+                    0.02
+                ],
+                "\ud83e\udd88": [
+                    "prob",
+                    0.01
+                ]
+            }
+        },
+        "ID_Monday": {
+            "inputs": {
+                "\ud83d\udca7": "X",
+                "\u274e": "X",
+                "\ud83d\udcb3": "X",
+                "\u26001\ufe0f\u20e3": 0,
+                "\ud83d\uded2": "X"
+            },
+            "outputs": {
+                "\u26002\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf1e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca7": [
+                    "fixed",
+                    225.0
+                ],
+                "\ud83d\uded2": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Tuesday": {
+            "inputs": {
+                "\ud83d\udca7": "X",
+                "\u274e": "X",
+                "\ud83d\udcb3": "X",
+                "\u26002\ufe0f\u20e3": 0,
+                "\ud83d\uded2": "X"
+            },
+            "outputs": {
+                "\u26003\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83c\udfb2": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf1e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca7": [
+                    "fixed",
+                    225.0
+                ],
+                "\ud83d\uded2": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Wednesday": {
+            "inputs": {
+                "\ud83d\udca7": "X",
+                "\u274e": "X",
+                "\ud83d\udcb3": "X",
+                "\u26003\ufe0f\u20e3": 0,
+                "\ud83d\uded2": "X"
+            },
+            "outputs": {
+                "\u26004\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf1e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca7": [
+                    "fixed",
+                    225.0
+                ],
+                "\ud83d\uded2": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Thursday": {
+            "inputs": {
+                "\ud83d\udca7": "X",
+                "\u274e": "X",
+                "\ud83d\udcb3": "X",
+                "\u26004\ufe0f\u20e3": 0,
+                "\ud83d\uded2": "X"
+            },
+            "outputs": {
+                "\u26005\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf1e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca7": [
+                    "fixed",
+                    225.0
+                ],
+                "\ud83d\uded2": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Friday": {
+            "inputs": {
+                "\ud83d\udca7": "X",
+                "\u274e": "X",
+                "\ud83d\udcb3": "X",
+                "\u26005\ufe0f\u20e3": 0,
+                "\ud83d\uded2": "X"
+            },
+            "outputs": {
+                "\u26006\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf1e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca7": [
+                    "fixed",
+                    225.0
+                ],
+                "\ud83d\uded2": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Saturday": {
+            "inputs": {
+                "\ud83d\udca7": "X",
+                "\u274e": "X",
+                "\ud83d\udcb3": "X",
+                "\u26006\ufe0f\u20e3": 0,
+                "\u2705": 0,
+                "\ud83d\uded2": "X"
+            },
+            "outputs": {
+                "\u26007\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf1e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca7": [
+                    "fixed",
+                    225.0
+                ],
+                "\ud83d\uded2": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Sunday": {
+            "inputs": {
+                "\ud83d\udca7": "X",
+                "\u274e": "X",
+                "\ud83d\udcb3": "X",
+                "\u26007\ufe0f\u20e3": 0,
+                "\ud83d\uded2": "X"
+            },
+            "outputs": {
+                "\u26001\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcc5": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf1e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca7": [
+                    "fixed",
+                    225.0
+                ],
+                "\ud83d\uded2": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent1": {
+            "inputs": {
+                "\u27051\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 1000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u27052\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent2": {
+            "inputs": {
+                "\u27052\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 2500
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u27053\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent3": {
+            "inputs": {
+                "\u27053\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 5000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u27054\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent4": {
+            "inputs": {
+                "\u27054\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 10000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u27055\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent5": {
+            "inputs": {
+                "\u27055\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 20000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u27056\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent6": {
+            "inputs": {
+                "\u27056\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 40000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u27057\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent7": {
+            "inputs": {
+                "\u27057\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 80000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u27058\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent8": {
+            "inputs": {
+                "\u27058\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 160000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u27059\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent9": {
+            "inputs": {
+                "\u27059\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 320000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u2705\ud83d\udd1f": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent10": {
+            "inputs": {
+                "\u2705\ud83d\udd1f": 0,
+                "\ud83d\udcb0": 640000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u2705\ud83d\udd1f1\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent11": {
+            "inputs": {
+                "\u2705\ud83d\udd1f1\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 1280000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u2705\ud83d\udd1f2\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent12": {
+            "inputs": {
+                "\u2705\ud83d\udd1f2\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 2560000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u2705\ud83d\udd1f3\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent13": {
+            "inputs": {
+                "\u2705\ud83d\udd1f3\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 5120000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u2705\ud83d\udd1f4\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent14": {
+            "inputs": {
+                "\u2705\ud83d\udd1f4\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 10240000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u2705\ud83d\udd1f5\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rent15": {
+            "inputs": {
+                "\u2705\ud83d\udd1f5\ufe0f\u20e3": 0,
+                "\ud83d\udcb0": 20480000
+            },
+            "outputs": {
+                "\u2705": [
+                    "fixed",
+                    1
+                ],
+                "\u2705\ud83d\udd1f6\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Shop_Stock": {
+            "inputs": {
+                "\ud83d\uded2": 0
+            },
+            "outputs": {
+                "\ud83d\udcb3": [
+                    "range",
+                    8.0,
+                    "80"
+                ]
+            }
+        },
+        "ID_Chop_Axe": {
+            "inputs": {
+                "\ud83e\ude93": 0,
+                "\ud83d\udca7": 4
+            },
+            "outputs": {
+                "\ud83e\ude93": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\ude93\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Chop_Axe_Copper": {
+            "inputs": {
+                "\ud83e\ude93\ud83e\udd49": 0,
+                "\ud83d\udca7": 3
+            },
+            "outputs": {
+                "\ud83e\ude93\ud83e\udd49": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\ude93\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Chop_Axe_Iron": {
+            "inputs": {
+                "\ud83e\ude93\ud83e\udd48": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\ud83e\ude93\ud83e\udd48": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\ude93\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Chop_Axe_Gold": {
+            "inputs": {
+                "\ud83e\ude93\ud83e\udd47": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\ud83e\ude93\ud83e\udd47": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\ude93\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Pickaxe": {
+            "inputs": {
+                "\u26cf": 0,
+                "\ud83d\udca7": 5
+            },
+            "outputs": {
+                "\u26cf": [
+                    "fixed",
+                    1
+                ],
+                "\u26cf\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Pickaxe_Copper": {
+            "inputs": {
+                "\u26cf\ud83e\udd49": 0,
+                "\ud83d\udca7": 4
+            },
+            "outputs": {
+                "\u26cf\ud83e\udd49": [
+                    "fixed",
+                    1
+                ],
+                "\u26cf\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Pickaxe_Iron": {
+            "inputs": {
+                "\u26cf\ud83e\udd48": 0,
+                "\ud83d\udca7": 3
+            },
+            "outputs": {
+                "\u26cf\ud83e\udd48": [
+                    "fixed",
+                    1
+                ],
+                "\u26cf\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Pickaxe_Gold": {
+            "inputs": {
+                "\u26cf\ud83e\udd47": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\u26cf\ud83e\udd47": [
+                    "fixed",
+                    1
+                ],
+                "\u26cf\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Hoe_Grass": {
+            "inputs": {
+                "\ud83d\udfe9": 0,
+                "\ud83d\udd30": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\ud83d\udfe8": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd30": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd30\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Hoe_Grass_Copper": {
+            "inputs": {
+                "\ud83d\udfe9": 3,
+                "\ud83d\udd30\ud83e\udd49": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\ud83d\udfe8": [
+                    "fixed",
+                    3.0
+                ],
+                "\ud83d\udd30\ud83e\udd49": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd30\ud83c\udfaf": [
+                    "fixed",
+                    3.0
+                ]
+            }
+        },
+        "ID_Hoe_Grass_Iron": {
+            "inputs": {
+                "\ud83d\udfe9": 6,
+                "\ud83d\udd30\ud83e\udd48": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\ud83d\udfe8": [
+                    "fixed",
+                    6.0
+                ],
+                "\ud83d\udd30\ud83e\udd48": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd30\ud83c\udfaf": [
+                    "fixed",
+                    6.0
+                ]
+            }
+        },
+        "ID_Hoe_Grass_Gold": {
+            "inputs": {
+                "\ud83d\udfe9": 9,
+                "\ud83d\udd30\ud83e\udd47": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\ud83d\udfe8": [
+                    "fixed",
+                    9.0
+                ],
+                "\ud83d\udd30\ud83e\udd47": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd30\ud83c\udfaf": [
+                    "fixed",
+                    9.0
+                ]
+            }
+        },
+        "ID_Hoe_Hit": {
+            "inputs": {
+                "\ud83d\udd30\ud83c\udfaf": 0
+            },
+            "outputs": {
+                "\ud83c\udf3f": [
+                    "range",
+                    0.0,
+                    "1"
+                ]
+            }
+        },
+        "ID_Shovel_Dirt": {
+            "inputs": {
+                "\ud83d\udfe8": 0,
+                "\u2660": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\u2660": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd73": [
+                    "fixed",
+                    1
+                ],
+                "\u2660\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Shovel_Dirt_Copper": {
+            "inputs": {
+                "\ud83d\udfe7": 3,
+                "\u2660\ud83e\udd49": 0,
+                "\ud83d\udca7": 3
+            },
+            "outputs": {
+                "\u2660\ud83e\udd49": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe7\ud83d\udd73": [
+                    "fixed",
+                    3.0
+                ],
+                "\u2660\ud83c\udfaf": [
+                    "fixed",
+                    3.0
+                ]
+            }
+        },
+        "ID_Shovel_Dirt_Iron": {
+            "inputs": {
+                "\ud83d\udfe7": 6,
+                "\u2660\ud83e\udd48": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2660\ud83e\udd48": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe7\ud83d\udd73": [
+                    "fixed",
+                    6.0
+                ],
+                "\u2660\ud83c\udfaf": [
+                    "fixed",
+                    6.0
+                ]
+            }
+        },
+        "ID_Shovel_Dirt_Gold": {
+            "inputs": {
+                "\ud83d\udfe7": 9,
+                "\u2660\ud83e\udd47": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\u2660\ud83e\udd47": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe7\ud83d\udd73": [
+                    "fixed",
+                    9.0
+                ],
+                "\u2660\ud83c\udfaf": [
+                    "fixed",
+                    9.0
+                ]
+            }
+        },
+        "ID_Shovel_Wet_Dirt": {
+            "inputs": {
+                "\ud83d\udfe7": 0,
+                "\u2660": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\u2660": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe7\ud83d\udd73": [
+                    "fixed",
+                    1
+                ],
+                "\u2660\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Shovel_Hit": {
+            "inputs": {
+                "\u2660\ud83c\udfaf": 0
+            },
+            "outputs": {
+                "\u231b": [
+                    "range",
+                    0.0,
+                    "1"
+                ]
+            }
+        },
+        "ID_Water_Dirt": {
+            "inputs": {
+                "\ud83d\udfe8": 0,
+                "\ud83d\udebf": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\ud83d\udfe7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udebf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Water_Dirt_Copper": {
+            "inputs": {
+                "\ud83d\udfe8": 3,
+                "\ud83d\udebf\ud83e\udd49": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\ud83d\udfe7": [
+                    "fixed",
+                    3.0
+                ],
+                "\ud83d\udebf\ud83e\udd49": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Water_Dirt_Iron": {
+            "inputs": {
+                "\ud83d\udfe8": 6,
+                "\ud83d\udebf\ud83e\udd48": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\ud83d\udfe7": [
+                    "fixed",
+                    6.0
+                ],
+                "\ud83d\udebf\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Water_Dirt_Gold": {
+            "inputs": {
+                "\ud83d\udfe8": 9,
+                "\ud83d\udebf\ud83e\udd47": 0,
+                "\ud83d\udca7": 3
+            },
+            "outputs": {
+                "\ud83d\udfe7": [
+                    "fixed",
+                    9.0
+                ],
+                "\ud83d\udebf\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Water_Hole": {
+            "inputs": {
+                "\ud83d\udd73": 0,
+                "\ud83d\udebf": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\ud83d\udfe7\ud83d\udd73": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udebf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Water_Hole_Copper": {
+            "inputs": {
+                "\ud83d\udd73": 3,
+                "\ud83d\udebf\ud83e\udd49": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\ud83d\udfe7\ud83d\udd73": [
+                    "fixed",
+                    3.0
+                ],
+                "\ud83d\udebf\ud83e\udd49": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Water_Hole_Iron": {
+            "inputs": {
+                "\ud83d\udd73": 6,
+                "\ud83d\udebf\ud83e\udd48": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\ud83d\udfe7\ud83d\udd73": [
+                    "fixed",
+                    6.0
+                ],
+                "\ud83d\udebf\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Water_Hole_Gold": {
+            "inputs": {
+                "\ud83d\udd73": 9,
+                "\ud83d\udebf\ud83e\udd47": 0,
+                "\ud83d\udca7": 3
+            },
+            "outputs": {
+                "\ud83d\udfe7\ud83d\udd73": [
+                    "fixed",
+                    9.0
+                ],
+                "\ud83d\udebf\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rod_Fish": {
+            "inputs": {
+                "\ud83d\udfe6": 0,
+                "\ud83c\udfa3": 0,
+                "\ud83d\udca7": 4
+            },
+            "outputs": {
+                "\ud83c\udfa3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe6": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udfa3\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Rod_Fish_Copper": {
+            "inputs": {
+                "\ud83d\udfe6": 3,
+                "\ud83c\udfa3\ud83e\udd49": 0,
+                "\ud83d\udca7": 6
+            },
+            "outputs": {
+                "\ud83c\udfa3\ud83e\udd49": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe6": [
+                    "fixed",
+                    3.0
+                ],
+                "\ud83c\udfa3\ud83c\udfaf": [
+                    "fixed",
+                    3.0
+                ]
+            }
+        },
+        "ID_Rod_Fish_Iron": {
+            "inputs": {
+                "\ud83d\udfe6": 6,
+                "\ud83c\udfa3\ud83e\udd48": 0,
+                "\ud83d\udca7": 3
+            },
+            "outputs": {
+                "\ud83c\udfa3\ud83e\udd48": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe6": [
+                    "fixed",
+                    6.0
+                ],
+                "\ud83c\udfa3\ud83c\udfaf": [
+                    "fixed",
+                    6.0
+                ]
+            }
+        },
+        "ID_Rod_Fish_Gold": {
+            "inputs": {
+                "\ud83d\udfe6": 9,
+                "\ud83c\udfa3\ud83e\udd47": 0,
+                "\ud83d\udca7": 5
+            },
+            "outputs": {
+                "\ud83c\udfa3\ud83e\udd47": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe6": [
+                    "fixed",
+                    9.0
+                ],
+                "\ud83c\udfa3\ud83c\udfaf": [
+                    "fixed",
+                    9.0
+                ]
+            }
+        },
+        "ID_Hammer_Hit": {
+            "inputs": {
+                "\ud83d\udd28": 0,
+                "\ud83d\udca7": 8
+            },
+            "outputs": {
+                "\ud83d\udd28": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd28\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Hammer_Hit_Copper": {
+            "inputs": {
+                "\ud83d\udd28\ud83e\udd49": 0,
+                "\ud83d\udca7": 6
+            },
+            "outputs": {
+                "\ud83d\udd28\ud83e\udd49": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd28\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Hammer_Hit_Iron": {
+            "inputs": {
+                "\ud83d\udd28\ud83e\udd48": 0,
+                "\ud83d\udca7": 4
+            },
+            "outputs": {
+                "\ud83d\udd28\ud83e\udd48": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd28\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Hammer_Hit_Gold": {
+            "inputs": {
+                "\ud83d\udd28\ud83e\udd47": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\ud83d\udd28\ud83e\udd47": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd28\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Chop_Tree": {
+            "inputs": {
+                "\ud83c\udf33": 0,
+                "\ud83e\ude93\ud83c\udfaf": 3
+            },
+            "outputs": {
+                "\ud83d\udfe4": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd0e": [
+                    "range",
+                    1.0,
+                    "3"
+                ]
+            }
+        },
+        "ID_Chop_Apple_Tree": {
+            "inputs": {
+                "\ud83c\udf33\ud83c\udf4e": 0,
+                "\ud83e\ude93\ud83c\udfaf": 3
+            },
+            "outputs": {
+                "\ud83d\udfe4": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf4e": [
+                    "range",
+                    1.0,
+                    "3"
+                ],
+                "\ud83e\udd0e": [
+                    "range",
+                    1.0,
+                    "3"
+                ]
+            }
+        },
+        "ID_Chop_Orange_Tree": {
+            "inputs": {
+                "\ud83c\udf33\ud83c\udf4a": 0,
+                "\ud83e\ude93\ud83c\udfaf": 3
+            },
+            "outputs": {
+                "\ud83d\udfe4": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf4a": [
+                    "range",
+                    1.0,
+                    "3"
+                ],
+                "\ud83e\udd0e": [
+                    "range",
+                    1.0,
+                    "3"
+                ]
+            }
+        },
+        "ID_Chop_Stump": {
+            "inputs": {
+                "\ud83d\udfe4": 0,
+                "\ud83e\ude93\ud83c\udfaf": 3
+            },
+            "outputs": {
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd0e": [
+                    "range",
+                    1.0,
+                    "3"
+                ]
+            }
+        },
+        "ID_Chop_Bush": {
+            "inputs": {
+                "\ud83c\udf40": 0,
+                "\ud83e\ude93\ud83c\udfaf": 0
+            },
+            "outputs": {
+                "\ud83e\udd0e": [
+                    "range",
+                    1.0,
+                    "3"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Chop_Bush_Apple": {
+            "inputs": {
+                "\ud83c\udf40\ud83c\udf4e": 0,
+                "\ud83e\ude93\ud83c\udfaf": 0
+            },
+            "outputs": {
+                "\ud83e\udd0e": [
+                    "range",
+                    1.0,
+                    "3"
+                ],
+                "\ud83c\udf4e": [
+                    "range",
+                    0.0,
+                    "2"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Chop_Bush_Berry": {
+            "inputs": {
+                "\ud83c\udf40\ud83c\udf47": 0,
+                "\ud83e\ude93\ud83c\udfaf": 0
+            },
+            "outputs": {
+                "\ud83e\udd0e": [
+                    "range",
+                    1.0,
+                    "3"
+                ],
+                "\ud83c\udf47": [
+                    "range",
+                    0.0,
+                    "2"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Chop_Bush_Orange": {
+            "inputs": {
+                "\ud83c\udf40\ud83c\udf4a": 0,
+                "\ud83e\ude93\ud83c\udfaf": 0
+            },
+            "outputs": {
+                "\ud83e\udd0e": [
+                    "range",
+                    1.0,
+                    "3"
+                ],
+                "\ud83c\udf4a": [
+                    "range",
+                    0.0,
+                    "2"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Stone_Small": {
+            "inputs": {
+                "\u26f0\ufe0f": 0,
+                "\u26cf\ud83c\udfaf": 0
+            },
+            "outputs": {
+                "\ud83e\udd4c": [
+                    "range",
+                    1.0,
+                    "3"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Stone": {
+            "inputs": {
+                "\u26f0\ufe0f\u26f0\ufe0f": 0,
+                "\u26cf\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83e\udd4c": [
+                    "range",
+                    2.0,
+                    "4"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Stone_Large": {
+            "inputs": {
+                "\ud83d\uddfb": 0,
+                "\u26cf\ud83c\udfaf": 4
+            },
+            "outputs": {
+                "\ud83e\udd4c": [
+                    "range",
+                    4.0,
+                    "6"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Coal": {
+            "inputs": {
+                "\u26f0\ufe0f\ud83d\udda4": 0,
+                "\u26cf\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83d\udda4": [
+                    "range",
+                    2.0,
+                    "4"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Coal_Large": {
+            "inputs": {
+                "\ud83d\uddfb\ud83d\udda4": 0,
+                "\u26cf\ud83c\udfaf": 5
+            },
+            "outputs": {
+                "\ud83d\udda4": [
+                    "range",
+                    4.0,
+                    "6"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Copper": {
+            "inputs": {
+                "\u26f0\ufe0f\ud83e\udd49": 0,
+                "\u26cf\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83e\udd49": [
+                    "range",
+                    2.0,
+                    "4"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Copper_Large": {
+            "inputs": {
+                "\ud83d\uddfb\ud83e\udd49": 0,
+                "\u26cf\ud83c\udfaf": 5
+            },
+            "outputs": {
+                "\ud83e\udd49": [
+                    "range",
+                    4.0,
+                    "6"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Iron": {
+            "inputs": {
+                "\u26f0\ufe0f\ud83e\udd48": 0,
+                "\u26cf\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83e\udd48": [
+                    "range",
+                    2.0,
+                    "4"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Iron_Large": {
+            "inputs": {
+                "\ud83d\uddfb\ud83e\udd48": 0,
+                "\u26cf\ud83c\udfaf": 5
+            },
+            "outputs": {
+                "\ud83e\udd48": [
+                    "range",
+                    4.0,
+                    "6"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Gold": {
+            "inputs": {
+                "\u26f0\ufe0f\ud83e\udd47": 0,
+                "\u26cf\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83e\udd47": [
+                    "range",
+                    2.0,
+                    "4"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Pick_Gold_Large": {
+            "inputs": {
+                "\ud83d\uddfb\ud83e\udd47": 0,
+                "\u26cf\ud83c\udfaf": 5
+            },
+            "outputs": {
+                "\ud83e\udd47": [
+                    "range",
+                    4.0,
+                    "6"
+                ],
+                "\ud83d\udfe9": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Copper_Hoe": {
+            "inputs": {
+                "\ud83d\udd30": 0,
+                "\ud83d\udd32\ud83e\udd49": 0
+            },
+            "outputs": {
+                "\ud83d\udd30\ud83e\udd49": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Iron_Hoe": {
+            "inputs": {
+                "\ud83d\udd30": 0,
+                "\ud83d\udd32\ud83e\udd48": 0
+            },
+            "outputs": {
+                "\ud83d\udd30\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Gold_Hoe": {
+            "inputs": {
+                "\ud83d\udd30": 0,
+                "\ud83d\udd32\ud83e\udd47": 0
+            },
+            "outputs": {
+                "\ud83d\udd30\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Copper_Shovel": {
+            "inputs": {
+                "\u2660": 0,
+                "\ud83d\udd32\ud83e\udd49": 0
+            },
+            "outputs": {
+                "\u2660\ud83e\udd49": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Iron_Shovel": {
+            "inputs": {
+                "\u2660": 0,
+                "\ud83d\udd32\ud83e\udd48": 0
+            },
+            "outputs": {
+                "\u2660\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Gold_Shovel": {
+            "inputs": {
+                "\u2660": 0,
+                "\ud83d\udd32\ud83e\udd47": 0
+            },
+            "outputs": {
+                "\u2660\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Copper_Axe": {
+            "inputs": {
+                "\ud83e\ude93": 0,
+                "\ud83d\udd32\ud83e\udd49": 0
+            },
+            "outputs": {
+                "\ud83e\ude93\ud83e\udd49": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Iron_Axe": {
+            "inputs": {
+                "\ud83e\ude93": 0,
+                "\ud83d\udd32\ud83e\udd48": 0
+            },
+            "outputs": {
+                "\ud83e\ude93\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Gold_Axe": {
+            "inputs": {
+                "\ud83e\ude93": 0,
+                "\ud83d\udd32\ud83e\udd47": 0
+            },
+            "outputs": {
+                "\ud83e\ude93\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Copper_Pickaxe": {
+            "inputs": {
+                "\u26cf": 0,
+                "\ud83d\udd32\ud83e\udd49": 0
+            },
+            "outputs": {
+                "\u26cf\ud83e\udd49": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Iron_Pickaxe": {
+            "inputs": {
+                "\u26cf": 0,
+                "\ud83d\udd32\ud83e\udd48": 0
+            },
+            "outputs": {
+                "\u26cf\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Gold_Pickaxe": {
+            "inputs": {
+                "\u26cf": 0,
+                "\ud83d\udd32\ud83e\udd47": 0
+            },
+            "outputs": {
+                "\u26cf\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Copper_Watering_Can": {
+            "inputs": {
+                "\ud83d\udebf": 0,
+                "\ud83d\udd32\ud83e\udd49": 0
+            },
+            "outputs": {
+                "\ud83d\udebf\ud83e\udd49": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Iron_Watering_Can": {
+            "inputs": {
+                "\ud83d\udebf": 0,
+                "\ud83d\udd32\ud83e\udd48": 0
+            },
+            "outputs": {
+                "\ud83d\udebf\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Gold_Watering_Can": {
+            "inputs": {
+                "\ud83d\udebf": 0,
+                "\ud83d\udd32\ud83e\udd47": 0
+            },
+            "outputs": {
+                "\ud83d\udebf\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Copper_Fishing_Rod": {
+            "inputs": {
+                "\ud83c\udfa3": 0,
+                "\ud83d\udd32\ud83e\udd49": 0
+            },
+            "outputs": {
+                "\ud83c\udfa3\ud83e\udd49": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Iron_Fishing_Rod": {
+            "inputs": {
+                "\ud83c\udfa3": 0,
+                "\ud83d\udd32\ud83e\udd48": 0
+            },
+            "outputs": {
+                "\ud83c\udfa3\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Gold_Fishing_Rod": {
+            "inputs": {
+                "\ud83c\udfa3": 0,
+                "\ud83d\udd32\ud83e\udd47": 0
+            },
+            "outputs": {
+                "\ud83c\udfa3\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Copper_Hammer": {
+            "inputs": {
+                "\ud83d\udd28": 0,
+                "\ud83d\udd32\ud83e\udd49": 0
+            },
+            "outputs": {
+                "\ud83d\udd28\ud83e\udd49": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Iron_Hammer": {
+            "inputs": {
+                "\ud83d\udd28": 0,
+                "\ud83d\udd32\ud83e\udd48": 0
+            },
+            "outputs": {
+                "\ud83d\udd28\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Gold_Hammer": {
+            "inputs": {
+                "\ud83d\udd28": 0,
+                "\ud83d\udd32\ud83e\udd47": 0
+            },
+            "outputs": {
+                "\ud83d\udd28\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Jar": {
+            "inputs": {
+                "\ud83e\udd0d": 0
+            },
+            "outputs": {
+                "\ud83e\udd43": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Bottle": {
+            "inputs": {
+                "\ud83e\udd0d": 0
+            },
+            "outputs": {
+                "\ud83c\udf7c": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Beehive": {
+            "inputs": {
+                "\ud83d\udfe9": 0,
+                "\ud83e\udd0e": 15,
+                "\ud83d\udd28\ud83c\udfaf": 3
+            },
+            "outputs": {
+                "\ud83d\udc1d": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Fishtrap": {
+            "inputs": {
+                "\ud83d\udfe6": 0,
+                "\ud83e\udd0e": 5,
+                "\ud83d\udc55": 2,
+                "\ud83d\udd28\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83e\udd45": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Keg": {
+            "inputs": {
+                "\ud83d\udfe9": 0,
+                "\ud83e\udd0e": 10,
+                "\ud83d\udd28\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83c\udf7a\u2699": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Furnace": {
+            "inputs": {
+                "\ud83d\udfe9": 0,
+                "\ud83e\udd4c": 5,
+                "\ud83d\udd28\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Preserves": {
+            "inputs": {
+                "\ud83d\udfe9": 0,
+                "\ud83e\udd0e": 10,
+                "\ud83d\udd28\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Cheese_Maker": {
+            "inputs": {
+                "\ud83d\udfe9": 4,
+                "\ud83e\udd4c": 10,
+                "\ud83d\udd32\ud83e\udd48": 2,
+                "\ud83d\udd28\ud83c\udfaf": 5
+            },
+            "outputs": {
+                "\ud83e\uddc0\u2699": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Loom": {
+            "inputs": {
+                "\ud83d\udfe9": 6,
+                "\ud83e\udd0e": 10,
+                "\ud83e\udd4c": 5,
+                "\ud83d\udd28\ud83c\udfaf": 4
+            },
+            "outputs": {
+                "\ud83e\uddf5\u2699": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Mayonaise_Maker": {
+            "inputs": {
+                "\ud83d\udfe9": 4,
+                "\ud83d\udd32\ud83e\udd48": 2,
+                "\ud83e\udd49": 3,
+                "\ud83d\udd28\ud83c\udfaf": 4
+            },
+            "outputs": {
+                "\ud83e\uddc2\u2699": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Windmill": {
+            "inputs": {
+                "\ud83d\udfe9": 0,
+                "\ud83e\udd0e": 15,
+                "\ud83e\udd4c": 10,
+                "\ud83d\udd28\ud83c\udfaf": 8
+            },
+            "outputs": {
+                "\u2795": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Seed_Machine": {
+            "inputs": {
+                "\ud83d\udfe9": 4,
+                "\ud83e\udd0e": 5,
+                "\ud83d\udd32\ud83e\udd48": 2,
+                "\ud83d\udd28\ud83c\udfaf": 7
+            },
+            "outputs": {
+                "\ud83c\udf31\u2699": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Sprinkler": {
+            "inputs": {
+                "\ud83d\udfe9": 0,
+                "\ud83e\udd4c": 3,
+                "\ud83e\udd49": 0,
+                "\ud83d\udd28\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83d\udebf\u2699": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Scarecrow": {
+            "inputs": {
+                "\ud83d\udfe9": 0,
+                "\ud83e\udd0e": 5,
+                "\ud83c\udf3f": 8,
+                "\ud83d\udd28\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\ud83e\udd16": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Build_Fence": {
+            "inputs": {
+                "\ud83d\udfe9": 0,
+                "\ud83e\udd0e": 2,
+                "\ud83d\udd28\ud83c\udfaf": 0
+            },
+            "outputs": {
+                "\ud83d\udea7": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Beehive_Honey": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc1d": 0
+            },
+            "outputs": {
+                "\ud83d\udc1d": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf6f": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Fishtrap_Fish": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd45": 0
+            },
+            "outputs": {
+                "\ud83e\udd45": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udfa3\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Cheese": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\uddc0\u2699": 0,
+                "\ud83e\udd5b": 0
+            },
+            "outputs": {
+                "\ud83e\uddc0\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\uddc0": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Loom_Fabric": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\uddf5\u2699": 0,
+                "\ud83d\udc0f": 0
+            },
+            "outputs": {
+                "\ud83e\uddf5\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udc55": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Loom_Hide": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\uddf5\u2699": 0,
+                "\ud83d\udc2e": 0
+            },
+            "outputs": {
+                "\ud83e\uddf5\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udc5e": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Mayonaise": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\uddc2\u2699": 0,
+                "\ud83e\udd5a": 0
+            },
+            "outputs": {
+                "\ud83e\uddc2\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83e\udd5a": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Windmill_Flour": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\u2795": 0,
+                "\u2618\ud83c\udf3e": 0
+            },
+            "outputs": {
+                "\u2795": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83c\udf3e": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Sprinkle": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udebf\u2699": 0,
+                "\ud83d\udfe8": 104
+            },
+            "outputs": {
+                "\ud83d\udebf\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe7": [
+                    "fixed",
+                    104.0
+                ]
+            }
+        },
+        "ID_Day_Scarecrow": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd16": 0
+            },
+            "outputs": {
+                "\ud83e\udd16": [
+                    "fixed",
+                    1
+                ],
+                "\u274e": [
+                    "fixed",
+                    48.0
+                ]
+            }
+        },
+        "ID_Day_Keg_Apple": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83c\udf7a\u2699": 0,
+                "\ud83c\udf4e": 0
+            },
+            "outputs": {
+                "\ud83c\udf7a\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\uddc3\ud83c\udf4e": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Keg_Berry": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83c\udf7a\u2699": 0,
+                "\ud83c\udf47": 0
+            },
+            "outputs": {
+                "\ud83c\udf7a\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\uddc3\ud83c\udf47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Keg_Orange": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83c\udf7a\u2699": 0,
+                "\ud83c\udf4a": 0
+            },
+            "outputs": {
+                "\ud83c\udf7a\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\uddc3\ud83c\udf4a": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Parsnip": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\u2618\ud83d\udc9c": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83d\udc9c": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Carrot": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\u2618\ud83e\udd55": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83e\udd55": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Beetroot": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\u2618\u2764": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\u2764": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Cabbage": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\u2618\ud83e\udd6c": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83e\udd6c": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Kale": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\u2618\ud83d\udc9a": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83d\udc9a": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Cauliflower": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\u2618\ud83e\udd0d": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83e\udd0d": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Pumpkin": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\u2618\ud83c\udf83": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83c\udf83": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Potato": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\u2618\ud83e\udd54": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83e\udd54": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Radish": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\u2618\ud83c\udf52": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83c\udf52": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Sunflower": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\u2618\ud83c\udf3b": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83c\udf3b": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Fish_Sardine": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\ud83d\udc1f": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83d\udc1f": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Fish_Halibut": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\ud83d\udc20": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83d\udc20": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Fish_Bullhead": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\ud83d\udc21": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83d\udc21": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Fish_Carp": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\ud83e\udd80": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83e\udd80": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Fish_Red_Mullet": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\ud83e\udd90": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83e\udd90": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Preserves_Fish_Sturgeon": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83e\udd6b\u2699": 0,
+                "\ud83e\udd88": 0,
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83e\udd6b\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd43\ud83e\udd88": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Copper": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83d\udda4": 0,
+                "\ud83e\udd49": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd32\ud83e\udd49": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Iron": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83d\udda4": 0,
+                "\ud83e\udd48": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd32\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Gold": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83d\udda4": 0,
+                "\ud83e\udd47": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd32\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Glass": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83d\udda4": 0,
+                "\u231b": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd0d": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Bread": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83d\udda4": 0,
+                "\ud83e\udd43\ud83c\udf3e": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf5e": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Roasted_Meat": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83d\udda4": 0,
+                "\ud83e\udd69": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd25\ud83e\udd69": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Boiled_Egg": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83d\udda4": 0,
+                "\ud83e\udd5a": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd25\ud83e\udd5a": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Fish_Sardine": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83d\udc1f": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd25\ud83d\udc1f": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Fish_Halibut": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83d\udc20": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd25\ud83d\udc20": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Fish_Bullhead": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83d\udc21": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd25\ud83d\udc21": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Fish_Carp": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83e\udd80": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd25\ud83e\udd80": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Fish_Red_Mullet": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83e\udd90": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd25\ud83e\udd90": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Day_Baked_Fish_Sturgeon": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udd25\u2699": 0,
+                "\ud83e\udd88": 0
+            },
+            "outputs": {
+                "\ud83d\udd25\u2699": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd25\ud83e\udd88": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Parsnip": {
+            "inputs": {
+                "\ud83c\udf31\ud83d\udc9c": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83d\udc9c": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83d\udc9c\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Carrot": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd55": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83e\udd55": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83e\udd55\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Beetroot": {
+            "inputs": {
+                "\ud83c\udf31\u2764": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\u2764": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\u2764\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Cabbage": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd6c": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83e\udd6c": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83e\udd6c\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Kale": {
+            "inputs": {
+                "\ud83c\udf31\ud83d\udc9a": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83d\udc9a": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83d\udc9a\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Cauliflower": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd0d": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83e\udd0d": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83e\udd0d\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Pumpkin": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf83": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83c\udf83": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83c\udf83\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Potato": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd54": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83e\udd54": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83e\udd54\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Radish": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf52": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83c\udf52": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83c\udf52\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Sunflower": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf3b": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83c\udf3b": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83c\udf3b\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Grow_Wheat": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf3e": 0,
+                "\ud83d\udfe7\ud83d\udd73": 0,
+                "\ud83c\udf1e": 0,
+                "\u274e": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83c\udf3e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83c\udf3e\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8\ud83d\udd73": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Parsnip": {
+            "inputs": {
+                "\ud83c\udf31\ud83d\udc9c": 0,
+                "\ud83c\udf31\ud83d\udc9c\ud83c\udfaf": 2
+            },
+            "outputs": {
+                "\u2663\ud83d\udc9c": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Carrot": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd55": 0,
+                "\ud83c\udf31\ud83e\udd55\ud83c\udfaf": 3
+            },
+            "outputs": {
+                "\u2663\ud83e\udd55": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Beetroot": {
+            "inputs": {
+                "\ud83c\udf31\u2764": 0,
+                "\ud83c\udf31\u2764\ud83c\udfaf": 4
+            },
+            "outputs": {
+                "\u2663\u2764": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Cabbage": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd6c": 0,
+                "\ud83c\udf31\ud83e\udd6c\ud83c\udfaf": 3
+            },
+            "outputs": {
+                "\u2663\ud83e\udd6c": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Kale": {
+            "inputs": {
+                "\ud83c\udf31\ud83d\udc9a": 0,
+                "\ud83c\udf31\ud83d\udc9a\ud83c\udfaf": 4
+            },
+            "outputs": {
+                "\u2663\ud83d\udc9a": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Cauliflower": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd0d": 0,
+                "\ud83c\udf31\ud83e\udd0d\ud83c\udfaf": 4
+            },
+            "outputs": {
+                "\u2663\ud83e\udd0d": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Pumpkin": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf83": 0,
+                "\ud83c\udf31\ud83c\udf83\ud83c\udfaf": 4
+            },
+            "outputs": {
+                "\u2663\ud83c\udf83": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Potato": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd54": 0,
+                "\ud83c\udf31\ud83e\udd54\ud83c\udfaf": 3
+            },
+            "outputs": {
+                "\u2663\ud83e\udd54": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Radish": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf52": 0,
+                "\ud83c\udf31\ud83c\udf52\ud83c\udfaf": 3
+            },
+            "outputs": {
+                "\u2663\ud83c\udf52": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Sunflower": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf3b": 0,
+                "\ud83c\udf31\ud83c\udf3b\ud83c\udfaf": 6
+            },
+            "outputs": {
+                "\u2663\ud83c\udf3b": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Harvest_Wheat": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf3e": 0,
+                "\ud83c\udf31\ud83c\udf3e\ud83c\udfaf": 3
+            },
+            "outputs": {
+                "\u2663\ud83c\udf3e": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Sell_Copper_Ore": {
+            "inputs": {
+                "\ud83e\udd49": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    10.0,
+                    "25"
+                ]
+            }
+        },
+        "ID_Sell_Iron_Ore": {
+            "inputs": {
+                "\ud83e\udd48": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    20.0,
+                    "40"
+                ]
+            }
+        },
+        "ID_Sell_Gold_Ore": {
+            "inputs": {
+                "\ud83e\udd47": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    30.0,
+                    "50"
+                ]
+            }
+        },
+        "ID_Sell_Coal": {
+            "inputs": {
+                "\ud83d\udda4": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    10.0,
+                    "15"
+                ]
+            }
+        },
+        "ID_Sell_Copper_Bar": {
+            "inputs": {
+                "\ud83d\udd32\ud83e\udd49": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    50.0,
+                    "80"
+                ]
+            }
+        },
+        "ID_Sell_Iron": {
+            "inputs": {
+                "\ud83d\udd32\ud83e\udd48": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    70.0,
+                    "120"
+                ]
+            }
+        },
+        "ID_Sell_Gold": {
+            "inputs": {
+                "\ud83d\udd32\ud83e\udd47": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    100.0,
+                    "200"
+                ]
+            }
+        },
+        "ID_Sell_Glass": {
+            "inputs": {
+                "\ud83e\udd0d": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    10.0,
+                    "15"
+                ]
+            }
+        },
+        "ID_Sell_Bread": {
+            "inputs": {
+                "\ud83c\udf5e": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    90.0,
+                    "145"
+                ]
+            }
+        },
+        "ID_Sell_Roasted_Meat": {
+            "inputs": {
+                "\ud83d\udd25\ud83e\udd69": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    60.0,
+                    "190"
+                ]
+            }
+        },
+        "ID_Sell_Boiled_Egg": {
+            "inputs": {
+                "\ud83d\udd25\ud83e\udd5a": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    80.0,
+                    "160"
+                ]
+            }
+        },
+        "ID_Sell_Berry": {
+            "inputs": {
+                "\ud83c\udf47": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    5.0,
+                    "10"
+                ]
+            }
+        },
+        "ID_Sell_Orange": {
+            "inputs": {
+                "\ud83c\udf4a": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    5.0,
+                    "10"
+                ]
+            }
+        },
+        "ID_Sell_Apple": {
+            "inputs": {
+                "\ud83c\udf4e": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    5.0,
+                    "10"
+                ]
+            }
+        },
+        "ID_Sell_Berry_Juice": {
+            "inputs": {
+                "\ud83e\uddc3\ud83c\udf47": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    45.0,
+                    "120"
+                ]
+            }
+        },
+        "ID_Sell_Orange_Juice": {
+            "inputs": {
+                "\ud83e\uddc3\ud83c\udf4a": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    45.0,
+                    "120"
+                ]
+            }
+        },
+        "ID_Sell_Apple_Juice": {
+            "inputs": {
+                "\ud83e\uddc3\ud83c\udf4e": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    45.0,
+                    "120"
+                ]
+            }
+        },
+        "ID_Sell_Parsnip": {
+            "inputs": {
+                "\u2618\ud83d\udc9c": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    5.0,
+                    "10"
+                ]
+            }
+        },
+        "ID_Sell_Carrot": {
+            "inputs": {
+                "\u2618\ud83e\udd55": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    6.0,
+                    "12"
+                ]
+            }
+        },
+        "ID_Sell_Beetroot": {
+            "inputs": {
+                "\u2618\u2764": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    10.0,
+                    "18"
+                ]
+            }
+        },
+        "ID_Sell_Cabbage": {
+            "inputs": {
+                "\u2618\ud83e\udd6c": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    8.0,
+                    "15"
+                ]
+            }
+        },
+        "ID_Sell_Kale": {
+            "inputs": {
+                "\u2618\ud83d\udc9a": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    25.0,
+                    "40"
+                ]
+            }
+        },
+        "ID_Sell_Cauliflower": {
+            "inputs": {
+                "\u2618\ud83e\udd0d": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    25.0,
+                    "40"
+                ]
+            }
+        },
+        "ID_Sell_Pumpkin": {
+            "inputs": {
+                "\u2618\ud83c\udf83": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    40.0,
+                    "80"
+                ]
+            }
+        },
+        "ID_Sell_Potato": {
+            "inputs": {
+                "\u2618\ud83e\udd54": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    4.0,
+                    "10"
+                ]
+            }
+        },
+        "ID_Sell_Radish": {
+            "inputs": {
+                "\u2618\ud83c\udf52": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    8.0,
+                    "15"
+                ]
+            }
+        },
+        "ID_Sell_Sunflower": {
+            "inputs": {
+                "\u2618\ud83c\udf3b": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    40.0,
+                    "80"
+                ]
+            }
+        },
+        "ID_Sell_Wheat": {
+            "inputs": {
+                "\u2618\ud83c\udf3e": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    8.0,
+                    "12"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Parsnip": {
+            "inputs": {
+                "\ud83e\udd43\ud83d\udc9c": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    20.0,
+                    "95"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Carrot": {
+            "inputs": {
+                "\ud83e\udd43\ud83e\udd55": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    25.0,
+                    "85"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Beetroot": {
+            "inputs": {
+                "\ud83e\udd43\u2764": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    35.0,
+                    "95"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Cabbage": {
+            "inputs": {
+                "\ud83e\udd43\ud83e\udd6c": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    30.0,
+                    "95"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Kale": {
+            "inputs": {
+                "\ud83e\udd43\ud83d\udc9a": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    70.0,
+                    "140"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Cauliflower": {
+            "inputs": {
+                "\ud83e\udd43\ud83e\udd0d": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    70.0,
+                    "140"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Pumpkin": {
+            "inputs": {
+                "\ud83e\udd43\ud83c\udf83": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    90.0,
+                    "190"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Potato": {
+            "inputs": {
+                "\ud83e\udd43\ud83e\udd54": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    20.0,
+                    "95"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Radish": {
+            "inputs": {
+                "\ud83e\udd43\ud83c\udf52": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    30.0,
+                    "95"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Sunflower": {
+            "inputs": {
+                "\ud83e\udd43\ud83c\udf3b": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    30.0,
+                    "95"
+                ]
+            }
+        },
+        "ID_Sell_Sardine": {
+            "inputs": {
+                "\ud83d\udc1f": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    10.0,
+                    "20"
+                ]
+            }
+        },
+        "ID_Sell_Halibut": {
+            "inputs": {
+                "\ud83d\udc20": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    25.0,
+                    "35"
+                ]
+            }
+        },
+        "ID_Sell_Bullhead": {
+            "inputs": {
+                "\ud83d\udc21": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    40.0,
+                    "50"
+                ]
+            }
+        },
+        "ID_Sell_Carp": {
+            "inputs": {
+                "\ud83e\udd80": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    55.0,
+                    "65"
+                ]
+            }
+        },
+        "ID_Sell_Red_Mullet": {
+            "inputs": {
+                "\ud83e\udd90": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    70.0,
+                    "80"
+                ]
+            }
+        },
+        "ID_Sell_Sturgeon": {
+            "inputs": {
+                "\ud83e\udd88": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    90.0,
+                    "95"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Fish_Sardine": {
+            "inputs": {
+                "\ud83e\udd43\ud83d\udc1f": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    60.0,
+                    "90"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Fish_Halibut": {
+            "inputs": {
+                "\ud83e\udd43\ud83d\udc20": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    90.0,
+                    "130"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Fish_Bullhead": {
+            "inputs": {
+                "\ud83e\udd43\ud83d\udc21": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    110.0,
+                    "150"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Fish_Carp": {
+            "inputs": {
+                "\ud83e\udd43\ud83e\udd80": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    150.0,
+                    "180"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Fish_Red_Mullet": {
+            "inputs": {
+                "\ud83e\udd43\ud83e\udd90": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    170.0,
+                    "230"
+                ]
+            }
+        },
+        "ID_Sell_Preserves_Fish_Sturgeon": {
+            "inputs": {
+                "\ud83e\udd43\ud83e\udd88": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    200.0,
+                    "300"
+                ]
+            }
+        },
+        "ID_Sell_Baked_Fish_Sardine": {
+            "inputs": {
+                "\ud83d\udd25\ud83d\udc1f": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    45.0,
+                    "60"
+                ]
+            }
+        },
+        "ID_Sell_Baked_Fish_Halibut": {
+            "inputs": {
+                "\ud83d\udd25\ud83d\udc20": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    60.0,
+                    "90"
+                ]
+            }
+        },
+        "ID_Sell_Baked_Fish_Bullhead": {
+            "inputs": {
+                "\ud83d\udd25\ud83d\udc21": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    80.0,
+                    "120"
+                ]
+            }
+        },
+        "ID_Sell_Baked_Fish_Carp": {
+            "inputs": {
+                "\ud83d\udd25\ud83e\udd80": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    100.0,
+                    "150"
+                ]
+            }
+        },
+        "ID_Sell_Baked_Fish_Red_Mullet": {
+            "inputs": {
+                "\ud83d\udd25\ud83e\udd90": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    120.0,
+                    "160"
+                ]
+            }
+        },
+        "ID_Sell_Baked_Fish_Sturgeon": {
+            "inputs": {
+                "\ud83d\udd25\ud83e\udd88": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    150.0,
+                    "210"
+                ]
+            }
+        },
+        "ID_Sell_Honey": {
+            "inputs": {
+                "\ud83c\udf6f": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    20.0,
+                    "45"
+                ]
+            }
+        },
+        "ID_Sell_Milk": {
+            "inputs": {
+                "\ud83e\udd5b": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    60.0,
+                    "90"
+                ]
+            }
+        },
+        "ID_Sell_Cheese": {
+            "inputs": {
+                "\ud83e\uddc0": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    90.0,
+                    "180"
+                ]
+            }
+        },
+        "ID_Sell_Wool": {
+            "inputs": {
+                "\ud83d\udc11": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    40.0,
+                    "60"
+                ]
+            }
+        },
+        "ID_Sell_Cloth": {
+            "inputs": {
+                "\ud83d\udc55": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    70.0,
+                    "160"
+                ]
+            }
+        },
+        "ID_Sell_Flour": {
+            "inputs": {
+                "\ud83e\udd43\ud83c\udf3e": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    30.0,
+                    "55"
+                ]
+            }
+        },
+        "ID_Sell_Egg": {
+            "inputs": {
+                "\ud83e\udd5a": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    40.0,
+                    "75"
+                ]
+            }
+        },
+        "ID_Sell_Mayonaise": {
+            "inputs": {
+                "\ud83e\udd43\ud83e\udd5a": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    75.0,
+                    "160"
+                ]
+            }
+        },
+        "ID_Sell_Meat": {
+            "inputs": {
+                "\ud83e\udd69": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    25.0,
+                    "80"
+                ]
+            }
+        },
+        "ID_Sell_Fertilizer": {
+            "inputs": {
+                "\ud83d\udca9": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    3.0,
+                    "5"
+                ]
+            }
+        },
+        "ID_Sell_Truffle": {
+            "inputs": {
+                "\ud83c\udf44": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    50.0,
+                    "90"
+                ]
+            }
+        },
+        "ID_Sell_Hide": {
+            "inputs": {
+                "\ud83d\udc2e": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    30.0,
+                    "45"
+                ]
+            }
+        },
+        "ID_Sell_Leather": {
+            "inputs": {
+                "\ud83d\udc5e": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    80.0,
+                    "150"
+                ]
+            }
+        },
+        "ID_Sell_Feather": {
+            "inputs": {
+                "\ud83c\udf42": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    60.0,
+                    "90"
+                ]
+            }
+        },
+        "ID_Sell_Sand": {
+            "inputs": {
+                "\u231b": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    1.0,
+                    "2"
+                ]
+            }
+        },
+        "ID_Sell_Jar": {
+            "inputs": {
+                "\ud83e\udd43": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    10.0,
+                    "20"
+                ]
+            }
+        },
+        "ID_Sell_Bottle": {
+            "inputs": {
+                "\ud83c\udf7c": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    10.0,
+                    "20"
+                ]
+            }
+        },
+        "ID_Sell_Wood": {
+            "inputs": {
+                "\ud83e\udd0e": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    15.0,
+                    "20"
+                ]
+            }
+        },
+        "ID_Sell_Grass": {
+            "inputs": {
+                "\ud83c\udf3f": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    15.0,
+                    "25"
+                ]
+            }
+        },
+        "ID_Sell_Stone": {
+            "inputs": {
+                "\ud83e\udd4c": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "range",
+                    15.0,
+                    "25"
+                ]
+            }
+        },
+        "ID_Sell_Cow": {
+            "inputs": {
+                "\ud83d\udc04": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "fixed",
+                    200.0
+                ]
+            }
+        },
+        "ID_Sell_Chicken": {
+            "inputs": {
+                "\ud83d\udc14": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "fixed",
+                    200.0
+                ]
+            }
+        },
+        "ID_Sell_Sheep": {
+            "inputs": {
+                "\ud83d\udc11": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "fixed",
+                    200.0
+                ]
+            }
+        },
+        "ID_Sell_Pig": {
+            "inputs": {
+                "\ud83d\udc16": 0
+            },
+            "outputs": {
+                "\ud83d\udcb0": [
+                    "fixed",
+                    200.0
+                ]
+            }
+        },
+        "ID_Feed_Cow_Wheat": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc04": 0,
+                "\u2618\ud83c\udf3e": 0
+            },
+            "outputs": {
+                "\ud83d\udc04": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd5b": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Cow_Kale": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc04": 0,
+                "\u2618\ud83e\udd6c": 0
+            },
+            "outputs": {
+                "\ud83d\udc04": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd5b": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Cow_Radish": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc04": 0,
+                "\u2618\ud83c\udf52": 0
+            },
+            "outputs": {
+                "\ud83d\udc04": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd5b": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Chicken_Carrot": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc14": 0,
+                "\u2618\ud83e\udd55": 0
+            },
+            "outputs": {
+                "\ud83d\udc14": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd5a": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Chicken_Parsnip": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc14": 0,
+                "\u2618\ud83d\udc9c": 0
+            },
+            "outputs": {
+                "\ud83d\udc14": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd5a": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Chicken_Cauliflower": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc14": 0,
+                "\u2618\ud83e\udd66": 0
+            },
+            "outputs": {
+                "\ud83d\udc14": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\udd5a": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Sheep_Wheat": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc11": 0,
+                "\u2618\ud83c\udf3e": 0
+            },
+            "outputs": {
+                "\ud83d\udc11": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udc0f": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Sheep_Parsnip": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc11": 0,
+                "\u2618\ud83d\udc9c": 0
+            },
+            "outputs": {
+                "\ud83d\udc11": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udc0f": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Sheep_Carrot": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc11": 0,
+                "\u2618\ud83e\udd55": 0
+            },
+            "outputs": {
+                "\ud83d\udc11": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udc0f": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Pig_Potato": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc16": 0,
+                "\u2618\ud83e\udd54": 0
+            },
+            "outputs": {
+                "\ud83d\udc16": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca9": [
+                    "range",
+                    0.0,
+                    "2"
+                ],
+                "\ud83c\udf44": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Pig_Pumpkin": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc16": 0,
+                "\u2618\ud83c\udf83": 0
+            },
+            "outputs": {
+                "\ud83d\udc16": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca9": [
+                    "range",
+                    0.0,
+                    "2"
+                ],
+                "\ud83c\udf44": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feed_Pig_Radish": {
+            "inputs": {
+                "\ud83c\udf1e": 0,
+                "\ud83d\udc16": 0,
+                "\u2618\ud83c\udf52": 0
+            },
+            "outputs": {
+                "\ud83d\udc16": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca9": [
+                    "range",
+                    0.0,
+                    "2"
+                ],
+                "\ud83c\udf44": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Butcher_Cow": {
+            "inputs": {
+                "\ud83d\udc04": 0
+            },
+            "outputs": {
+                "\ud83e\udd69": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udc2e": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Butcher_Chicken": {
+            "inputs": {
+                "\ud83d\udc14": 0
+            },
+            "outputs": {
+                "\ud83e\udd69": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf42": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Butcher_Sheep": {
+            "inputs": {
+                "\ud83d\udc11": 0
+            },
+            "outputs": {
+                "\ud83e\udd69": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Butcher_Pig": {
+            "inputs": {
+                "\ud83d\udc16": 0
+            },
+            "outputs": {
+                "\ud83e\udd69": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Parsnip_Seed": {
+            "inputs": {
+                "\ud83c\udf31\ud83d\udc9c\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 15
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83d\udc9c": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Carrot_Seed": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd55\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 15
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83e\udd55": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Beetroot_Seed": {
+            "inputs": {
+                "\ud83c\udf31\u2764\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 20
+            },
+            "outputs": {
+                "\ud83c\udf31\u2764": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Cabbage_Seed": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd6c\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 20
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83e\udd6c": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Kale_Seed": {
+            "inputs": {
+                "\ud83c\udf31\ud83d\udc9a\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 30
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83d\udc9a": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Cauliflower_Seed": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd0d\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 30
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83e\udd0d": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Pumpkin_Seed": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf83\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 25
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83c\udf83": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Potato_Seed": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd54\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 15
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83e\udd54": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Radish_Seed": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf52\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 15
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83c\udf52": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Sunflower_Seed": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf3b\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 30
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83c\udf3b": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Wheat_Seed": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf3e\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 15
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83c\udf3e": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Wood": {
+            "inputs": {
+                "\ud83e\udd0e\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 30
+            },
+            "outputs": {
+                "\ud83e\udd0e": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Stone": {
+            "inputs": {
+                "\ud83e\udd4c\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 40
+            },
+            "outputs": {
+                "\ud83e\udd4c": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Cow": {
+            "inputs": {
+                "\ud83d\udc04\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 200
+            },
+            "outputs": {
+                "\ud83d\udc04": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Chicken": {
+            "inputs": {
+                "\ud83d\udc14\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 200
+            },
+            "outputs": {
+                "\ud83d\udc14": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Sheep": {
+            "inputs": {
+                "\ud83d\udc11\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 200
+            },
+            "outputs": {
+                "\ud83d\udc11": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Pig": {
+            "inputs": {
+                "\ud83d\udc16\ud83d\udcb3": 0,
+                "\ud83d\udcb0": 200
+            },
+            "outputs": {
+                "\ud83d\udc16": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Stock_Item": {
+            "inputs": {
+                "\ud83d\udcb3": 0
+            },
+            "outputs": {
+                "\ud83c\udf31\ud83d\udc9c\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83c\udf31\ud83e\udd55\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83c\udf31\u2764\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83c\udf31\ud83e\udd6c\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83c\udf31\ud83d\udc9a\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83c\udf31\ud83e\udd0d\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83c\udf31\ud83c\udf83\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83c\udf31\ud83e\udd54\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83c\udf31\ud83c\udf52\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83c\udf31\ud83c\udf3b\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83c\udf31\ud83c\udf3e\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83e\udd0e\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ],
+                "\ud83e\udd4c\ud83d\udcb3": [
+                    "prob",
+                    0.07692307692307693
+                ]
+            }
+        },
+        "ID_Shop_Reroll": {
+            "inputs": {
+                "\ud83d\udcb0": 100,
+                "\ud83c\udf31\ud83d\udc9c\ud83d\udcb3": "X",
+                "\ud83c\udf31\ud83e\udd55\ud83d\udcb3": "X",
+                "\ud83c\udf31\u2764\ud83d\udcb3": "X",
+                "\ud83c\udf31\ud83e\udd6c\ud83d\udcb3": "X",
+                "\ud83c\udf31\ud83d\udc9a\ud83d\udcb3": "X",
+                "\ud83c\udf31\ud83e\udd0d\ud83d\udcb3": "X",
+                "\ud83c\udf31\ud83c\udf83\ud83d\udcb3": "X",
+                "\ud83c\udf31\ud83e\udd54\ud83d\udcb3": "X",
+                "\ud83c\udf31\ud83c\udf52\ud83d\udcb3": "X",
+                "\ud83c\udf31\ud83c\udf3b\ud83d\udcb3": "X",
+                "\ud83c\udf31\ud83c\udf3e\ud83d\udcb3": "X",
+                "\ud83e\udd0e\ud83d\udcb3": "X",
+                "\ud83e\udd4c\ud83d\udcb3": "X",
+                "\ud83d\udda4\ud83d\udcb3": "X",
+                "\ud83e\udd49\ud83d\udcb3": "X",
+                "\ud83e\udd48\ud83d\udcb3": "X",
+                "\ud83e\udd47\ud83d\udcb3": "X",
+                "\ud83d\udc04\ud83d\udcb3": "X",
+                "\ud83d\udc14\ud83d\udcb3": "X",
+                "\ud83d\udc11\ud83d\udcb3": "X",
+                "\ud83d\udc16\ud83d\udcb3": "X"
+            },
+            "outputs": {
+                "\ud83d\uded2": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Roll": {
+            "inputs": {
+                "\u2b50\ud83c\udfb2": 0,
+                "\u2b50\ud83d\udcb3\ud83d\udcaa": "X",
+                "\u2b50\ud83d\udcb3\ud83c\udf4e": "X",
+                "\u2b50\ud83d\udcb3\u26cf": "X",
+                "\u2b50\ud83d\udcb3\ud83d\udc04": "X",
+                "\u2b50\ud83d\udcb3\ud83d\ude46\u200d\u2642\ufe0f": "X",
+                "\u2b50\ud83d\udcb3": "X",
+                "\u2b50": "X"
+            },
+            "outputs": {
+                "\u2b50\ud83d\udcb3": [
+                    "fixed",
+                    3.0
+                ],
+                "\u2b50": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Stock": {
+            "inputs": {
+                "\u2b50\ud83d\udcb3": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udcb3\ud83d\udcaa": [
+                    "prob",
+                    0.2
+                ],
+                "\u2b50\ud83d\udcb3\ud83c\udf4e": [
+                    "prob",
+                    0.2
+                ],
+                "\u2b50\ud83d\udcb3\u26cf": [
+                    "prob",
+                    0.2
+                ],
+                "\u2b50\ud83d\udcb3\ud83d\udc04": [
+                    "prob",
+                    0.2
+                ],
+                "\u2b50\ud83d\udcb3\ud83d\ude46\u200d\u2642\ufe0f": [
+                    "prob",
+                    0.2
+                ]
+            }
+        },
+        "ID_Buy_Feat_Steroids": {
+            "inputs": {
+                "\u2b50\ud83d\udcb3\ud83d\udcaa": 0,
+                "\u2b50\ud83d\udcb3\ud83c\udf4e": "X",
+                "\u2b50\ud83d\udcb3\u26cf": "X",
+                "\u2b50\ud83d\udcb3\ud83d\udc04": "X",
+                "\u2b50\ud83d\udcb3\ud83d\ude46\u200d\u2642\ufe0f": "X",
+                "\u2b50": "X",
+                "\u2b50\ud83d\udcb3": "X"
+            },
+            "outputs": {
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Feat_Fruit_Expert": {
+            "inputs": {
+                "\u2b50\ud83d\udcb3\ud83c\udf4e": 0,
+                "\u2b50\ud83d\udcb3\ud83d\udcaa": "X",
+                "\u2b50\ud83d\udcb3\u26cf": "X",
+                "\u2b50\ud83d\udcb3\ud83d\udc04": "X",
+                "\u2b50\ud83d\udcb3\ud83d\ude46\u200d\u2642\ufe0f": "X",
+                "\u2b50": "X",
+                "\u2b50\ud83d\udcb3": "X"
+            },
+            "outputs": {
+                "\u2b50\ud83c\udf4e": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Feat_Miner": {
+            "inputs": {
+                "\u2b50\ud83d\udcb3\u26cf": 0,
+                "\u2b50\ud83d\udcb3\ud83d\udcaa": "X",
+                "\u2b50\ud83d\udcb3\ud83c\udf4e": "X",
+                "\u2b50\ud83d\udcb3\ud83d\udc04": "X",
+                "\u2b50\ud83d\udcb3\ud83d\ude46\u200d\u2642\ufe0f": "X",
+                "\u2b50": "X",
+                "\u2b50\ud83d\udcb3": "X"
+            },
+            "outputs": {
+                "\u2b50\u26cf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Feat_Animal_Lover": {
+            "inputs": {
+                "\u2b50\ud83d\udcb3\ud83d\udc04": 0,
+                "\u2b50\ud83d\udcb3\ud83d\udcaa": "X",
+                "\u2b50\ud83d\udcb3\ud83c\udf4e": "X",
+                "\u2b50\ud83d\udcb3\u26cf": "X",
+                "\u2b50\ud83d\udcb3\ud83d\ude46\u200d\u2642\ufe0f": "X",
+                "\u2b50": "X",
+                "\u2b50\ud83d\udcb3": "X"
+            },
+            "outputs": {
+                "\u2b50\ud83d\udc04": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Buy_Feat_Muscle_Head": {
+            "inputs": {
+                "\u2b50\ud83d\udcb3\ud83d\ude46\u200d\u2642\ufe0f": 0,
+                "\u2b50\ud83d\udcb3\ud83d\udcaa": "X",
+                "\u2b50\ud83d\udcb3\ud83c\udf4e": "X",
+                "\u2b50\ud83d\udcb3\u26cf": "X",
+                "\u2b50\ud83d\udcb3\ud83d\udc04": "X",
+                "\u2b50": "X",
+                "\u2b50\ud83d\udcb3": "X"
+            },
+            "outputs": {
+                "\u2b50\ud83d\ude46\u200d\u2642\ufe0f": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Fruit_Expert": {
+            "inputs": {
+                "\u2b50\ud83c\udf4e": 0,
+                "\ud83d\uded2": 0
+            },
+            "outputs": {
+                "\u2b50\ud83c\udf4e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb3": [
+                    "range",
+                    16.0,
+                    "160"
+                ]
+            }
+        },
+        "ID_Feat_Fruit_Expert_Sell_Berry": {
+            "inputs": {
+                "\u2b50\ud83c\udf4e": 0,
+                "\ud83c\udf47": 0
+            },
+            "outputs": {
+                "\u2b50\ud83c\udf4e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb0": [
+                    "range",
+                    10.0,
+                    "20"
+                ]
+            }
+        },
+        "ID_Feat_Fruit_Expert_Sell_Orange": {
+            "inputs": {
+                "\u2b50\ud83c\udf4e": 0,
+                "\ud83c\udf4a": 0
+            },
+            "outputs": {
+                "\u2b50\ud83c\udf4e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb0": [
+                    "range",
+                    10.0,
+                    "20"
+                ]
+            }
+        },
+        "ID_Feat_Fruit_Expert_Sell_Apple": {
+            "inputs": {
+                "\u2b50\ud83c\udf4e": 0,
+                "\ud83c\udf4e": 0
+            },
+            "outputs": {
+                "\u2b50\ud83c\udf4e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb0": [
+                    "range",
+                    10.0,
+                    "20"
+                ]
+            }
+        },
+        "ID_Feat_Lazy_Miner": {
+            "inputs": {
+                "\u2b50\u26cf": 0,
+                "\ud83d\uded2": 0
+            },
+            "outputs": {
+                "\u2b50\u26cf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb3": [
+                    "range",
+                    16.0,
+                    "160"
+                ]
+            }
+        },
+        "ID_Feat_Lazy_Miner_Stock_Item": {
+            "inputs": {
+                "\u2b50\u26cf": 0,
+                "\ud83d\udcb3": 0
+            },
+            "outputs": {
+                "\u2b50\u26cf": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83d\udc9c\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83e\udd55\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\u2764\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83e\udd6c\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83d\udc9a\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83e\udd0d\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83c\udf83\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83e\udd54\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83c\udf52\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83c\udf3b\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83c\udf3e\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83e\udd0e\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83e\udd4c\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83d\udda4\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83e\udd49\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83e\udd48\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83e\udd47\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ]
+            }
+        },
+        "ID_Feat_Animal_Lover": {
+            "inputs": {
+                "\u2b50\ud83d\udc04": 0,
+                "\ud83d\uded2": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udc04": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb3": [
+                    "range",
+                    16.0,
+                    "160"
+                ]
+            }
+        },
+        "ID_Feat_Animal_Lover_Stock_Item": {
+            "inputs": {
+                "\u2b50\ud83d\udc04": 0,
+                "\ud83d\udcb3": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udc04": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udf31\ud83d\udc9c\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83e\udd55\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\u2764\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83e\udd6c\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83d\udc9a\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83e\udd0d\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83c\udf83\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83e\udd54\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83c\udf52\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83c\udf3b\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83c\udf31\ud83c\udf3e\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83e\udd0e\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83e\udd4c\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83d\udc04\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83d\udc14\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83d\udc11\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ],
+                "\ud83d\udc16\ud83d\udcb3": [
+                    "prob",
+                    0.058823529411764705
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Parsnip": {
+            "inputs": {
+                "\ud83c\udf31\ud83d\udc9c\ud83c\udfaf": 0,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\ud83d\udc9c": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Carrot": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd55\ud83c\udfaf": 2,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\ud83e\udd55": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Beetroot": {
+            "inputs": {
+                "\ud83c\udf31\u2764\ud83c\udfaf": 3,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\u2764": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Cabbage": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd6c\ud83c\udfaf": 2,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\ud83e\udd6c": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Kale": {
+            "inputs": {
+                "\ud83c\udf31\ud83d\udc9a\ud83c\udfaf": 3,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\ud83d\udc9a": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Cauliflower": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd0d\ud83c\udfaf": 3,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\ud83e\udd0d": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Pumpkin": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf83\ud83c\udfaf": 3,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\ud83c\udf83": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Potato": {
+            "inputs": {
+                "\ud83c\udf31\ud83e\udd54\ud83c\udfaf": 2,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\ud83e\udd54": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Radish": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf52\ud83c\udfaf": 2,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\ud83c\udf52": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Sunflower": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf3b\ud83c\udfaf": 5,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\ud83c\udf3b": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Steroids_Harvest_Wheat": {
+            "inputs": {
+                "\ud83c\udf31\ud83c\udf3e\ud83c\udfaf": 2,
+                "\u2b50\ud83d\udcaa": 0
+            },
+            "outputs": {
+                "\u2663\ud83c\udf3e": [
+                    "fixed",
+                    1
+                ],
+                "\u2b50\ud83d\udcaa": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Muscle_Head": {
+            "inputs": {
+                "\u2b50\ud83d\ude46\u200d\u2642\ufe0f": 0,
+                "\ud83c\udf1e": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\ude46\u200d\u2642\ufe0f": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udca7": [
+                    "fixed",
+                    100.0
+                ]
+            }
+        },
+        "ID_Feat_Triple_Upgrade_2_Sell_Parsnip": {
+            "inputs": {
+                "\u2b503\ufe0f\u20e3": 0,
+                "\u2618\ud83d\udc9c": 0
+            },
+            "outputs": {
+                "\u2b503\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb0": [
+                    "range",
+                    20.0,
+                    "40"
+                ]
+            }
+        },
+        "ID_Feat_Triple_Upgrade_2_Sell_Kale": {
+            "inputs": {
+                "\u2b503\ufe0f\u20e3": 0,
+                "\u2618\ud83d\udc9a": 0
+            },
+            "outputs": {
+                "\u2b503\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb0": [
+                    "range",
+                    100.0,
+                    "160"
+                ]
+            }
+        },
+        "ID_Feat_Triple_Upgrade_2_Sell_Cauliflower": {
+            "inputs": {
+                "\u2b503\ufe0f\u20e3": 0,
+                "\u2618\ud83e\udd0d": 0
+            },
+            "outputs": {
+                "\u2b503\ufe0f\u20e3": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb0": [
+                    "range",
+                    100.0,
+                    "160"
+                ]
+            }
+        },
+        "ID_Feat_Wheat_Heart_Sell_Wheat": {
+            "inputs": {
+                "\u2b50\ud83c\udf3e": 0,
+                "\u2618\ud83c\udf3e": 0
+            },
+            "outputs": {
+                "\u2b50\ud83c\udf3e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb0": [
+                    "range",
+                    12.0,
+                    "18"
+                ]
+            }
+        },
+        "ID_Feat_Wheat_Heart_Sell_Flour": {
+            "inputs": {
+                "\u2b50\ud83c\udf3e": 0,
+                "\ud83e\udd43\ud83c\udf3e": 0
+            },
+            "outputs": {
+                "\u2b50\ud83c\udf3e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb0": [
+                    "range",
+                    45.0,
+                    "78"
+                ]
+            }
+        },
+        "ID_Feat_Wheat_Heart_Sell_Bread": {
+            "inputs": {
+                "\u2b50\ud83c\udf3e": 0,
+                "\ud83c\udf5e": 0
+            },
+            "outputs": {
+                "\u2b50\ud83c\udf3e": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udcb0": [
+                    "range",
+                    135.0,
+                    "218"
+                ]
+            }
+        },
+        "ID_Feat_Performance_Chop_Axe": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83e\ude93": 0,
+                "\ud83d\udca7": 3
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\ude93\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Chop_Axe_Copper": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83e\ude93\ud83e\udd49": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\ude93\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Chop_Axe_Iron": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83e\ude93\ud83e\udd48": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83e\ude93\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Pick_Pickaxe": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 1,
+                "\u26cf": 0,
+                "\ud83d\udca7": 4
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\u26cf\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Pick_Pickaxe_Copper": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\u26cf\ud83e\udd49": 0,
+                "\ud83d\udca7": 3
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\u26cf\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Pick_Pickaxe_Iron": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\u26cf\ud83e\udd48": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\u26cf\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Pick_Pickaxe_Gold": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\u26cf\ud83e\udd47": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\u26cf\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Hoe_Grass": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe9": 0,
+                "\ud83d\udd30": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd30\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Hoe_Grass_Copper": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe9": 3,
+                "\ud83d\udd30\ud83e\udd49": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8": [
+                    "fixed",
+                    3.0
+                ],
+                "\ud83d\udd30\ud83c\udfaf": [
+                    "fixed",
+                    3.0
+                ]
+            }
+        },
+        "ID_Feat_Performance_Hoe_Grass_Iron": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe9": 6,
+                "\ud83d\udd30\ud83e\udd48": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8": [
+                    "fixed",
+                    6.0
+                ],
+                "\ud83d\udd30\ud83c\udfaf": [
+                    "fixed",
+                    6.0
+                ]
+            }
+        },
+        "ID_Feat_Performance_Hoe_Grass_Gold": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe9": 9,
+                "\ud83d\udd30\ud83e\udd47": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe8": [
+                    "fixed",
+                    9.0
+                ],
+                "\ud83d\udd30\ud83c\udfaf": [
+                    "fixed",
+                    9.0
+                ]
+            }
+        },
+        "ID_Feat_Performance_Shovel_Dirt": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe8": 0,
+                "\u2660": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd73": [
+                    "fixed",
+                    1
+                ],
+                "\u2660\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Shovel_Dirt_Copper": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe8": 3,
+                "\u2660\ud83e\udd49": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd73": [
+                    "fixed",
+                    3.0
+                ],
+                "\u2660\ud83c\udfaf": [
+                    "fixed",
+                    3.0
+                ]
+            }
+        },
+        "ID_Feat_Performance_Shovel_Dirt_Gold": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe8": 9,
+                "\u2660\ud83e\udd47": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd73": [
+                    "fixed",
+                    9.0
+                ],
+                "\u2660\ud83c\udfaf": [
+                    "fixed",
+                    9.0
+                ]
+            }
+        },
+        "ID_Feat_Performance_Water_Dirt_Iron": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe8": 6,
+                "\ud83d\udebf\ud83e\udd48": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe7": [
+                    "fixed",
+                    6.0
+                ],
+                "\ud83d\udebf\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Water_Dirt_Gold": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe8": 9,
+                "\ud83d\udebf\ud83e\udd47": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe7": [
+                    "fixed",
+                    9.0
+                ],
+                "\ud83d\udebf\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Water_Hole_Iron": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udd73": 6,
+                "\ud83d\udebf\ud83e\udd48": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe7\ud83d\udd73": [
+                    "fixed",
+                    6.0
+                ],
+                "\ud83d\udebf\ud83e\udd48": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Water_Hole_Gold": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udd73": 9,
+                "\ud83d\udebf\ud83e\udd47": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe7\ud83d\udd73": [
+                    "fixed",
+                    9.0
+                ],
+                "\ud83d\udebf\ud83e\udd47": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Rod_Fish": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe6": 0,
+                "\ud83c\udfa3": 0,
+                "\ud83d\udca7": 3
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe6": [
+                    "fixed",
+                    1
+                ],
+                "\ud83c\udfa3\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Rod_Fish_Copper": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe6": 3,
+                "\ud83c\udfa3\ud83e\udd49": 0,
+                "\ud83d\udca7": 5
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe6": [
+                    "fixed",
+                    3.0
+                ],
+                "\ud83c\udfa3\ud83c\udfaf": [
+                    "fixed",
+                    3.0
+                ]
+            }
+        },
+        "ID_Feat_Performance_Rod_Fish_Iron": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe6": 6,
+                "\ud83c\udfa3\ud83e\udd48": 0,
+                "\ud83d\udca7": 2
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe6": [
+                    "fixed",
+                    6.0
+                ],
+                "\ud83c\udfa3\ud83c\udfaf": [
+                    "fixed",
+                    6.0
+                ]
+            }
+        },
+        "ID_Feat_Performance_Rod_Fish_Gold": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udfe6": 9,
+                "\ud83c\udfa3\ud83e\udd47": 0,
+                "\ud83d\udca7": 4
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udfe6": [
+                    "fixed",
+                    9.0
+                ],
+                "\ud83c\udfa3\ud83c\udfaf": [
+                    "fixed",
+                    9.0
+                ]
+            }
+        },
+        "ID_Feat_Performance_Hammer_Hit": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udd28": 0,
+                "\ud83d\udca7": 7
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd28\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Hammer_Hit_Copper": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udd28\ud83e\udd49": 0,
+                "\ud83d\udca7": 5
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd28\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Hammer_Hit_Iron": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udd28\ud83e\udd48": 0,
+                "\ud83d\udca7": 3
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd28\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        },
+        "ID_Feat_Performance_Hammer_Hit_Gold": {
+            "inputs": {
+                "\u2b50\ud83d\udca7": 0,
+                "\ud83d\udd28\ud83e\udd47": 0,
+                "\ud83d\udca7": 0
+            },
+            "outputs": {
+                "\u2b50\ud83d\udca7": [
+                    "fixed",
+                    1
+                ],
+                "\ud83d\udd28\ud83c\udfaf": [
+                    "fixed",
+                    1
+                ]
+            }
+        }
+    }
+}
