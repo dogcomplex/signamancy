@@ -1,4 +1,4 @@
-# SIGNAMANCY - Axiomatic Game Engine Crafting Rules
+# 🐾 SIGNAMANCY - Axiomatic Game Engine Crafting Rules
 
 A symbolic rule engine for expressing game and system mechanics through token-based asynchronous state transitions.  Testing how complex game rules can be expressed through simple token transformations and sum up to complex systems.  These rules aim to always compile down to token transitions which can run in tensor batches on a GPU, making their simplicity deceptively efficient.
 
@@ -15,9 +15,9 @@ GOALS:
 
 This engine allows you to express game mechanics through simple token-based rules in the form:
 
-\```
+```
 🪓 🌳 => 🪓 🤎3  # chop tree to get wood
-\```
+```
 
 Rules can be chained together to create complex game behaviors while maintaining readability through emoji.
 
@@ -71,7 +71,7 @@ Another harvest moon style farming sim game with complex crafting mechanics and 
 - Crafting
 - Shopping
 
-\```
+```
 # Example Rules
 
 # Basic Resource Gathering
@@ -93,7 +93,7 @@ Another harvest moon style farming sim game with complex crafting mechanics and 
 # Day/Night Cycle with Events
 🌞 ⌛100 => ⌛100 🌛  # Day turns to night
 
-\```
+```
 
 ## License
 
