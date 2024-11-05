@@ -1,0 +1,793 @@
+POKEMON RED
+
+
+
+AXIOMATIC RULES:
+- all equations are collections of tokens transitioning to other tokens (tokens_before => tokens_after)
+- a token is text or emojis separated by whitespace
+- each token represents an aspect of the global state which is changing
+- for => relationships, tokens on the left are being consumed (rendered inert) and tokens on the right are being produced (rendered active)
+- any token used on both sides is unchanged and acts as a catalyst (these enable conditional/if statements)
+- any token can be substituted for an equivalent token (marked by <=> relationship)
+- as a trivial extension of the above, tokens with quantities (e.g. 🍎3) can be used instead of creating separate tokens for each quantity
+- the purpose of this system is to be as expressive as possible without resorting to too much additional logic
+- this system uses immutable rules and tokens to map out global state transitions
+- please avoid any additional extensions to the basic logic beyond these axioms
+- this means (for now): no multiplication, no division, no modulo, no bitwise operators, no indexing, no arrays, etc.
+- many of the above can be implemented in these rules, but are generally better off remaining simple unless really needed to reduce verbosity
+- in general, these axiom production rules should be seen as simple functions, consuming inputs and producing outputs
+
+Two more tools of this system are:
+- listeners: e.g. current_square(🧍) move_left => left_square(🧍)
+  - use listeners as pointers to subsections of the global state (trivially: all tokens prefixed by the listener)
+  - the above is saying "if player is in the current square and we move left, then the player is in the left square"
+  - equivalently: remove the player from current square, add it to the left square
+  - equivalently: current_square_player move_left => left_square_player  (but this creates new tokens instead of just using subsets)
+- ❗ priority: if two rules are possible at the same time, use the one with the ❗ priority flag
+  - this enables if/else logic, if-zero logic, and guarantees win/lose/error checks if possible
+
+Special tokens:
+- 🎬 <=> GAME_START  # start token, never produced except by the execution logic (resets should use an intermediate token)
+- 🏁 <=> GAME_END  # end token, never consumed except by the execution logic to stop execution (resets should use an intermediate token)
+- ⌛ <=> STEP  # time step token, produced by the system clock event loop and passed to each grid square to enable syncronous time-based rules
+
+
+
+
+
+# CONTROLS
+👆 <=> up_input
+👇 <=> down_input
+👈 <=> left_input
+👉 <=> right_input
+🅰 <=> 👌 <=> A_input  #(with hand alias)
+🅱 <=> ✋ <=> B_input
+⏸ <=> 🙌 <=> start_input
+▶️ <=> 👋 <=> select_input
+🚫 <=> ✊ <=> no_input <=> wait_input
+
+
+# TIME
+⌛ <=> tick <=> second # note: could be frame-by-frame, or a preset delay between frames for input time 
+🎞⌛ <=> frame_tick # smaller than a tick
+
+# generalized:
+🆎 <=> ✌ <=> A_or_B_input => 🅰 | 🅱
+🤙 <=> any_directional_input => 👆 | 👇 | 👈 | 👉
+↕🤙 <=> up_or_down_input => 👆 | 👇
+↔🤙 <=> left_or_right_input => 👈 | 👉
+⏯ <=> start_or_select_input => ⏸ | ▶️
+🔠 <=> any_button_input => 🆎 | ⏯
+⏩ <=> any_confirmation_input => 🅰 | ⏸
+🎮 <=> any_input => 🆎 | 🤙 | ⏯
+
+# SPECIAL TOKENS:
+🎬 <=> start 
+🏁 <=> end
+❗ <=> priority  # given a choice of valid paths, always choose the one requiring the most of these
+  # this enables if statements and other conditional logic
+⏰ <=> clock # system clock listener, produces time signals for the game loop
+🎲 <=> random # indicates that if there's a choice between multiple valid rules with 🎲, select one randomly with 🎲n / total odds for each 
+  # (e.g. 🎲2, 🎲, 🎲 would choose the first transition 2/4 times, 1/4 the other transition, 1/4 the last transition 
+... <=> any_other_tokens # wildcard to say a transition may modify any other tokens.  (🍎 ... =>) in input removes 1 🍎 and any number of other tokens, (=> ... 🍎 ) in output adds 🍎 and any other tokens
+  # USE SPARINGLY!  If a python function is needed for advanced stuff, this is how it marks it's doing random magic.  
+  # Otherwise treat tokens as neurotransmitters which trigger the function.  The function is only capable of being triggered if ALL other input tokens are met (e.g. has 1 🍎), but the ... in input will not be triggered by the normal program 
+  # (i.e. the python function gets triggered by 🍎 then needs to do its own inventory management or return false and do nothing)
+
+
+# SPECIAL RULES:
+❗99 ⏰ 🎮⌛✔ => ⏰ ⌛ 🎮⌛ 
+    # the clock produces a tick at a pre-specified turn interval (i.e. this is run automatically)
+    # 🎮⌛✔ <=> input_checked ensures only the input is changed once per tick cycle
+
+# CONTROL RULES:
+🎮 🎮⌛ => 🎮 🎮⌛✔  
+  # any => any.  can freely change input in a given tick
+  # 🎮⌛ => 🎮⌛✔ happens to ensure the input is changed only once per tick cycle. (or not changed at all)
+  # this is a general rule representation, full rules are all the possible combinations of inputs, e.g.:   
+  👆 🎮⌛ => 👉 🎮⌛✔ # change input from up to right movement
+  
+
+# GAME START:
+# init and credits:
+🎬 => 🖼credit_screen 🎮 ⏰ 🎮⌛✔ options_defaults
+🖼credit_screen ⌛3 => 🖼game_freak_credits
+🖼game_freak_credits ⌛5 => 🖼pokemon_title_animation
+🖼game_freak_credits ⌛ ⏩ => ⏩ 🖼pokemon_title_animation # "if you press A or B, skip the credits"
+🖼pokemon_title_animation ⌛15 => 🖼title_screen title_screen_charmander
+🖼pokemon_title_animation ⌛ ⏩ => ⏩ 🖼title_screen title_screen_charmander
+
+# title screen logic:
+🖼title_screen title_screen_charmander ⌛4 => 🖼title_screen title_screen_pokemon
+🎲 title_screen_pokemon => title_screen_pikachu | title_screen_charmander | title_screen_squirtle | title_screen_ditto | ...
+title_screen_pikachu | title_screen_charmander | title_screen_squirtle | title_screen_ditto | ... => title_screen_pokemon_swap
+🖼title_screen title_screen_pokemon_swap ⌛4 => 🖼title_screen title_screen_pokemon
+    # this all basically says: start title screen with charmander, then swap to a random pokemon every 4 seconds
+❗ 🖼title_screen title_screen_pokemon ⌛ ⏩ saved_game => ⏩ ⚙🆕 saved_game ▶continue
+🖼title_screen title_screen_pokemon ⌛ ⏩ => ⏩ ⚙🆕 ▶new_game
+
+# VIBE: skip this all, just button mash
+🖼credit_screen ⌛4 ⏩3 => ⏩ ⚙🆕 ▶new_game
+
+# would be nice if these were simpler states, but optional continue makes it tricky:
+⚙🆕 <=> new_continue_screen
+# click an option:
+⚙🆕 ⌛ ⏩ saved_game ▶continue => ⏩ saved_game continue_game 
+⚙🆕 ⌛ ⏩ ▶new_game => ⏩ new_game saved_game
+⚙🆕 ⌛ ⏩ ▶options => ⏩ ⚙options ⚙text_speed
+# move up:
+⚙🆕 ⌛ 👆 ▶continue => 👆 ⚙🆕 ▶options
+❗ ⚙🆕 ⌛ ▶new_game 👆 saved_game => saved_game 👆 ⚙🆕 ▶continue    # if saved_game, allow the continue option. else:
+⚙🆕 ⌛ 👆 ▶options => 👆 ⚙🆕 ▶new_game
+# move down:
+⚙🆕 ⌛ 👇 ▶continue => 👇 ⚙🆕 ▶new_game
+⚙🆕 ⌛ ▶new_game 👇 => 👇 ⚙🆕 ▶options
+❗ ⚙🆕 ⌛ ▶options 👇 saved_game => saved_game 👇 ⚙🆕 ▶continue    # if saved_game, allow the continue option. else:
+⚙🆕 ⌛ ▶continue 🅱 => 🅱 🖼title_screen title_screen_charmander # BACK
+⚙🆕 ⌛ ▶new_game 🅱 => 🅱 🖼title_screen title_screen_charmander # BACK
+⚙🆕 ⌛ ▶options 🅱 => 🅱 🖼title_screen title_screen_charmander # BACK
+
+options_defaults => text_speed_medium battle_animation_on battle_style_shift    # see init
+⚙options => ⚙text_speed
+⚙text_speed text_speed_medium ⌛ 👉 => 👉 ⚙text_speed text_speed_slow
+⚙text_speed text_speed_medium ⌛ 👈 => 👈 ⚙text_speed text_speed_fast
+⚙text_speed text_speed_slow ⌛ 👈 => 👈 ⚙text_speed text_speed_medium
+⚙text_speed text_speed_fast ⌛ 👉 => 👉 ⚙text_speed text_speed_medium
+⚙text_speed ⌛ 👇 => 👇 ⚙battle_animation
+⚙text_speed ⌛ 👆 => 👆 ⚙options🚫 # wraparound to cancel button
+⚙battle_animation battle_animation_on ⌛ 👉 => 👉 ⚙battle_animation battle_animation_off
+⚙battle_animation battle_animation_off ⌛ 👈 => 👈 ⚙battle_animation battle_animation_on
+⚙battle_animation ⌛ 👇 => 👇 ⚙battle_style
+⚙battle_style battle_style_shift ⌛ 👉 => 👉 ⚙battle_style battle_style_set
+⚙battle_style battle_style_set ⌛ 👈 => 👈 ⚙battle_style battle_style_shift
+⚙battle_style ⌛ 👇 => 👇 ⚙options🚫
+⚙options🚫 ⌛ ⏩ => ⏩ ⚙🆕 ▶new_game
+⚙options🚫 ⌛ 👆 => 👆 ⚙battle_style
+⚙options🚫 ⌛ 👇 => 👇 ⚙text_speed # wraparound
+
+❗ (⚙text_speed | ⚙battle_style | ⚙battle_style) ⌛ (⏸ | 🅰 | 🅱) saved_game => ⏩ ⚙🆕 saved_game ▶continue
+(⚙text_speed | ⚙battle_style | ⚙battle_style) ⌛ (⏸ | 🅰 | 🅱) => ⏩ ⚙🆕 ▶new_game
+  # this is just lazy general shorthand ^ these need to be compiled out to base rules
+
+new_game => oak_intro oak_intro_text
+oak_intro => oak_intro | oak_intro_nidorino | oak_intro_player | oak_intro_player_confirm | oak_intro_rival | oak_intro_rival_confirm | oak_intro_outro # stages of the intro
+oak_intro ⌛ 🆎 => 🆎 oak_intro oak_intro_text   # progress through text+1
+oak_intro oak_intro_text*4 => oak_intro_nidorino
+oak_intro_nidorino oak_intro_text*8 => oak_intro_player
+oak_intro_player oak_intro_text => ▶player_name_new
+
+▶player_name_new ⌛ 👇 => 👇 ▶player_name_red
+▶player_name_new ⌛ 👆 => 👆 ▶player_name_jack
+▶player_name_red ⌛ 👇 => 👇 ▶player_name_ash
+▶player_name_red ⌛ 👆 => 👆 ▶player_name_new
+▶player_name_ash ⌛ 👇 => 👇 ▶player_name_jack
+▶player_name_ash ⌛ 👆 => 👆 ▶player_name_red
+▶player_name_jack ⌛ 👇 => 👇 ▶player_name_new
+▶player_name_jack ⌛ 👆 => 👆 ▶player_name_ash
+▶player_name_new ⌛ 🅰 => 🅰 player_naming_screen
+▶player_name_red ⌛ 🅰 => 🅰 oak_intro_player_confirm player_name_red
+▶player_name_ash ⌛ 🅰 => 🅰 oak_intro_player_confirm player_name_ash
+▶player_name_jack ⌛ 🅰 => 🅰 oak_intro_player_confirm player_name_jack
+
+player_name => player_name_red | player_name_ash | player_name_jack | player_name_new
+player_name_new => player_name_new1 player_name_new2 player_name_new3 player_name_new4 player_name_new5 player_name_new6 player_name_new7
+# lol this is more complex than most of the game now
+# id opt for using an external function or "wave your hands" function at this point (i.e. we cheat here)
+player_naming_screen ... => oak_intro_player_confirm  player_name_new ...   # we can skip this whole ordeal!
+          # NOTE: could pass this whatever state functions we want e.g. ⏰ 🎮 listeners, and just have it be a python function etc
+      # non-cowardly way:
+      player_naming_screen => player_naming_screen player_name_new1 uppercase_letters
+      letter_upper => "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | " " | "*" | "(" | ")" | ":" | ";" | "[" | "]" | "pk" | "mn" | "-" | "?" | "!" | "♂" | "♀" | "/" | "." | "," | "ED"
+      letter_lower => "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | " " | "*" | "(" | ")" | ":" | ";" | "[" | "]" | "pk" | "mn" | "-" | "?" | "!" | "♂" | "♀" | "/" | "." | "," | "ED"
+      player_naming_screen player_name_new1 naming_x naming_y ⌛ 🅰 => player_naming_screen 🅰 player_name_new2 naming_x naming_y player_name_new1("A")    # use a listener to store tokens in player name location
+      player_naming_screen player_name_new1 naming_x*2 naming_y ⌛ 🅰 => player_naming_screen 🅰 player_name_new2 naming_x*2 naming_y player_name_new1("B")
+      # ... forever lol, with upper/lowercase variants
+      player_naming_screen player_name_new2 ⌛ 🅱 => player_naming_screen 🅱 player_name_new1 # how to delete player_name_new1("A") though?
+      # repeat for all 7 characters
+      ❗ player_naming_screen ⌛ naming_y 👆 => player_naming_screen 👆 # y - 1
+      player_naming_screen ⌛ 👆 => player_naming_screen 👆 naming_y*5 # wraparound
+      player_naming_screen ⌛ 👇 => player_naming_screen 👇 naming_y # y + 1
+      ❗ player_naming_screen ⌛ 👇 naming_y*5 => player_naming_screen 👇 # y => 0 wraparound
+      player_naming_screen ⌛ naming_x 👉 => player_naming_screen 👉 # x + 1
+      ❗ player_naming_screen ⌛ naming_x*8 👉 => player_naming_screen 👉 # wraparound
+      player_naming_screen ⌛ 👈 naming_x => 👈 player_naming_screen # x - 1
+      ❗ player_naming_screen ⌛ 👈 => 👈 player_naming_screen naming_x*8 # wraparound
+      player_naming_screen naming_y*5 uppercase_letters ⌛ 🅰 => 🅰 player_naming_screen naming_y*5 lowercase_letters
+      # exits:
+      player_naming_screen player_name_new7 ⌛ 🅰 => 🅰 oak_intro_player_confirm player_name_new
+      player_naming_screen ⌛ ⏸ => ⏸ oak_intro_player_confirm player_name_new
+
+# MOVING ON!
+oak_intro_player_confirm oak_intro_text => oak_intro_rival
+oak_intro_rival oak_intro_text*4 => rival_name_select
+rival_name_select ⌛ 👇 => 👇 rival_name_select_blue
+# ...................... skipping this.  same as player naming
+oak_intro_rival_confirm oak_intro_text*2 => oak_intro_outro
+oak_intro_outro oak_intro_text*4 => game_start
+
+# VIBE: button mash this all too
+new_game 🅰10 ⌛10 👇4 ▶player_name_ash ▶player_name_blue ... => game_start
+
+# HO BOYYYYYY
+game_start => 📍player_room 🧍‍♂️ ⬆🧍‍♂️ ➡ ⬅ ⬆ ⬇ 👣 # control player, facing up, can interact in 4 directions and current 👣
+👣 <=> current_square_listener
+⬆ <=> up_listener
+⬇ <=> down_listener
+⬅ <=> left_listener
+➡ <=> right_listener 
+🔄 <=> any_direction_listener => ⬆ | ⬇ | ⬅ | ➡ | 👣
+# TODO do we update listeners?  e.g. move right, then
+  ######    👣 => ⬅,  ➡ => 👣,  ⬆ ⬇ ⬅ =>,  ➡(⬆) => ⬆,  ➡(⬇) => ⬇, ➡(➡) => ➡  
+  # problem is this is kinda complex.  hard to do with just tokens. (May need to use "..." and trigger a python function)
+⬜ <=> walkable_square
+⬛ <=> blocked_square
+🟩 <=> interactive_square
+❎ <=> noninteractive_square
+🔃 <=> teleport_square
+👁🧍‍♂️ => ⬆🧍‍♂️ | ⬇🧍‍♂️ | ➡🧍‍♂️ | ⬅🧍‍♂️ # generalize: directions player can face
+⬆(⬜) ⌛ 👆 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ⬆🧍‍♂️ 🧍‍♂️ 👆 ⬆(⬜ 🧍‍♂️)  # if there's a walkable square up, occupy it, remove the boyyyyy
+⬇(⬜) ⌛ 👇 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ⬇🧍‍♂️ 🧍‍♂️ 👇 ⬇(⬜ 🧍‍♂️)  # if there's a walkable square down, occupy it
+⬅(⬜) ⌛ 👈 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ⬅🧍‍♂️ 🧍‍♂️ 👈 ⬅(⬜ 🧍‍♂️)  # if there's a walkable square left, occupy it
+➡(⬜) ⌛ 👉 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ➡🧍‍♂️ 🧍‍♂️ 👉 ➡(⬜ 🧍‍♂️)  # if there's a walkable square right, occupy it
+⬆(⬛) ⌛ 👆 🧍‍♂️ 👁🧍‍♂️ => ⬆🧍‍♂️ 🧍‍♂️ 👆 ⬆(⬛) # if there's a blocked square up, do nothing
+⬇(⬛) ⌛ 👇 🧍‍♂️ 👁🧍‍♂️ => ⬇🧍‍♂️ 🧍‍♂️ 👇 ⬇(⬛) # if there's a blocked square down, do nothing
+⬅(⬛) ⌛ 👈 🧍‍♂️ 👁🧍‍♂️ => ⬅🧍‍♂️ 🧍‍♂️ 👈 ⬅(⬛) # if there's a blocked square left, do nothing
+➡(⬛) ⌛ 👉 🧍‍♂️ 👁🧍‍♂️ => ➡🧍‍♂️ 🧍‍♂️ 👉 ➡(⬛)  # if there's a blocked square right, do nothing
+⬆🧍‍♂️ ⬆(🟩) 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ⬆🧍‍♂️ ⬆(🟩) ✅ # interact with the square in front of you (facing up).  🟩 are interactive
+⬇🧍‍♂️ ⬇(🟩) 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ⬇🧍‍♂️ ⬇(🟩) ✅ # interact with the square in front of you (facing down)
+⬅🧍‍♂️ ⬅(🟩) 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ⬅🧍‍♂️ ⬅(🟩) ✅ # interact with the square in front of you (facing left)
+➡🧍‍♂️ ➡(🟩) 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ➡🧍‍♂️ ➡(🟩) ✅ # interact with the square in front of you (facing right)
+⬆🧍‍♂️ ⬆(❎) 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ⬆(❎) # interact with the square in front of you (facing up).  ❎ are noninteractive so do nothing
+⬇🧍‍♂️ ⬇(❎) 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ⬇(❎) # interact with the square in front of you (facing down)
+⬅🧍‍♂️ ⬅(❎) 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ⬅(❎) # interact with the square in front of you (facing left)
+➡🧍‍♂️ ➡(❎) 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ➡(❎) # interact with the square in front of you (facing right)
+⬆(🔃) ⌛ 👆 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ⬆🧍‍♂️ 🧍‍♂️ 👆 ⬆(🔃 🧍‍♂️) # teleport squares
+⬇(🔃) ⌛ 👇 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ⬇🧍‍♂️ 🧍‍♂️ 👇 ⬇(🔃 🧍‍♂️) 
+⬅(🔃) ⌛ 👈 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ⬅🧍‍♂️ 🧍‍♂️ 👈 ⬅(🔃 🧍‍♂️)  
+➡(🔃) ⌛ 👉 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ➡🧍‍♂️ 🧍‍♂️ 👉 ➡(🔃 🧍‍♂️)  
+
+🟣 <=> blocked_interactive_square
+⏹ <=> unknown_utestable_square
+⚪ <=> walkable_interactive_square
+📥 <=> starting_square 
+
+# directly-testable player's room: (reference)
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+⏹⏹⏹⏹⏹⬛⬛⬛⬛⏹⏹⏹
+⏹⏹🟣⬛⬛⬜⬜⬜⬜🔃⏹⏹
+⏹⬛⬜⬜⬜⬜⬜⬜⬜⬜⬛⏹
+⏹⬛⬜⬜⬜⬜⬜⬜⬜⬜⬛⏹
+⏹⬛⬜⬜⬜⬛⬜⬜⬜⬜⬛⏹
+⏹⬛⬜⬜⬜🟣⬜⬜⬜⬜⬛⏹
+⏹⏹⬛⬜⬜📥⬜⬜⬛⬜⬛⏹                                      
+⏹⏹⬛⬜⬜⬜⬜⬜⬛⬜⬛⏹
+⏹⏹⏹⬛⬛⬛⬛⬛⏹⬛⏹⏹
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+
+# player's room: (initial view)
+⏹⏹🟣⏹⏹
+⏹⬜📥⬜⏹
+⏹⏹⬜⏹⏹
+⏹⏹⏹⏹⏹
+# discoveries:
+👣(📥) => 👣(📥) ⬆(🟣) ⬇(⬜) ⬅(⬜) ➡(⬜)
+⬅(📥) => 👣(⬜) ⬆(⬜) ⬇(⬜) ⬅(📥) ➡(⬜)
+➡(📥) => 👣(⬜) ⬆(⬜) ⬇(⬜) ⬅(⬜) ➡(📥)
+⬆(📥) => 👣(⬜) ⬆(📥) ⬇(⬛) ⬅(⬜) ➡(⬜)
+⬇(📥) => 👣(🟣) ⬆(⬛) ⬇(📥) ⬅(⬜) ➡(⬜) # hmmm - but this can't actually be stood in
+⬅(⬅(📥)) => 👣(⬜) ⬆(⬜) ⬇(⬜) ⬅(⬜) ➡(⬛)
+# ... etc.  One way to store these is just remembering rules relative to each other
+# then path to teleport:
+
+# general rules we need:
+➡(⬜) ⌛ 👉 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ➡🧍‍♂️ 🧍‍♂️ 👉 ➡(⬜ 🧍‍♂️) # move right 1
+⬆(⬜) ⌛ 👆 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ⬆🧍‍♂️ 🧍‍♂️ 👆 ⬆(⬜ 🧍‍♂️) # up 5
+➡(⬜) ⌛ 👉 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ➡🧍‍♂️ 🧍‍♂️ 👉 ➡(⬜ 🧍‍♂️) # right 3
+
+# named functions:
+👉🧍‍♂️ => ( ➡(⬜) ⌛ 👉 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ➡🧍‍♂️ 🧍‍♂️ 👉 ➡(⬜ 🧍‍♂️) )
+👆🧍‍♂️ => ( ⬆(⬜) ⌛ 👆 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ⬆🧍‍♂️ 🧍‍♂️ 👆 ⬆(⬜ 🧍‍♂️ )
+
+# using 👣(📥) as precondition (starting at start location)
+# chained function:
+⌛ 👉 🧍‍♂️ 👣(📥 🧍‍♂️) 👁🧍‍♂️ => 👉 🧍‍♂️ 👣(📥) ➡🧍‍♂️ ➡(🧍‍♂️) # single step right
+⌛2 👉 🧍‍♂️ 👣(📥 🧍‍♂️) 👁🧍‍♂️ => 👆 🧍‍♂️ 👣(📥) ⬆🧍‍♂️ ➡(⬆(🧍‍♂️)) # forgets the middle steps
+⌛9 👉 🧍‍♂️ 👣(📥 🧍‍♂️) 👁🧍‍♂️ => 👉 🧍‍♂️ 👣(📥) ➡🧍‍♂️ ➡⬆5➡3(🧍‍♂️) # full path
+  # though note: ⌛ doesn't currently allow for multiple steps in a row without going through the move changes
+
+# helper lol:
+➡(⬆(⬆(⬆(⬆(⬆(➡(➡(➡(🧍‍♂️))))))))) <=> ➡⬆5➡3(🧍‍♂️)
+  # easy function to make this mapping
+
+# GENERAL THOUGHTS:  would be nice if we could go:
+# 👉🧍‍♂️ 👆🧍‍♂️5 👉🧍‍♂️3 # except we dont have order
+# (❗2 👉🧍‍♂️) (❗1 👆🧍‍♂️5) 👉🧍‍♂️ # maybe this?
+# ⌛9 👉 🧍‍♂️ 👣(📥 🧍‍♂️) 👁🧍‍♂️ (❗2 👉🧍‍♂️) (❗1 👆🧍‍♂️5) 👉🧍‍♂️ => 👉 🧍‍♂️ 👣(📥) ➡🧍‍♂️ ➡⬆5➡3(🧍‍♂️)
+
+# teleporting:
+📍player_room 👣("stairs down" 🧍‍♂️) => 📍player_home 👣("stairs up" 🧍‍♂️)
+
+# other discoveries:
+⬜ => "brick-tile floor space"
+⬛ => "black wall" | "wooden room wall" | "wooden room window" | "table left side" | "table right side" | "bed top" | "bed bottom" | "potted plant top" | "potted plant bottom" | "tv"
+🟣 => "player_pc bottom keyboard" | "video game console"
+# unknowns still:
+⏹ => "player_pc top monitor" | "table top left" | "table top right" 
+🔃 => "staircase down"
+# note: these should all be stored/id'd just by a pixel image
+
+# inferred map based on tile behavior being consistent:
+# (i.e. we can't confirm them by interacting, but can assume they're consistent)
+# the remaining unknowns are either unviewable or uninteractable
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+⏹⏹⏹⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⏹⏹⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛🟣⬛⬛⬜⬜⬜⬜🔃⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬛⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜🟣⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬜⬜📥⬜⬜⬛⬜⬛⬛⬛⬛⬛⏹                                      
+⏹⬛⬛⬛⬛⬛⬜⬜⬜⬜⬜⬛⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+
+# other potential rules:
+# - being able to say "X is above Y" and have it be a vibe that's more true directly above, less true if it's like 9 to the right and 1 up 
+#    - also useful because even if X is 9 right and 1 below Y, it's still wrong ("X is below Y" instead)
+# - being able to make a state map of the whole room that gets built and confirmed from base principles of other step rules
+#    - it does get static soon enough!
+
+🚹 <=> any_character => 🧍‍♂️ | ...
+⬜ 🚹 => 🚹 => ⬛ # a character in a square makes it non walkable
+
+
+# note: ignore light-touch reversed without walking for now lol
+
+
+# interaction rules:
+ ⌛ 🅰 => 🅰 "video game console" "play game"
+⬆🧍‍♂️ ⬆("video game console") 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ⬆🧍‍♂️ ⬆("video game console") ✅"video game console"
+  # repeat x4 directions
+✅"video game console" => 💬video_game_console
+💬video_game_console ⌛ 🆎 => 🆎 💬video_game_console 💬
+💬video_game_console 💬3 => # end dialog
+
+⬆🧍‍♂️ ⬆("player_pc bottom keyboard") 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ⬆🧍‍♂️ ⬆("player_pc bottom keyboard") ✅player_pc
+✅player_pc => 💬player_pc
+💬player_pc ⌛ 🆎 => 🆎 💬player_pc 💬
+💬player_pc 💬 => ⚙player_pc ▶withdraw_item
+⚙player_pc ▶withdraw_item ⌛ ⏩ => ⏩ ⚙withdraw_item 
+⚙player_pc ▶withdraw_item ⌛ 👇 => 👇 ⚙player_pc ▶deposit_item
+⚙player_pc ▶withdraw_item ⌛ 👆 => 👆 ⚙player_pc ▶log_off
+⚙player_pc ▶deposit_item ⌛ ⏩ => ⏩ ⚙deposit_item
+⚙player_pc ▶deposit_item ⌛ 👆 => 👆 ⚙player_pc ▶withdraw_item
+⚙player_pc ▶deposit_item ⌛ 👇 => 👇 ⚙player_pc ▶toss_item
+⚙player_pc ▶toss_item ⌛ ⏩ => ⏩ ⚙toss_item
+⚙player_pc ▶toss_item ⌛ 👆 => 👆 ⚙player_pc ▶deposit_item
+⚙player_pc ▶toss_item ⌛ 👇 => 👇 ⚙player_pc ▶log_off
+⚙player_pc ▶log_off ⌛ ⏩ => ⏩ # exit pc
+⚙player_pc ⌛ 🅱 => 🅱 
+
+# pc state is interesting, as it requires memory.  let's just walk through the basic observations first:
+⚙withdraw_item => ⚙withdraw_item ▶potion    # OBSERVATION: (will get broken later when top item's not a potion)
+⚙withdraw_item ▶potion ⌛ 👆 => 👆 ⚙withdraw_item ▶🚫   # OBSERVATION: same
+⚙withdraw_item ▶🚫 ⌛ 👇 => 👇 ⚙withdraw_item ▶potion   # OBSERVATION: same
+⚙withdraw_item ▶potion ⌛ 🅰  => ⚙withdraw_item_quantity ▶potion 🅰   # this one should stick though
+⚙withdraw_item_quantity ▶potion ⌛ 🅰 => ⚙withdraw_item_quantity 🅰 💬"Withdrew POTION."  # OBSERVATION: missing a side effect, i.e. 📦potion add to inventory
+# ⚙withdraw_item_quantity ▶potion ⌛ 👆 => 👆 ▶potion # OBSERVATION for now this does nothing (system hasn't guessed about the link to quantity yet)
+  # does nothing yet so we dont know up and down do anything (but we add the observation)
+⚙withdraw_item_quantity 💬"Withdrew POTION." ⌛ 🆎 => 🆎 ⚙withdraw_item ▶🚫 
+⚙withdraw_item ▶🚫 ⌛ 🅰 => 🅰 ⚙player_pc ▶withdraw_item
+⚙withdraw_item ⌛ 🅱 => 🅱 ⚙player_pc ▶withdraw_item
+⚙player_pc ▶deposit_item ⌛ ⏩ => ⏩ 💬"You have nothing to deposit."  
+
+#summary: recording the observations is easy, though most of these rules will break soon!
+
+#now: consequences of the above actions round 2:
+⚙player_pc ▶withdraw_item ⌛ ⏩ => ⏩ 💬"There is nothing stored."  # different path
+# anomaly detection: something has changed, perhaps a new item has been added to the inventory
+
+⚙deposit_item => ⚙deposit_item ▶potion    # OBSERVATION: (will get broken later when top item's not a potion)
+# now this works too!
+# anomaly detection: something has changed, perhaps a new item has been added to the inventory 
+
+⚙deposit_item ▶potion ⌛ 👆 => 👆 ⚙deposit_item ▶🚫   # OBSERVATION: same
+⚙deposit_item ▶🚫 ⌛ 👇 => 👇 ⚙deposit_item ▶potion   # OBSERVATION: same
+⚙deposit_item ▶potion ⌛ 🅰  => ⚙deposit_item_quantity ▶potion 🅰   # this one should stick though
+⚙deposit_item_quantity ▶potion ⌛ 🅰 => ⚙deposit_item_quantity 🅰 💬"POTION was stored via PC."  # OBSERVATION: missing a side effect, i.e. 📦potion add to inventory
+# ⚙deposit_item_quantity ▶potion ⌛ 👆 => 👆 ▶potion # OBSERVATION for now this does nothing (system hasn't guessed about the link to quantity yet)
+  # does nothing yet so we dont know up and down do anything (but we add the observation)
+⚙deposit_item_quantity 💬"POTION was stored via PC." ⌛ 🆎 => 🆎 ⚙deposit_item ▶🚫 
+⚙deposit_item ▶🚫 ⌛ 🅰 => 🅰 ⚙player_pc ▶deposit_item
+⚙deposit_item ⌛ 🅱 => 🅱 ⚙player_pc ▶deposit_item
+
+⚙player_pc ▶deposit_item ⌛ ⏩ => ⏩ 💬"You have nothing to deposit."  
+
+
+
+# generalized rules: (which chatgpt would guess)
+  ⚙item_menu ▶ITEM ⌛ 👆 => 👆 ⚙item_menu ▶🚫  
+  ⚙item_menu ▶🚫 ⌛ 👇 => 👇 ⚙item_menu ▶ITEM   
+  ⚙item_menu ▶ITEM ⌛ 🅰  => ⚙item_menu_quantity ▶ITEM 🅰   
+  ⚙item_menu_quantity ▶ITEM ⌛ 🅰 => ⚙item_menu_quantity 🅰 💬item_menu 
+  # ⚙item_menu_quantity ▶ITEM ⌛ 👆 => 👆 ▶ITEM 
+  ⚙item_menu_quantity 💬item_menu ⌛ 🆎 => 🆎 ⚙item_menu ▶🚫 
+  ⚙item_menu ▶🚫 ⌛ 🅰 => 🅰 ⚙player_pc ▶item_menu_choice
+  ⚙item_menu ⌛ 🅱 => 🅱 ⚙player_pc ▶item_menu_choice
+
+  ⚙item_menu => ⚙withdraw_item | ⚙deposit_item | ⚙toss_item
+  ▶ITEM => ▶potion
+  ▶item_menu_choice => ▶withdraw_item | ▶deposit_item | ▶toss_item
+  ⚙item_menu_quantity => ⚙withdraw_item_quantity | ⚙deposit_item_quantity | ⚙toss_item_quantity
+  💬item_menu => 💬"Withdrew POTION." | 💬"POTION was stored via PC." | 💬toss_potion
+
+  ⚙player_pc ▶item_menu_choice ⌛ ⏩ => ⏩ 💬item_menu # now this works again
+
+# TODO skipping toss menu
+# ⚙toss_item => ⚙toss_item ▶potion    # OBSERVATION: (will get broken later when top item's not a potion)
+
+# START MENU LOGIC:
+
+🧍‍♂️ ⌛ ⏸ => ⏸ ⚙start_menu ▶start_menu_pos_default
+🧍‍♂️ ⌛ ⏸ ▶start_menu_pokemon => ⏸ ⚙start_menu ▶start_menu_pokemon
+▶start_menu_pos_default => ▶start_menu_pokemon
+▶start_menu_choices => ▶start_menu_pokemon | ▶start_menu_item | ▶start_menu_player | ▶start_menu_save | ▶start_menu_options | ▶start_menu_exit
+⚙start_menu ▶start_menu_item ⌛ 🅰 => ⚙start_menu_items ▶start_menu_item 🅰 
+
+⚙start_menu_items ▶ITEM ⌛ 👆 => 👆 ⚙start_menu_items ▶🚫  
+⚙start_menu_items ▶🚫 ⌛ 👇 => 👇 ⚙start_menu_items ▶ITEM   
+⚙start_menu_items ▶ITEM ⌛ 🅰  => ⚙start_menu_items_use_toss ▶ITEM ▶USE 🅰   
+⚙start_menu_items_use_toss ▶USE ⌛ 🅰 => ⚙start_menu_items_use_toss ▶ITEM 🅰 💬"You dont have any pokemon"
+⚙start_menu_items_use_toss ▶TOSS ⌛ 🅰 => ⚙start_menu_items_use_toss 🅰 💬toss_dialog
+⚙start_menu_items_use_toss ⌛ 🅱 => ⚙start_menu_items 🅱
+⚙start_menu_items ▶🚫 ⌛ 🅰 => 🅰 ⚙start_menu 
+
+⚙start_menu ▶start_menu_player ⌛ 🅰 => ⚙start_menu_player ▶start_menu_player 🅰 
+⚙start_menu_player player_name 📛0 💰3000 ⌚21 => ⚙start_menu_player player_name 📛0 💰3000 ⌚21 
+  # oddly, this is one of the more challenging rules... it's merely an observation that does nothing, but it could be interpreted to e.g. create 💰 if not done right
+  # note that all read-only actions are identities
+⚙start_menu_player ⌛ 🆎 => 🆎 ⚙start_menu
+
+⚙start_menu ▶start_menu_save ⌛ 🅰 => 🅰 ⚙start_menu_save ▶start_menu_save ▶save_yes
+⚙start_menu_save ▶save_yes ⌛ 🅰 => 🅰 💬saving 
+💬saving ⌛ => 🧍‍♂️
+⚙start_menu_save ▶save_no ⌛ 🅰 => 🅰 🧍‍♂️
+⚙start_menu_save ⌛ 🅱 => 🅱 🧍‍♂️
+⚙start_menu_save ▶save_yes ⌛ 👆 => ⚙start_menu_save ▶save_no 👆
+⚙start_menu_save ▶save_no ⌛ 👆 => ⚙start_menu_save ▶save_yes 👆
+⚙start_menu_save ▶save_yes ⌛ 👇 => ⚙start_menu_save ▶save_no 👇
+⚙start_menu_save ▶save_no ⌛ 👇 => ⚙start_menu_save ▶save_yes 👇
+
+⚙start_menu ▶start_menu_options ⌛ 🅰 => ⚙start_menu_options ▶start_menu_options 🅰 
+⚙start_menu_options => ⚙options
+
+⚙start_menu ▶start_menu_exit ⌛ 🅰 => 🅰 🧍‍♂️
+
+# TODO start menu up/down/exit junk
+
+# ANNNNNND - fully-defined behavior/states.  ready to explore
+
+
+# DOWNSTAIRS
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+⏹⏹⏹⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⏹⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛🟣🟣⬜🟣⬜⬜⬜🔃⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬛⬛🚹⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬛⬛⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹                                      
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛🔃🔃⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+
+🔃 => "staircase up" | "black square"
+🟣 => "bookcase bottom" | "tv"
+⬛ => "table UL" | "table UR" | "table DL" | "table DR"
+⏹ => "bookcase top"
+⬜ => "stool" | "carpet"
+# the tv tile maps to both 🟣 and ⬛ now.  Anomaly detection
+# also big anomaly: "black square" can be a teleport now (door).  It's always next to a carpet, but agent doesnt necessarily know that
+# rule is basically this:
+➡("carpet") ⌛ 👉2 🧍‍♂️ 👣(🧍‍♂️) 👁🧍‍♂️ => ➡🧍‍♂️ 🧍‍♂️ ➡(➡(🔃 🧍‍♂️)) # repeat for each dir
+
+
+
+# NPCS:
+# this would probably be guessed as 🟣 at first, but interacting will make them turn/move which may be recognized as a different category
+🚹 => "mom" 
+"mom" => ⬅"mom" | ⬆"mom" | ➡"mom" | ⬇"mom"
+
+⬆🧍‍♂️ ⬆("mom") 🧍‍♂️ ⌛ 🅰 => 🅰 🧍‍♂️ ⬆🧍‍♂️ ⬆(⬇"mom") ✅"mom" 
+  # repeat x4 directions, x4 mom initial facing directions
+✅"mom" => 💬mom
+💬mom ⌛ 🆎 => 🆎 💬mom 💬
+💬mom 💬5 => 
+
+# PALLET TOWN:
+# interesting...  this is where MLs searching for only novelty get stuck
+# due to the randomness of the 2 npcs + ocean wave animations + grass wind animations
+# lol this is silly drawing maps still.... but it helps to think of every nuance
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+⏹🟩🟩🟩⬜⬜⬜⏹⬜⬜⬜⬜⬜⬛🟩🟩⬛⬜⬜⬜⬜⬜⏹⬜🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬜⬜⬜⏹⬜⬜⬜⬜⬜⬛🟩🟩⬛⬜⬜⬜⬜⬜⏹⬜🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬜⬜⬜⬛⬜⬜⬜⬜⬜⬛🟩🟩⬛⬜⬜⬜⬜⬜⬛⬜🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛🟩🟩⬛⬛⬛⬛⬛⬛⬛⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬛⬛⬛⬛⬜⬜⬜⬜⬛⬛⬛⬛⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬛⏹⏹⬛⬜⬜⬜⬜⬛⏹⏹⬛⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜🟣⬛🔃⬛⬛⬜⬜⬜🟣⬛🔃⬛⬛⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜🚺⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⬛⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬛⬛⬛🟣⬜⬜⬛⏹⏹⏹⏹⬛⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛⏹⏹⏹⏹⬛⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛🔃⬛⬛⬛⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛🟣⬛⬛⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜🟦🟦🟦⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜🟦🟦🟦⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬜⬜⬜🟦🟦🟦⬜🚺⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬛⬜⬜🟦🟦🟦⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬛⬛⬛⬛🟦🟦🟦⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬜⬜⬜⬛🟦🟦🟦⬜⬜⬜⬜⬜⬜⬛⬜⬜⬜⬜⬜⬜🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬜⬜⬜⬛🟦🟦🟦⬜⬜⬜⬜⬜⬜⬛⬜⬜⬜⬜⬜⬜🟩🟩🟩🟩⏹
+⏹🟩🟩🟩⬜⬜⬜⬛🟦🟦🟦⬜⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+
+🔃 => "house door"
+⏹ => "large rock"
+⬛ => "fence post" | "fence" | "house ULL" | "house UL" | "house UR" | "house URR" | ... # lotta house pieces
+🟦 => "water" | "water shore L" | "water shore R" | "water shore U"
+⚫ => "sign" | 
+⬜ => "cut grass" | "flowers" | "dirt road" | "dirt road clear" | "dirt road partial"
+# ....
+# animated stuff:
+"flowers" => "flowers"1 | "flowers"2 | "flowers"3
+
+🟩 => GRASS
+⬆🧍‍♂️ ⬆(🟩) 🧍‍♂️ ⌛ 👆 => 👆 🧍‍♂️ ⬆🧍‍♂️ ⬆(🟩 🧍‍♂️) 💬oak_safety
+💬oak_safety ⌛ 🆎 => 🆎 💬oak_safety 💬
+💬oak_safety 💬7 => oak_takes_you_to_lab  
+# ... could make rule transitions along the way here showing the path walked to lab
+oak_takes_you_to_lab ⌛10 => 🧍‍♂️ ⬆🧍‍♂️ ⬆(🔃 🧍‍♂️)
+💬17
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛🟣🟣⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛🟣🟣🟣🟣⬜⬜🟣🟣🟣🟣⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜🚺⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜🚺⬜🟣🟣🟣⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛❎❎⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛🟣🟣🟣🟣⬜⬜🟣🟣🟣🟣⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜🚺⬜⬜⬜⬜⬜🚺⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜🚺⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛🔃🔃⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+
+🟣 => "oak_pc_left" | "oak_pc_right" | "oak_encyclopedia" | "wall_scroll_1" | "wall_scroll_2" | 🔥charmander | 🐢🐾 | 🌱🐾
+🐢🐾 => 🐢squirtle
+🌱🐾 => 🌱bulbasaur
+
+# notes:
+# bookcase: only interactive from bottom
+# "wall_scroll" two different dialogs for same sprite
+
+#cant escape
+⬇(❎) 👁🧍‍♂️ 🧍‍♂️ ⌛ 👇 => ⬆🧍‍♂️ 👇 ⬇(❎) 💬cant_escape_lab
+💬cant_escape_lab ⌛ 🅰 => # end dialog 
+
+# pick a starter:
+⬆🧍‍♂️ ⬆(squirtle) 🧍‍♂️ ⌛ 🅰 => 🅰 ⬆🧍‍♂️ ⬆(⬛) 💬chose_squirtle 🐢🐾 🐢🐾(🎬) 📅got_starter
+💬chose_squirtle ⌛ 🆎 => 🆎 💬chose_squirtle 💬
+💬chose_squirtle 💬5 => 💬gary_chooses_bulbasaur  
+💇‍♂️ => GARY
+💬gary_chooses_bulbasaur ⬅3⬆(💇‍♂️) ⌛3 ➡(⬆(🌱🐾)) => 💬gary_chooses_bulbasaur ➡(💇‍♂️) ➡(⬆(⬛)) # move gary, remove bulbasaur
+💬gary_chooses_bulbasaur 💬3 => 🧍‍♂️  # end dialog
+
+# escaping is now a gary battle
+📅got_starter ⬇(❎) 👁🧍‍♂️ 🧍‍♂️ ⌛ 👇 => 📅rival_battle
+📅rival_battle ⌛3 => 💬"GARY wants to fight!" 🤺🚺Gary_1 🤺🔴 🔴
+🤺🔴 => enemy_pokemon
+🔴 => your_pokemon
+
+
+# BATTLE 
+# TODO redo this with listeners as pokemon
+🐢🐾(🎬) => 🐢🐾(#️⃣🐾7 🆔23794 🍎19  ⬆🍎19 5️⃣  🅿Tackle*35 🅿TailWhip*30 ⚔10 🛡12 💨10 🧙‍♀️10)
+🤺🌱🐾(🎬) => 🤺🌱🐾(#️⃣🐾1 🆔23794 🍎20 ⬆🍎20 5️⃣  🅿Tackle*35 🅿Growl*30 ⚔10 🛡11 💨10 🧙‍♀️11)
+
+
+# gary sends out bulbasaur:
+❗ 🤺🚺Gary_1 🤺🔴 ⌛ => 🤺🚺Gary_1 🤺🌱🐾(🎬)
+# you send out squirtle:
+❗ 🔴 ⌛ 🐢🐾 => 🐢🐾 ⚔🐢🐾
+
+💬"GARY wants to fight!" ⌛ 🅰 => 🅰 ⚙battle_menu ▶FIGHT
+▶FIGHT ⚔🐢🐾 ⌛ 🅰 => 🅰 ▶FIGHT ⚔🐢🐾 ▶Tackle
+
+# choose move:
+▶FIGHT ⚔🐢🐾 ⌛ 🅰 ▶Tackle 🐢🐾(🅿Tackle) => 🅰 ▶FIGHT ⚔🐢🐾 ▶Tackle ⚔Tackle 🎲🚦       
+▶FIGHT ⚔🐢🐾 ⌛ 🅰 ▶TailWhip 🐢🐾(🅿TailWhip) => 🅰 ▶FIGHT ⚔🐢🐾 ▶TailWhip ⚔TailWhip 🎲🚦    
+▶FIGHT ⚔🐢🐾 ⌛ 👆 ▶Tackle => 👆 ▶FIGHT ⚔🐢🐾 ▶TailWhip
+▶FIGHT ⚔🐢🐾 ⌛ 👆 ▶TailWhip => 👆 ▶FIGHT ⚔🐢🐾 ▶Tackle
+▶FIGHT ⚔🐢🐾 ⌛ 👇 ▶Tackle => 👇 ▶FIGHT ⚔🐢🐾 ▶TailWhip
+▶FIGHT ⚔🐢🐾 ⌛ 👇 ▶TailWhip => 👇 ▶FIGHT ⚔🐢🐾 ▶Tackle
+
+
+# turn resolve:
+⚔🐢🐾 🤺🌱🐾 🎲🚦 => ⚔🐢🐾 🤺🌱🐾 🚦  # speed calculation on who goes first (player wins here)
+
+# tackle:
+❗ 🎲 🚦 ⚔🐢🐾 🤺🌱🐾 ⚔Tackle ⌛ 🤺🌱🐾(🍎2-4)  => ⚔🐢🐾 🤺🌱🐾 🤺🚦  # attack, take enemy hp, switch turns (randomize hp)
+🎲 🚦 ⚔🐢🐾 🤺🌱🐾 ⚔Tackle ⌛ => ⚔🐢🐾 🤺💀 🐢🐾(🏅67 🧮67)  # enemy faints if not enough hp, gain fresh exp (+ total exp)
+# tail whip:
+🤺🛡🔽 => "Enemy BULBASAUR defense fell!"
+# 🎲 🚦 ⚔🐢🐾 🤺🌱🐾 ⚔TailWhip ⌛ 🤺🌱🐾(🛡1-3) => ⚔🐢🐾 🤺🌱🐾 🤺🚦  # probably the real rule
+🎲 🚦 ⚔🐢🐾 🤺🌱🐾 ⚔TailWhip ⌛ => ⚔🐢🐾 🤺🌱🐾 🤺🚦 🤺🛡🔽 # but this is all we know now
+
+# enemy turn
+🎲 🤺🌱🐾 ⚔🐢🐾 🤺🚦 => 🤺🌱🐾 ⚔🐢🐾 🤺⚔Tackle    # randomize which move opponent uses
+🎲 🤺🌱🐾 ⚔🐢🐾 🤺🚦 => 🤺🌱🐾 ⚔🐢🐾 🤺⚔Growl
+# enemy tackle:
+🎲 🤺🚦 ⚔🐢🐾 🤺🌱🐾 🤺⚔Tackle ⌛ 🐢🐾(🍎2-4) => ⚔🐢🐾 🤺🌱🐾 🚦   # opp attack, take your hp, switch turns (randomize hp)
+🎲 🤺🚦 ⚔🐢🐾 🤺🌱🐾 🤺⚔Tackle ⌛ => 🤺🌱🐾 💀 # your pokemon faints
+# enemy growl:
+⚔🔽 => "SQUIRTLE's attack fell!"
+# 🎲 🤺🚦 ⚔🐢🐾 🤺🌱🐾 🤺⚔Growl ⌛ 🐢🐾(⚔1-3) => ⚔🐢🐾 🤺🌱🐾 🚦 # probably the real rule
+🎲 🤺🚦 ⚔🐢🐾 🤺🌱🐾 🤺⚔Growl ⌛ => ⚔🐢🐾 🤺🌱🐾 🚦 ⚔🔽  # but this is all we know now
+
+# FAINT end of battle:
+❗ 🤺🚺Gary_1 🤺🔴 🤺💀 ⌛ => enemy_choose_next_pokemon
+🤺🚺Gary_1 🤺💀 ⌛ => gary_defeated
+
+❗ 🔴 ⌛ 💀 => player_choose_next_pokemon
+🤺🚺Gary_1 💀 ⌛ => gary_wins
+
+gary_defeated => 💰175 💬gary_defeated
+💬gary_defeated ⌛ 🆎 => 🆎 💬gary_defeated 💬
+💬gary_defeated 💬5 => 📅post_rival_battle  
+
+# level up:
+🐢🐾(🏅65 5️⃣) => 🐢🐾(6️⃣ ⚔ 🛡 💨 🧙‍♀️ ⬆🍎2) # (lol attack def speed special)
+
+# TODO rolls to hit/miss, critical, attack/def/etc modifiers, etc
+# TODO pokemon choose/switch,  items, run
+
+
+📅post_rival_battle ⬇(❎) => ⬇(⬜) # remove blocks
+
+
+# sigh might as well finish up pallet town:
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛🟣⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛🟣🟣⬜⬜⬜⬜⬜🟣⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜🚺🟣⬛⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬛⬛⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛🔃🔃⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹
+⏹⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹⏹
+⏹⏹⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⏹⏹
+⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹⏹
+
+🟣 <=> "open map" | "world map"
+
+# ...because - one more big fun thing: WORLD MAP:
+
+
+⬆🧍‍♂️ ⬆("world map") 🧍‍♂️ ⌛ 🅰 => 🅰 ⬆🧍‍♂️ ⬆("world map") ⚙world_map 🗺PalletTown
+⚙world_map 🗺PalletTown ⌛ 👆 => 👆 🗺Route1 🗺⬆0.5 
+⚙world_map 🗺Route1 ⌛ 👆 => 👆 🗺ViridianCity 🗺⬆ 
+⚙world_map 🗺ViridianCity ⌛ 👆 => 👆 🗺Route2  🗺⬆
+⚙world_map 🗺Route2 ⌛ 👆 => 👆 🗺ViridianForest 🗺⬆ 
+⚙world_map 🗺ViridianForest ⌛ 👆 => 👆 🗺DiglettsCave 🗺➡0.5
+⚙world_map 🗺DiglettsCave ⌛ 👆 => 👆 🗺PewterCity 🗺⬆0.5 🗺⬅0.5
+⚙world_map 🗺PewterCity ⌛ 👆 => 👆 🗺Route3 🗺➡
+⚙world_map 🗺Route3 ⌛ 👆 => 👆 🗺MtMoon 🗺⬆0.5 🗺➡0.5
+⚙world_map 🗺MtMoon ⌛ 👆 => 👆 🗺Route4 🗺➡
+⚙world_map 🗺Route4 ⌛ 👆 => 👆 🗺CeruleanCity 🗺➡
+⚙world_map 🗺CeruleanCity ⌛ 👆 => 👆 🗺Route24 🗺⬆0.5
+⚙world_map 🗺Route24 ⌛ 👆 => 👆 🗺Route25 🗺⬆0.5 🗺➡0.5
+⚙world_map 🗺Route25 ⌛ 👆 => 👆 🗺SeaCottage 🗺➡0.5
+⚙world_map 🗺SeaCottage ⌛ 👆 => 👆 🗺Route5 🗺⬇2.5 🗺⬅2
+⚙world_map 🗺Route5 ⌛ 👆 => 👆 🗺Route6 🗺⬇2.5
+⚙world_map 🗺Route6 ⌛ 👆 => 👆 🗺VermilionCity 🗺⬇0.5
+⚙world_map 🗺VermilionCity ⌛ 👆 => 👆 🗺S.S.Anne 🗺⬇0.5 🗺⬅0.5
+⚙world_map 🗺S.S.Anne ⌛ 👆 => 👆 🗺Route9 🗺⬆4 🗺➡2
+⚙world_map 🗺Route9 ⌛ 👆 => 👆 🗺RockTunnel 🗺⬇0.5 🗺➡0.5
+⚙world_map 🗺RockTunnel ⌛ 👆 => 👆 🗺Route10 🗺⬇0.5
+⚙world_map 🗺Route10 ⌛ 👆 => 👆 🗺LavenderTown 🗺⬇0.5
+⚙world_map 🗺LavenderTown ⌛ 👆 => 👆 🗺PokemonTower 🗺➡0.5
+⚙world_map 🗺PokemonTower ⌛ 👆 => 👆 🗺Route8 🗺⬅
+⚙world_map 🗺Route8 ⌛ 👆 => 👆 🗺Route7 🗺⬅2.5
+⚙world_map 🗺Route7 ⌛ 👆 => 👆 🗺CeladonCity 🗺⬅0.5
+⚙world_map 🗺CeladonCity ⌛ 👆 => 👆 🗺SaffronCity 🗺➡1.5
+⚙world_map 🗺SaffronCity ⌛ 👆 => 👆 🗺Route11 🗺⬇1.5 🗺➡
+⚙world_map 🗺Route11 ⌛ 👆 => 👆 🗺Route12 🗺➡
+⚙world_map 🗺Route12 ⌛ 👆 => 👆 🗺Route13 🗺⬇0.5 🗺⬅0.5
+⚙world_map 🗺Route13 ⌛ 👆 => 👆 🗺Route14 🗺⬇0.5 🗺⬅0.5
+⚙world_map 🗺Route14 ⌛ 👆 => 👆 🗺Route15 🗺⬇0.5 🗺⬅0.5
+⚙world_map 🗺Route15 ⌛ 👆 => 👆 🗺Route16 🗺⬆4.5 🗺⬅3
+⚙world_map 🗺Route16 ⌛ 👆 => 👆 🗺Route17 🗺⬇1.5 🗺⬅0.5
+⚙world_map 🗺Route17 ⌛ 👆 => 👆 🗺Route18 🗺⬇2 🗺➡
+⚙world_map 🗺Route18 ⌛ 👆 => 👆 🗺FuchsiaCity 🗺➡
+⚙world_map 🗺FuchsiaCity ⌛ 👆 => 👆 🗺SafariZone 🗺⬆0.5
+⚙world_map 🗺SafariZone ⌛ 👆 => 👆 🗺SeaRoute19 🗺⬇ 🗺⬅
+⚙world_map 🗺SeaRoute19 ⌛ 👆 => 👆 🗺SeaFoamIslands 🗺⬅0.5
+⚙world_map 🗺SeaFoamIslands ⌛ 👆 => 👆 🗺SeaRoute20 🗺⬅0.5
+⚙world_map 🗺SeaRoute20 ⌛ 👆 => 👆 🗺CinnabarIsland 🗺⬅
+⚙world_map 🗺CinnabarIsland ⌛ 👆 => 👆 🗺SeaRoute21 🗺⬆
+⚙world_map 🗺SeaRoute21 ⌛ 👆 => 👆 🗺Route22 🗺⬆2.5 🗺⬅
+⚙world_map 🗺Route22 ⌛ 👆 => 👆 🗺Route23 🗺⬆
+⚙world_map 🗺Route23 ⌛ 👆 => 👆 🗺VictoryRoad 🗺⬆
+⚙world_map 🗺VictoryRoad ⌛ 👆 => 👆 🗺IndigoPlateau 🗺⬆
+⚙world_map 🗺IndigoPlateau ⌛ 👆 => 👆 🗺PowerPlant 🗺⬇ 🗺➡9
+⚙world_map 🗺PowerPlant ⌛ 👆 => 👆 🗺PalletTown 🗺⬇3 🗺⬅8
+
+🗺🏙 <=> cities => 🗺PalletTown | 🗺ViridianCity | 🗺PewterCity | 🗺CeruleanCity | 🗺PalletTown | 🗺VermilionCity | 🗺LavenderTown | 🗺CeladonCity | 🗺SaffronCity | 🗺FuchsiaCity | 🗺CinnabarIsland | 🗺IndigoPlateau
+🗺🛤 <=> tunnels_forests => 🗺ViridianForest | 🗺MtMoon | 🗺RockTunnel | 🗺SeaFoamIslands | 🗺VictoryRoad
+🗺🌊 <=> sea_routes => 🗺SeaRoute19 | 🗺SeaRoute20 | 🗺SeaRoute21
+
+
+⬆🧍‍♂️ ⬆("mom") 🧍‍♂️ ⌛ 🅰 => 🅰 ⬆🧍‍♂️ ⬆(⬇"mom") ✅"mom" 
+  # repeat x4 directions, x4 mom initial facing directions
+✅"mom" => 💬mom_heal
+💬mom_heal ⌛ 🆎 => 🆎 💬mom_heal 💬
+💬mom_heal 💬3 => ➕heal 💬post_mom_heal
+❗ ➕heal 🐢🐾(🍎) => ➕heal  # remove all health first
+➕heal => ➕heal2
+❗ ➕heal2 🐢🐾(⬆🍎) => ➕heal2 🐢🐾(⬆🍎✅ 🍎) # convert all max hp to hp
+➕heal2 => ➕heal3
+❗ ➕heal3 🐢🐾(⬆🍎✅) => ➕heal3 🐢🐾(⬆🍎) # restore maxhp
+➕heal3 => # end heal
+💬post_mom_heal ⌛ 🆎 => 🆎 💬post_mom_heal 💬
+💬post_mom_heal 💬4 => 🧍‍♂️ # end convo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# TODO:
+- ⌛ can be built up currently in title screen and spent later. bad! 
+- many rules are generalized in ways that wont work... need to be "compiled" back into individual rules per option (it's fine as shorthand)

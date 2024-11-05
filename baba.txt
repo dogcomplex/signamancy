@@ -1,0 +1,409 @@
+# ========================= Level Island-2: Warm River
+# each is a separate rule
+
+# level:
+width is 15
+height is 8
+"baba" is 0,0
+"is" is 1,0
+"melt" is 2,0
+"baba" is 4,5
+"is" is 4,4
+"you" is 4,3
+"and" is 4,2
+"float" is 4,1
+"water" is 0,7
+"is" is 1,7
+"hot" is 2,7
+water is 8,0
+water is 8,1
+water is 8,2
+water is 8,3
+water is 8,4
+water is 8,5
+water is 8,6
+water is 8,7
+baba is 6,3
+"skull" is 10,0
+"is" is 11,0
+"defeat" is 12,0
+"and" is 13,0
+"float" is 14,0
+"flag" is 12,7
+"is" is 13,7
+"win" is 14,7
+flag is 13,6
+skull is 11,5
+skull is 11,6
+skull is 11,7
+skull is 12,4
+skull is 13,4
+skull is 14,4
+
+# 2nd-order:
+water is hot
+baba is melt
+baba is you
+baba is float
+skull is defeat
+skull is float
+flag is win
+
+
+# implicit (global, universal):
+"*" is word
+"baba" is noun
+"water" is noun
+"flag" is noun
+"skull" is noun
+"melt" is adjective
+"hot" is adjective
+"float" is adjective
+"defeat" is adjective
+"win" is adjective
+"you" is adjective
+"and" is conjunction
+"is" is verb
+"push" is verb
+text is push
+"skull" is skull
+"baba" is baba
+"water" is water
+"flag" is flag
+melt and hot is defeat
+noun verb adjective is rule
+noun verb noun is rule
+noun verb conjunction is not rule
+verb noun noun is not rule
+noun verb verb is not rule
+noun adjective word is not rule
+(noun verb adjective1 conjunction adjective2) is (noun verb adjective1) conjunction (noun verb adjective2)
+(noun1 conjunction noun2 verb adjective) is (noun1 verb adjective) conjunction (noun2 verb adjective)
+# ... many more around language rules
+
+
+
+
+
+We are attempting to solve levels of the game Baba Is You from base principles by creating testable axiomatic insights.
+
+Start by drawing the map, then attempt to make hypotheses about subsequent rules of the game and reachable states based on your observations so far.
+All rules listed so far have been confirmed by the game's mechanics and are considered true.  Please point out any that might be in error.
+For any proposed new rules, include a test of how you would confirm or deny the rule in the game in the current level.
+
+No NOT propose rules using any new objects/mechanics/syntax not already introduced below.  Rules should primarily be 2nd-order implications from the existing rules.
+Where a syntax clarification or extension is needed, propose it as a new rule and test which can validate it in the current level.
+
+Please start by drawing the current map from these observations, using ASCII art or a simple diagram.
+
+
+# ====================== LEVEL 00 BABA IS YOU
+# base observations from the level:
+height is 18
+width is 33
+baba is 12,7
+"wall" is 11,3
+"is" is 12,3
+"stop" is 13,3
+"rock" is 19,3
+"is" is 20,3
+"push" is 21,3
+"baba" is 11,11
+"is" is 12,11
+"you" is 13,11
+"flag" is 19,11
+"is" is 20,11
+"win" is 21,11
+rock is 16,6
+rock is 16,7
+rock is 16,8
+flag is 20,7
+wall is 11,5
+# ... many more walls
+wall is 21,5
+wall is 11,9
+# ... many more walls
+wall is 21,9
+# also decorative: floor tiles, empty
+# also "move" and directional arrows text
+
+
+# rules created based on initial block positions:
+baba is you
+wall is stop
+flag is win
+rock is push
+
+
+# inferred rules so far (global facts):
+moveL is (you and not stop(-1,+0) is move(-1,+0))
+moveR is (you and not stop(+1,+0) is move(+1,+0))
+moveU is (you and not stop(+0,+1) is move(+0,+1))
+moveD is (you and not stop(+0,-1) is move(+0,-1))
+<=0,* is stop # boundary walls:
+*,<=1 is stop
+>=width,* is stop
+*,>=height is stop
+"*" is text
+text is push
+(you is x,y) and (win is x,y) is VICTORY # you overlapping win is victory
+(you is hot) and (location is defeat) is not defeat # hot objects are not affected by defeat
+(x is x) and (x is y) is (x is x) # x is x creates permanence so x wont change as long as (x is x) is true
+
+# inferrable rules from the level:
+(wall is stop) is optional
+(flag is win) is optional
+(rock is push) is optional
+baba is not you => rock is you | wall is you | flag is you # something must be you to win
+(wall is flag) is possible
+(wall is rock) is possible
+(wall is baba) is possible
+(flag is wall) is possible
+(flag is rock) is possible
+(flag is baba) is possible
+(rock is baba) is possible
+(rock is flag) is possible
+(rock is wall) is possible
+(baba is flag) is possible
+(baba is rock) is possible
+(baba is wall) is possible
+(wall is you) is possible
+(flag is you) is possible
+(rock is you) is possible
+(baba is stop) is possible
+(flag is stop) is possible
+(rock is stop) is possible
+(wall is win) is possible
+(flag is win) is possible
+(rock is win) is possible
+(wall is push) is possible
+(flag is push) is possible
+(rock is push) is possible
+
+
+
+# ASCII VISUALIZATION:
+
+def create_grid(width, height):
+    # Create an empty grid with extra space for 2x2 characters
+    grid = [['    ' for _ in range(width)] for __ in range(height)]
+    return grid
+
+def add_to_grid(grid, x, y, text):
+    # Normalize text to fit 2x2 characters per block
+    # Pad text if it's shorter than 4 characters
+    if len(text) < 4:
+        text = text.ljust(4)
+    # Add text to the grid at the specified location
+    grid[y][x] = text
+
+def print_grid(grid):
+    # Prepare the grid for output, inverting the y-axis
+    output = []
+    for row in reversed(grid):  # Invert the rows
+        # Split each 2x2 block into two lines
+        first_line = ''
+        second_line = ''
+        for cell in row:
+            first_line += cell[:2]
+            second_line += cell[2:]
+        output.append(first_line)
+        output.append(second_line)
+    return '\n'.join(output)
+
+# Level dimensions and object positions
+width, height = 33, 18
+grid = create_grid(width, height)
+
+# Define objects and their positions
+objects = [
+    ("WALL", 11, 3),
+    ("IS  ", 12, 3),
+    ("STOP", 13, 3),
+    ("ROCK", 19, 3),
+    ("IS  ", 20, 3),
+    ("PUSH", 21, 3),
+    ("BABA", 11, 11),
+    ("IS  ", 12, 11),
+    ("YOU ", 13, 11),
+    ("FLAG", 19, 11),
+    ("IS  ", 20, 11),
+    ("WIN ", 21, 11),
+    ("baba", 12, 7),
+    ("rock", 16, 6),
+    ("rock", 16, 7),
+    ("rock", 16, 8),
+    ("flag", 20, 7),
+    ("wall", 11, 5),
+    ("wall", 12, 5),
+    ("wall", 13, 5),
+    ("wall", 14, 5),
+    ("wall", 15, 5),
+    ("wall", 16, 5),
+    ("wall", 17, 5),
+    ("wall", 18, 5),
+    ("wall", 19, 5),
+    ("wall", 20, 5),
+    ("wall", 21, 5),
+    ("wall", 11, 9),
+    ("wall", 12, 9),
+    ("wall", 13, 9),
+    ("wall", 14, 9),
+    ("wall", 15, 9),
+    ("wall", 16, 9),
+    ("wall", 17, 9),
+    ("wall", 18, 9),
+    ("wall", 19, 9),
+    ("wall", 20, 9),
+    ("wall", 21, 9),
+]
+
+# Add objects to the grid
+for text, x, y in objects:
+    add_to_grid(grid, x, y, text)
+
+# Print the ASCII map
+ascii_output = print_grid(grid)
+ascii_output
+
+
+
+# ========================================
+
+We are playing a grid-based text game called Baba Is You.  The game consists of a grid of objects, each with its own properties and rules.  The goal is to manipulate the objects and rules to reach a win condition.
+
+The current level can be defined as follows:
+```
+state = [
+    ("WALL", 11, 3),
+    ("IS  ", 12, 3),
+    ("STOP", 13, 3),
+    ("ROCK", 19, 3),
+    ("IS  ", 20, 3),
+    ("PUSH", 21, 3),
+    ("BABA", 11, 11),
+    ("IS  ", 12, 11),
+    ("YOU ", 13, 11),
+    ("FLAG", 19, 11),
+    ("IS  ", 20, 11),
+    ("WIN ", 21, 11),
+    ("baba", 12, 7),
+    ("rock", 16, 6),
+    ("rock", 16, 7),
+    ("rock", 16, 8),
+    ("flag", 20, 7),
+    ("wall", 11, 5),
+    ("wall", 12, 5),
+    ("wall", 13, 5),
+    ("wall", 14, 5),
+    ("wall", 15, 5),
+    ("wall", 16, 5),
+    ("wall", 17, 5),
+    ("wall", 18, 5),
+    ("wall", 19, 5),
+    ("wall", 20, 5),
+    ("wall", 21, 5),
+    ("wall", 11, 9),
+    ("wall", 12, 9),
+    ("wall", 13, 9),
+    ("wall", 14, 9),
+    ("wall", 15, 9),
+    ("wall", 16, 9),
+    ("wall", 17, 9),
+    ("wall", 18, 9),
+    ("wall", 19, 9),
+    ("wall", 20, 9),
+    ("wall", 21, 9),
+]
+```
+
+There are distinct differences between upper and lower case objects, but otherwise matching objects are identical.
+We observe the ability to move the "baba" object U, D, L, or R with the arrow keys. Pressing space performs a WAIT (W) move that does nothing.
+Coordinates of "baba" are affected accordingly: U: (x,y+1), D: (x,y-1), L: (x-1,y), R: (x+1,y). 
+The "baba" object can interact with other objects based on the rules defined in the level.
+The rules so far (visible in the pause screen) are:
+- baba is you
+- wall is stop
+- flag is win
+- rock is push
+We believe these are caused by adjacent objects BABA IS YOU, WALL IS STOP, FLAG IS WIN, and ROCK IS PUSH.
+
+We are hoping to deduce additional rules based on the current level setup.  Please provide any insights you have on the current state of the level and any potential rules that can be inferred from it.
+All suggested rules must be TESTABLE.  i.e. you must provide a set of moves and an expected state they will reach which validates the hypothesis.
+
+Please provide additional action rules in the json format:
+```
+{
+  'RULE': <your action rule short name here>
+  'DESCRIPTION': <your action rule description here>
+  'MOVES': <short list of previously-defined actions to apply to test the rule, e.g. ['U', 'R', 'R']>,
+  'ACTION': (state, moves) => <function transforming to new expected state after the action>,
+  'TESTS': {
+    '<test_name>' : {
+      'DESCRIPTION': <test description>,
+      'STATE': <state before the action>,
+      'EXPECTED_STATE': <state after the action>,
+    },
+  },
+}
+```
+
+Example rules:
+```
+{
+  'RULE': 'baba_UP_2',
+  'DESCRIPTION': 'Move baba up twice, failing if blocked', 
+  'MOVES': ['U', 'U'],
+  'ACTION': (state, moves) => ,
+
+
+Aim for short testable sequences that can confirm or deny the rule.  Pursue rules that are likely to lead to a win condition.
+
+
+
+
+# BABA IS YOU CELL AUTOMATA:
+# Level 1:
+
+# defs:
+🔳 <=> empty
+
+🐇 <=> baba
+🏁 <=> flag
+🧱 <=> wall
+🗻 <=> rock
+
+👑 <=> win
+🙂 <=> you
+✋ <=> push
+🛑 <=> stop
+
+BABA <=> baba_text
+FLAG <=> flag_text
+WALL <=> wall_text
+ROCK <=> rock_text
+IS <=> is_text
+YOU <=> you_text
+WIN <=> win_text
+PUSH <=> push_text
+STOP <=> stop_text
+
+🎮⬅️ <=> moveL
+🎮➡️ <=> moveR
+🎮⬆️ <=> moveU
+🎮⬇️ <=> moveD
+
+# listeners:
+👂⬅️ <=> listenL
+👂➡️ <=> listenR
+👂⬆️ <=> listenU
+👂⬇️ <=> listenD
+👂🌎 <=> listenGlobal
+👂🎮 <=> listenMoves
+👂 <=> listenAll
+
+# move listener:
+# views scope of 👂🎮 if there's a ⬅️ move input and imports it locally if so 
+👂🎮( ⬅️ ) => 👂🎮 🎮⬅️
+🎮⬅️ 🙂 =>  # move you left, leaving this space emptier (TODO lol this is tough, cuz overlap stack)
+

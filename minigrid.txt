@@ -1,0 +1,208 @@
+# COMMANDS
+🎮 <=> controls =>
+  ⤴ <=> turn_left 
+  ⤵ <=> turn_right
+  👉 <=> forward
+  🤏 <=> pickup
+  🖐 <=> drop
+  👋 <=> toggle
+  🙌 <=> done
+
+# SQUARES
+⏹ <=> square (any) => ⏹🔲 ⏹📦 | ⏹🔲  # contents can be empty
+
+# Floor:
+⏹🔲 <=> square_floor (any) <=> ⏹🔲 ⏹
+  ⬛ <=> normal
+  🟩 <=> goal_square
+  🟧 <=> lava
+  ⬜ <=> wall
+  🚪 <=> door # any (multiple colors)
+
+# OBJECTS/ENTITIES
+⏹📦 <=> square_contents =>
+  🔑 <=> key # any (multiple colors)
+  ⭕ <=> obstacle # any (multiple colors)
+  🎁 <=> box
+  🦊 <=> agent # any (multiple directions)
+  
+# META:
+🎬 <=> GAME_START
+🏁 <=> GAME_END
+🏆 <=> win <=> goal # distinct from goal_square, as sometimes it's not just a location
+  # note, game may end without the agent actually reaching the goal
+😿 <=> lose
+💰 <=> reward
+⏰ <=> timer
+⌛ <=> step
+⌛🔚 <=> max_steps <=> remaining_steps
+
+# Keys:
+🔑 <=> key =>
+  🔑🟥 <=> key_red
+  🔑🟨 <=> key_yellow
+  🔑🟩 <=> key_green
+  🔑🟦 <=> key_blue
+  🔑🟪 <=> key_purple
+  🔑⬜ <=> key_grey
+
+
+# Doors:
+🚪 <=> door <=> 🚪🌈 🚪🛅 # a door square is defined by its color and its state
+  🚪🌈 <=> door_color => # abstraction
+  🚪🟥 <=> door_red
+  🚪🟨 <=> door_yellow
+  🚪🟩 <=> door_green
+  🚪🟦 <=> door_blue
+  🚪🟪 <=> door_purple
+  🚪⬜ <=> door_grey
+
+🚪🛅 <=> door_state => # abstraction
+  🚪🔒 <=> door_locked
+  🚪🔓 <=> door_closed # but unlocked
+  🚪⬛ <=> door_open
+
+
+# full door states: # ground truth descriptions
+🚪 =>
+  🚪🔒🟥 <=> door_locked_red <=> 🚪🟥 🚪🔒
+  🚪🔓🟥 <=> door_closed_red
+  🚪⬛🟥 <=> door_open_red
+  🚪🔒🟨 <=> door_locked_yellow
+  🚪🔓🟨 <=> door_closed_yellow
+  🚪⬛🟨 <=> door_open_yellow
+  🚪🔒🟩 <=> door_locked_green
+  🚪🔓🟩 <=> door_closed_green
+  🚪⬛🟩 <=> door_open_green
+  🚪🔒🟦 <=> door_locked_blue
+  🚪🔓🟦 <=> door_closed_blue
+  🚪⬛🟦 <=> door_open_blue
+  🚪🔒🟪 <=> door_locked_purple
+  🚪🔓🟪 <=> door_closed_purple
+  🚪⬛🟪 <=> door_open_purple
+  🚪🔒⬜ <=> door_locked_grey
+  🚪🔓⬜ <=> door_closed_grey
+  🚪⬛⬜ <=> door_open_grey
+
+# Boxes:
+🎁 <=> box =>
+  🎁🟥 <=> box_red
+  🎁🟨 <=> box_yellow
+  🎁🟩 <=> box_green
+  🎁🟦 <=> box_blue
+  🎁🟪 <=> box_purple
+  🎁⬜ <=> box_grey
+
+# agent states:
+🦊 => 🦊🔄 🦊📦 | 🦊🔄  # an agent may have a rotation and a (optional) inventory
+🦊🔄 => # rotation abstraction
+  🦊⬆ <=> agent_up
+  🦊⬇ <=> agent_down
+  🦊➡ <=> agent_right
+  🦊⬅ <=> agent_left
+🦊📦 => # inventory abstraction
+  🦊🔑 <=> agent_carrying_key
+  🦊🎁 <=> agent_carrying_box
+
+# Grid:
+⏹↔ <=> grid_width
+⏹↕ <=> grid_height
+⏹📍 <=> grid_square_position =>
+  ⏹↔↕ <=> grid_position_1_1
+  ⏹↔2↕3 <=> grid_position_2_3
+  # ...
+❎ <=> grid_square_non_walkable =>
+  ⏹📦 | ⬜ | 🚪🔒 | 🚪🔓  # any contents or door is locked/closed
+✅ <=> grid_square_walkable =>
+  ⬛ | 🟧 | 🟩 | 🚪⬛ 
+
+# Relative positioning:
+👣 <=> current_square #(execution pointer)
+⬆ <=> grid_square_above_👣
+⬇ <=> grid_square_below_👣
+⬅ <=> grid_square_left_👣
+➡ <=> grid_square_right_👣
+👣(🦊) <=> current_square_with_🦊_in_it => 👣(⏹🔲 🦊)
+👣🦊 <=> 👣⏹🔲 👣🦊  # same thing?
+
+# ACTION LOGIC:
+🦊⬆ ⤴ => 🦊⬅
+🦊⬆ ⤵ => 🦊➡
+🦊⬇ ⤴ => 🦊➡
+🦊⬇ ⤵ => 🦊⬅
+🦊⬅ ⤴ => 🦊⬇
+🦊⬅ ⤵ => 🦊⬆
+🦊➡ ⤴ => 🦊⬆
+🦊➡ ⤵ => 🦊⬇
+👣(🦊⬆) 👉 ⬆(✅) => ⬆(🦊⬆ ✅) # move up one grid square if walkable and facing up
+👣(🦊⬆) 👉 ⬆(❎) => ⬆(❎) 👣(🦊⬆) # if not walkable, stay in place
+👣(🦊⬆ 🦊📦0) 🤏 ⬆(⏹📦) => 👣(🦊⬆ ⏹📦)  # if facing an item, pickup
+👣(🦊⬆) 🤏 ⬆(⏹📦0) => 👣(🦊⬆) ⬆(⏹📦0)  # if nothing to pickup, do nothing
+👣(🦊⬆ 🦊📦) 🤏 ⬆(⏹📦) => 👣(🦊⬆) ⬆(⏹📦) # if already holding something, do not pickup
+👣(🦊⬆ 🦊📦) 🖐 ⬆(⏹📦) => 👣(🦊⬆ 🦊📦) ⬆(⏹📦) # cant drop to full square
+👣(🦊⬆ 🦊📦) 🖐 ⬆(⬛) => 👣(🦊⬆) ⬆(⬛ ⏹📦) # drop on empty square
+👣(🦊⬆ 🦊📦0) 🖐 => 👣(🦊⬆ 🦊📦0)  # if not holding anything, drop does nothing
+👣(🦊⬆) ⬆(🚪🔓) 👋 => 👣(🦊⬆) ⬆(🚪⬛) # open door if unlocked
+👣(🦊⬆) ⬆(🚪🔒) 👋 => 👣(🦊⬆) ⬆(🚪🔒) # do nothing if locked
+👣(🦊⬆) ⬆(🚪⬛) 👋 => 👣(🦊⬆) ⬆(🚪🔓) # close door if open
+🙌 => 🏁 # end game
+
+
+# game logic
+🎬 => ⌛100 🌐 🎮 # start with 100 steps, grid world, and controls
+⌛ => 🎮  # one action per step
+
+👣(🟩) => 🏆 # win if standing on goal
+👣(🟧) => 😿 # lose if standing on lava
+🏆 => 🏁 # end game
+😿 => 🏁 # end game
+⌛0 => 🏁 # timeout ends game
+
+# grid generation logic (TODO)
+🌐
+
+# agent sight logic (TODO)
+
+# key/door logic (TODO)
+
+# mission logic (TODO)
+  # calling "done" logic
+  # e.g. "go to the red door":
+  👣(🦊⬆) ⬆(🚪🟥) 🙌 => 👣(🦊⬆) ⬆(🚪🟥) 🏆 # not sur if needs to be facing it
+  #“go to the matching object at the end of the hallway” would be tough! https://minigrid.farama.org/environments/minigrid/MemoryEnv/
+  # “put the {move_color} {move_type} near the {target_color} {target_type}”
+  # “open the red door then the blue door”
+
+
+# Reward equation:  1 - 0.9 * (step_count / max_steps) = reward
+# axiom equivalent:
+# ⌛🔚100  # say max steps is 100
+❗ ⌛ 🏆 => 🏆 💰0.009 # for each remaining step, get 0.9/100 reward
+🏆 => 💰0.1 # goal reward (min reward)
+# ⌛100 🏆 => 💰1 # max reward
+# ⌛0 🏆 => 💰0.1 # min reward
+# this is "taylor series expansion" of 1 - 0.9 * (step_count / max_steps) generally for any equation
+
+# collision logic (certain environments):
+👣(🦊⬆) 👉 ⬆(⭕) 💰1 => 👣(🦊⬆) ⬆(⭕) # big reward loss if crash into obstacle  (note need to start with high positive reward 💰 as written here)
+
+
+
+# example grids:
+
+# LAVA
+⬜⬜⬜⬜⬜⬜⬜⬜⬜
+⬜⬛⬛⬛⬛⬛🟧⬛⬜
+⬜⬛⬛⬛⬛⬛⬛⬛⬜
+⬜⬛⬛⬛⬛⬛🟧⬛⬜
+⬜🦊⬛⬛⬛⬛🟧⬛⬜
+⬜⬛⬛⬛⬛⬛🟧⬛⬜
+⬜⬛⬛⬛⬛⬛🟧⬛⬜
+⬜⬛⬛⬛⬛⬛🟧🟩⬜
+⬜⬜⬜⬜⬜⬜⬜⬜⬜
+
+# o1 gets it in 1 shot:
+# https://chatgpt.com/share/66e65ff9-1060-8003-b55d-f2bbc0fff163
+# gpt4o and co are fairly bad though
+# https://chatgpt.com/share/67255c71-a348-8003-b92c-3a8fd0104314
+

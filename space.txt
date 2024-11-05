@@ -1,0 +1,877 @@
+https://www.science.org/doi/10.1126/sciadv.adm8470
+
+Demonstrating how the same findings from this paper can emerge from simple rules
+Effectively encoding spatial understanding as the result of simple rules
+
+GLOBAL TOP DOWN ENVIRONMENT:
+
+🟪🟥🟧🟨🟩🟦🟫⬛⬜🔳
+
+5x5
+🟪🟧🟧🟧🟧🟧🟨
+🟫⬜⬜⬜⬜⬜⬛
+🟫⬜⬜⬜⬜⬜⬛
+🟫⬜⬜🐁⬜⬜⬛
+🟫⬜⬜⬜⬜⬜⬛
+🟫⬜⬜⬜⬜⬜⬛
+🟩🟦🟦🟦🟦🟦🟥
+
+3x3: (lets use this since basically equivalent for most rules!  But we need to think about how the two can be distinguished)
+🟪🟧🟧🟧🟨
+🟫⬜⬜⬜⬛
+🟫⬜🐁⬜⬛
+🟫⬜⬜⬜⬛
+🟩🟦🟦🟦🟥
+
+View: UP DOWN LEFT RIGHT 1, no memory
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ 👆 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬜  (possible from 6 states, but mouse dont know that)
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ 👇 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬜
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ 👈 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬜
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ 👉 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬜
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ 👆 => ⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ (3 states)
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ 👇 => ⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ (3 states)
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ 👈 => ⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ (3 states)
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ 👉 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ (3 states)
+⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ 👆 => ⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ # no movement (stop? 🛑)
+⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ 👇 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ (3 states)
+⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ 👈 => ⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ (2 states)
+⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ 👈 => ⬆🟧 ⬇⬜ ⬅🟫 ➡⬜ (1 state)
+⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ 👉 => ⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ (2 states)
+⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ 👉 => ⬆🟧 ⬇⬜ ⬅⬜ ➡⬛ (1 state)
+⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ 👆 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ (3 states)
+⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ 👇 => ⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ (3 states) 🛑
+⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ 👈 => ⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ (2 states)
+⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ 👈 => ⬆⬜ ⬇🟦 ⬅🟫 ➡⬜ (1 state)
+⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ 👉 => ⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ (2 states)
+⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ 👉 => ⬆⬜ ⬇🟦 ⬅⬜ ➡⬛ (1 state)
+⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ 👆 => ⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ (2 states)
+⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ 👆 => ⬆🟧 ⬇⬜ ⬅🟫 ➡⬜ (1 state)
+⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ 👇 => ⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ (2 states)
+⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ 👇 => ⬆⬜ ⬇🟦 ⬅🟫 ➡⬜ (1 state)
+⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ 👈 => ⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ (3 state) 🛑
+⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ 👉 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ (3 state)
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ 👆 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ (2 states)
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ 👆 => ⬆🟧 ⬇⬜ ⬅⬜ ➡⬛ (1 state)
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ 👇 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ (2 state)
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ 👇 => ⬆⬜ ⬇🟦 ⬅⬜ ➡⬛ (1 state)
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ 👈 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬜ (3 state)
+⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ 👉 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ (3 state) 🛑
+⬆🟧 ⬇⬜ ⬅🟫 ➡⬜ 👆 => ⬆🟧 ⬇⬜ ⬅🟫 ➡⬜ (1 state) 🛑
+⬆🟧 ⬇⬜ ⬅🟫 ➡⬜ 👇 => ⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ (1 state)
+⬆🟧 ⬇⬜ ⬅🟫 ➡⬜ 👈 => ⬆🟧 ⬇⬜ ⬅🟫 ➡⬜ (1 state) 🛑
+⬆🟧 ⬇⬜ ⬅🟫 ➡⬜ 👉 => ⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ (1 state)
+⬆🟧 ⬇⬜ ⬅⬜ ➡⬛ 👆 => ⬆🟧 ⬇⬜ ⬅⬜ ➡⬛ (1 state) 🛑
+⬆🟧 ⬇⬜ ⬅⬜ ➡⬛ 👇 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ (1 state)
+⬆🟧 ⬇⬜ ⬅⬜ ➡⬛ 👈 => ⬆🟧 ⬇⬜ ⬅⬜ ➡⬜ (1 state)
+⬆🟧 ⬇⬜ ⬅⬜ ➡⬛ 👉 => ⬆🟧 ⬇⬜ ⬅⬜ ➡⬛ (1 state) 🛑
+⬆⬜ ⬇🟦 ⬅🟫 ➡⬜ 👆 => ⬆⬜ ⬇⬜ ⬅🟫 ➡⬜ (1 state)
+⬆⬜ ⬇🟦 ⬅🟫 ➡⬜ 👇 => ⬆⬜ ⬇🟦 ⬅🟫 ➡⬜ (1 state) 🛑
+⬆⬜ ⬇🟦 ⬅🟫 ➡⬜ 👈 => ⬆⬜ ⬇🟦 ⬅🟫 ➡⬜ (1 state) 🛑
+⬆⬜ ⬇🟦 ⬅🟫 ➡⬜ 👉 => ⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ (1 state)
+⬆⬜ ⬇🟦 ⬅⬜ ➡⬛ 👆 => ⬆⬜ ⬇⬜ ⬅⬜ ➡⬛ (1 state)
+⬆⬜ ⬇🟦 ⬅⬜ ➡⬛ 👇 => ⬆⬜ ⬇🟦 ⬅⬜ ➡⬛ (1 state) 🛑
+⬆⬜ ⬇🟦 ⬅⬜ ➡⬛ 👈 => ⬆⬜ ⬇🟦 ⬅⬜ ➡⬜ (1 state)
+⬆⬜ ⬇🟦 ⬅⬜ ➡⬛ 👉 => ⬆⬜ ⬇🟦 ⬅⬜ ➡⬛ (1 state) 🛑
+
+
+
+🟪🟧🟧🟧🟨
+🟫⬜⬜⬜⬛
+🟫⬜🐁⬜⬛
+🟫⬜⬜⬜⬛
+🟩🟦🟦🟦🟥
+
+VIEW: just forward, no memory.  actions turn 90 / 180 / 270, move forward
+(note by convention 👉 is move, others are just turn. always moving "right" and vision turns)
+# center
+⬜ 👉 => ⬜
+⬜ 👉 => ⬛
+⬜ 👉 => 🟧
+⬜ 👉 => 🟫
+⬜ 👉 => 🟦
+# blocks:
+⬛ 👉 => ⬛ # 🛑
+🟧 👉 => 🟧 # 🛑
+🟫 👉 => 🟫 # 🛑
+🟦 👉 => 🟦 # 🛑
+# free rotate:
+⬜ ⤴ => ⬜ # rotations all basically the same from white
+⬜ ⤴ => ⬛
+⬜ ⤴ => 🟧
+⬜ ⤴ => 🟫
+⬜ ⤴ => 🟦
+⬜ ↔ => ⬜
+⬜ ↔ => ⬛
+⬜ ↔ => 🟧
+⬜ ↔ => 🟫
+⬜ ↔ => 🟦
+⬜ ⤵ => ⬜
+⬜ ⤵ => ⬛
+⬜ ⤵ => 🟧
+⬜ ⤵ => 🟫
+⬜ ⤵ => 🟦
+# corners:
+⬛ ⤴ => 🟧 # nice rotation pattern showing corners:
+🟧 ⤴ => 🟫 
+🟫 ⤴ => 🟦 
+🟦 ⤴ => ⬛ 
+⬛ ⤵ => 🟦
+🟦 ⤵ => 🟫
+🟫 ⤵ => 🟧
+🟧 ⤵ => ⬛
+# ohmygodImissedthis:
+⬛ ⤴ => ⬜
+🟦 ⤴ => ⬜
+🟫 ⤴ => ⬜
+🟧 ⤴ => ⬜
+⬜ ↔ => ⬜
+⬛ ↔ => ⬜
+🟧 ↔ => ⬜
+🟫 ↔ => ⬜
+🟦 ↔ => ⬜
+⬛ ⤵ => ⬜
+🟧 ⤵ => ⬜ 
+🟫 ⤵ => ⬜ 
+🟦 ⤵ => ⬜
+
+# second-order rules / generalization pass: 
+⏹ => ⬜ # all colors
+⏹ => ⬛
+⏹ => 🟧
+⏹ => 🟫
+⏹ => 🟦
+🔳 => 🟧 # define the "edge square" for simplicity
+🔳 => 🟦
+🔳 => 🟫
+🔳 => ⬛
+↪️ => ⤴ # rotates
+↪️ => ↔
+↪️ => ⤵
+⬜ 👉 => ⏹ # all center rules
+# ⬛ 👉 => ⬛ # 🛑 # I dont have a good syntax trick to say input matches output hmmm...
+# 🟧 👉 => 🟧 # 🛑
+# 🟫 👉 => 🟫 # 🛑
+# 🟦 👉 => 🟦 # 🛑
+##### ⏹ 👉 => ⏹ # this would be wrong.  it would absorb the 👉 but still enable jumping from any to any.   this should be a limiting gate
+👉 => # but this actually works haha!  can always do nothing.  (though note that this transition doesn't always actually work according to state.  it's just possible from *some* state that looks that way)
+⬜ ↪️ => ⏹ # all rotates can be easily defined though, so that's cool
+⬛ ⤴ => 🟧 # corner rules stay the same I think.  no easy way here
+🟧 ⤴ => 🟫 
+🟫 ⤴ => 🟦 
+🟦 ⤴ => ⬛ 
+⬛ ⤵ => 🟦
+🟦 ⤵ => 🟫
+🟫 ⤵ => 🟧
+🟧 ⤵ => ⬛
+⏹ ↪️ => ⬜
+# these could be dynamically discovered by e.g. assigning rules to ⏹ and ↪️, and checking each transition to see if they match
+# important note: these are observed transitions but are NOT actually the rules, since some transitions are not possible from certain actual real states.
+
+# one approach: 
+# so, in order to test this thing, it should just run the model and reality in parallel. every time it finds a discrepancy, it clones the rule (making a distinction on the overlaps)
+# e.g.:
+⬜ 👉 => ⬜
+⬜ 👉 => ⬛ # indicate two separate starting states, so mark em differently:
+⬜ 👉 => ⬜
+⬜' 👉 => ⬜'
+⬜ <=> ⬜' # group them temporarily
+
+
+🟪🟧🟧🟧🟨
+🟫⬜⬜⬜⬛
+🟫⬜🐁⬜⬛
+🟫⬜⬜⬜⬛
+🟩🟦🟦🟦🟥
+
+# another approach: all prev rules were 1-steps.  lets try applying them as 2-steps
+# assuming 5x5 grid: (3x3 white squares)
+
+# nomenclature:
+# TOKENS, PRODUCTIONS/TRANSITIONS, RULES, STATE/STORE
+
+# 2 STEP RULES: (VERBOSE BASIC OBSERVATIONS)
+# lesson: dont use general rules lol.  only base observations or it gets out of hand fast
+# format: start state + previous step + next action + next step verbose optional => next state
+# FORWARD 2nd step: 👉
+# edge => edge:
+⬜ 👉 (⬜ 👉 => ⬜) 👉 (⬜ 👉 => 🟧)  => 🟧
+⬜ 👉 (⬜ 👉 => ⬜) 👉 (⬜ 👉 => 🟦) => 🟦
+⬜ 👉 (⬜ 👉 => ⬜) 👉 (⬜ 👉 => 🟫) => 🟫
+⬜ 👉 (⬜ 👉 => ⬜) 👉 (⬜ 👉 => ⬛) => ⬛
+# center cross => edge:
+⬜ 👉 (⬜ 👉 => 🟧) 👉 (🟧 👉 => 🟧) => 🟧
+⬜ 👉 (⬜ 👉 => 🟦) 👉 (🟦 👉 => 🟦) => 🟦
+⬜ 👉 (⬜ 👉 => 🟫) 👉 (🟫 👉 => 🟫) => 🟫
+⬜ 👉 (⬜ 👉 => ⬛) 👉 (⬛ 👉 => ⬛) => ⬛
+# walls still block:
+🟧 👉 (🟧 👉 => 🟧)2 👉 => 🟧
+🟦 👉 (🟦 👉 => 🟦)2 👉 => 🟦
+🟫 👉 (🟫 👉 => 🟫)2 👉 => 🟫
+⬛ 👉 (⬛ 👉 => ⬛)2 👉 => ⬛
+# rotate left:
+⬜ ⤴ (⬜ ⤴ => ⬜) 👉 (⬜ 👉 => ⬜) => ⬜
+⬜ ⤴ (⬜ ⤴ => ⬜) 👉 (⬜ 👉 => 🟧) => 🟧
+⬜ ⤴ (⬜ ⤴ => ⬜) 👉 (⬜ 👉 => 🟦) => 🟦
+⬜ ⤴ (⬜ ⤴ => ⬜) 👉 (⬜ 👉 => 🟫) => 🟫
+⬜ ⤴ (⬜ ⤴ => ⬜) 👉 (⬜ 👉 => ⬛) => ⬛
+⬜ ⤴ (⬜ ⤴ => 🟧) 👉 (🟧 👉 => 🟧) => 🟧
+⬜ ⤴ (⬜ ⤴ => 🟦) 👉 (🟦 👉 => 🟦) => 🟦
+⬜ ⤴ (⬜ ⤴ => 🟫) 👉 (🟫 👉 => 🟫) => 🟫
+⬜ ⤴ (⬜ ⤴ => ⬛) 👉 (⬛ 👉 => ⬛) => ⬛
+# 180 rotate:
+# white is not possible!
+⬜ ↔ (⬜ ↔ => ⬜) 👉 (⬜ 👉 => 🟧) => 🟧
+⬜ ↔ (⬜ ↔ => ⬜) 👉 (⬜ 👉 => 🟦) => 🟦
+⬜ ↔ (⬜ ↔ => ⬜) 👉 (⬜ 👉 => 🟫) => 🟫
+⬜ ↔ (⬜ ↔ => ⬜) 👉 (⬜ 👉 => ⬛) => ⬛
+⬜ ↔ (⬜ ↔ => 🟧) 👉 (🟧 👉 => 🟧) => 🟧
+⬜ ↔ (⬜ ↔ => 🟦) 👉 (🟦 👉 => 🟦) => 🟦
+⬜ ↔ (⬜ ↔ => 🟫) 👉 (🟫 👉 => 🟫) => 🟫
+⬜ ↔ (⬜ ↔ => ⬛) 👉 (⬛ 👉 => ⬛) => ⬛
+# rotate right:
+⬜ ⤵ (⬜ ⤵ => ⬜) 👉 (⬜ 👉 => ⬜) => ⬜
+⬜ ⤵ (⬜ ⤵ => ⬜) 👉 (⬜ 👉 => 🟧) => 🟧
+⬜ ⤵ (⬜ ⤵ => ⬜) 👉 (⬜ 👉 => 🟦) => 🟦
+⬜ ⤵ (⬜ ⤵ => ⬜) 👉 (⬜ 👉 => 🟫) => 🟫
+⬜ ⤵ (⬜ ⤵ => ⬜) 👉 (⬜ 👉 => ⬛) => ⬛
+⬜ ⤵ (⬜ ⤵ => 🟧) 👉 (🟧 👉 => 🟧) => 🟧
+⬜ ⤵ (⬜ ⤵ => 🟦) 👉 (🟦 👉 => 🟦) => 🟦
+⬜ ⤵ (⬜ ⤵ => 🟫) 👉 (🟫 👉 => 🟫) => 🟫
+⬜ ⤵ (⬜ ⤵ => ⬛) 👉 (⬛ 👉 => ⬛) => ⬛
+# corners: (absorb)
+⬛ ⤴ (⬛ ⤴ => 🟧) 👉 (🟧 👉 => 🟧) => 🟧
+🟧 ⤴ (🟧 ⤴ => 🟫) 👉 (🟫 👉 => 🟫) => 🟫
+🟫 ⤴ (🟫 ⤴ => 🟦) 👉 (🟦 👉 => 🟦) => 🟦
+🟦 ⤴ (🟦 ⤴ => ⬛) 👉 (⬛ 👉 => ⬛) => ⬛
+⬛ ⤵ (⬛ ⤵ => 🟦) 👉 (🟦 👉 => 🟦) => 🟦
+🟦 ⤵ (🟦 ⤵ => 🟫) 👉 (🟫 👉 => 🟫) => 🟫
+🟫 ⤵ (🟫 ⤵ => 🟧) 👉 (🟧 👉 => 🟧) => 🟧
+🟧 ⤵ (🟧 ⤵ => ⬛) 👉 (⬛ 👉 => ⬛) => ⬛
+# sigh now need to repeat for rotations...
+# TODO exercise for the reader.  moving on to generalized stuff!
+# ... TODO also turning from edge to center
+
+
+🟪🟧🟧🟧🟨
+🟫⬜⬜⬜⬛
+🟫⬜🐁⬜⬛
+🟫⬜⬜⬜⬛
+🟩🟦🟦🟦🟥
+
+# 2-STEP generalized observations: (only showing the new rules)
+# note these are only generated by simply combining observations.  no cleverness allowed only brute force
+⬜ 👉 (⬜ 👉 => ⬜) 👉 => 🔳 # RULE full 2 step, it just gets absorbed
+⬜ 👉 (⬜ 👉 => 🔳') 👉 => 🔳' # RULE aka center cross => edge (note 🔳' must match)
+🔳' 👉 (🔳' 👉 => 🔳') 👉 => 🔳' 
+⬜ ⤴ (⬜ ⤴ => ⬜) 👉 => ⏹
+⬜ ⤴ (⬜ ⤴ => 🔳') 👉 => 🔳'
+⬜ ↔ (⬜ ↔ => ⬜) 👉 => 🔳
+⬜ ↔ (⬜ ↔ => 🔳') 👉 => 🔳'
+⬜ ⤵ (⬜ ⤵ => ⬜) 👉 => ⏹
+⬜ ⤵ (⬜ ⤵ => 🔳') 👉 => 🔳'
+# move/rotate then rotate
+⬜ 👉 (⬜ 👉 => ⬜) ⤴ => ⏹
+⬜ 👉 (⬜ 👉 => ⬜) ↔ => ⬜
+⬜ 👉 (⬜ 👉 => ⬜) ⤵ => ⏹
+  #⬜ 👉 (⬜ 👉 => 🟧) ⤴ => ⬜
+  #⬜ 👉 (⬜ 👉 => 🟧) ⤴ => 🟫 # rotates cant be generalized here
+⬜ 👉 (⬜ 👉 => 🔳) ↔ => ⬜
+  #⬜ 👉 (⬜ 👉 => 🟧) ⤴ => ⬜
+  #⬜ 👉 (⬜ 👉 => 🟧) ⤴ => ⬛ # rotates cant be generalized here
+  #🟧 👉 (🟧 👉 => 🟧) ⤴ => ⬜ # same
+  #🟧 👉 (🟧 👉 => 🟧) ⤴ => 🟫
+🔳' 👉 (🔳' 👉 => 🔳') ↔ => 🔳'
+⬜ ⤴ (⬜ ⤴ => ⬜) ⤴ => ⏹
+⬜ ⤴ (⬜ ⤴ => ⬜) ↔ => ⏹
+⬜ ⤴ (⬜ ⤴ => ⬜) ⤵ => ⏹'
+⬜ ↔ (⬜ ↔ => ⬜) ⤴ => ⏹
+⬜ ↔ (⬜ ↔ => ⬜) ↔ => ⬜
+⬜ ↔ (⬜ ↔ => ⬜) ⤵ => ⏹
+⬜ ⤵ (⬜ ⤵ => ⬜) ⤴ => ⬜
+⬜ ⤵ (⬜ ⤵ => ⬜) ↔ => ⏹
+⬜ ⤵ (⬜ ⤵ => ⬜) ⤵ => ⏹
+
+# 2-STEP reduced observations (generalizing 2nd time):
+⬜ ↪️' (⬜ ↪️' => 🔳') 👉 => 🔳'
+# ... any more?  regardless, these can be auto-discovered using the general catch-alls and compared brute force
+
+
+# 2-STEP reduced observations (drop the implied first step to be more general) 
+# edge => edge, center cross => edge:
+⬜ 👉2 => 🟧 # these are the only possibilities with ⬜ 👉2
+⬜ 👉2 => 🟦 
+⬜ 👉2 => 🟫
+⬜ 👉2 => ⬛
+# walls still block:
+🟧 👉2 => 🟧
+🟦 👉2 => 🟦
+🟫 👉2 => 🟫
+⬛ 👉2 => ⬛
+# rotate:
+⬜ ⤴ 👉 => ⬜
+⬜ ⤴ 👉 => 🟧
+⬜ ⤴ 👉 => 🟦
+⬜ ⤴ 👉 => 🟫
+⬜ ⤴ 👉 => ⬛
+⬜ ↔ 👉 => 🟧
+⬜ ↔ 👉 => 🟦
+⬜ ↔ 👉 => 🟫
+⬜ ↔ 👉 => ⬛
+⬜ ⤵ 👉 => ⬜
+⬜ ⤵ 👉 => 🟧
+⬜ ⤵ 👉 => 🟦
+⬜ ⤵ 👉 => 🟫
+⬜ ⤵ 👉 => ⬛
+# corners:
+⬛ ⤴ 👉 => 🟧
+🟧 ⤴ 👉 => 🟫
+🟫 ⤴ 👉 => 🟦
+🟦 ⤴ 👉 => ⬛
+
+# 2-STEP reduced general observations: (only showing the new rules)
+# note these dont preserve order.   they just say "if you have these two moves you can reach this with some combination"
+⬜ 👉2 => 🔳 # OBSERVATION aka edge => edge
+🔳' 👉2 => 🔳' 
+⬜ 👉 ⤴ => ⏹
+⬜ 👉 ↔ => 🔳
+⬜ 👉 ↔ => ⬜  # PROBLEM: order matters!
+⬜ 👉 ↔ => ⏹  # so it's actually more general
+⬜ 👉 ⤵ => ⏹
+🔳' 👉 ↔ => 🔳'
+⬜ ⤴2 => ⏹
+⬜ ⤴ ↔ => ⏹
+⬜ ⤴ ⤵ => ⏹
+⬜ ↔2 => ⬜
+⬜ ↔ ⤵ => ⏹
+⬜ ⤵ ↔ => ⏹
+⬜ ⤵2 => ⏹
+
+# SUMMARY (2-step) can discover a bunch of extra rules by brute force here
+# LOOPS discoverable: (but would still take many more steps to confirm.... which is a very good strategy lol)
+🔳' 👉 => 🔳' # edges are absorbing
+⏹' ↔2 <=> ⏹' # turn around twice
+⏹' ⤴ ⤵ <=> ⏹' # turns reset
+# which can then be reduced to:
+↔2 <=> # (this is a guess though, would need to be confirmed many times as it's possible the state is conditional)
+⤴ ⤵ <=> # same
+⤴2 <=> ↔ # note: loops aren't just to blanks, they're just two-way relationships between any states
+
+# 3-STEP same shit with one more step.
+# just showing example format as this is too tedious
+⬜ 👉3 (⬜ 👉 (⬜ 👉 => ⬜) 👉 => 🟧) => 🟧
+# ...
+# 3-LOOPS discoverable:
+⤵2 ↔ <=>
+⤴2 ↔ <=>
+#### ⬜ 👉2 ↔ (⬜ 👉 ↔ (⬜ 👉 => ⏹) => ⬜)  # step, 180, step.  complex to represent this forced order hmmm
+  # error not actually a loop anyway! cuz changes direction hah
+🔳' 👉 ↔2 (🔳' 👉 ↔ (🔳' 👉 => 🔳') => ⏹) => 🔳' # absorbing wall and 2x reverse
+# ... probably more but just testing out
+
+
+# 4-STEP LOOPS:
+⤵4 <=>
+⤴4 <=>
+
+
+# LOOP CHECKLIST (basically inferred by 4-step stage, if rules are checked for loopiness)
+# rotates are reversible: (these are second-order rules though)
+⤵ ⤴ <=> # nothing
+↔2 <=> # nothing
+⤵2 <=> ↔
+⤵3 <=> ⤴
+⤵4 <=>  # nothing
+⤴2 <=> ↔
+⤴3 <=> ⤵
+⤴4 <=>  # nothing
+
+
+# GENERAL TINKERING:  ABILITIES WE'VE SHOWN:
+- we know how to represent multiple steps (in an ordered way) as inputs => outputs
+  - A: use the inference formula as an input (bit of a stretch of syntax but it's probably the best idea we have)
+- we can do automated 1-step rule discovery easily
+  - A: just track input state and output state.  base observation ground truth
+- we can do automated rule generalizing (given basic proposed objects)
+  - A: e.g. if given ⏹ => ⬜ | ⬛ | 🟧 | 🟫 | 🟦 then we can modify other rules by swapping these out
+  - a general rule is only valid if (and while) it matches ALL applicable base operations.  this check is doable via algorithm
+- we can invalidate rules
+  - A: keep checking against observations.  If a rule maps to another rule they must be right
+- we can reduce rules
+  - A: same as generalizing, we can remove parts of the rule (e.g. same on both sides) and see if it's ever invalidated by observations
+- we can discover loops
+  - A: similarly, we can guess a loop rule and keep checking it to increase confidence
+- we can do automated 2+-step rule discovery
+  - A: each additional step rule takes the previous one as an input, and the output is the next step
+  - this gives us ordered steps, which can be reduced from base observations down to generalized rules and guesses
+
+
+# REMAINING THINGS TO DO:
+- we need to demonstrate we can get the location of a grid square definitively from these rules without knowing the underlying environment
+- we need to be able to do this even when the environment is identical (on edges) but wider in middle
+- then just "run" this with different environments to confirm effectiveness
+- then actually code it lol
+- ongoing major problem: => or <=> rules for generalizations
+
+# CLOCKS: hidden state squares
+🟪🟧🟧🟧🟨
+🟫⬜⬜⬜⬛
+🟫⬜🐁⬜⬛
+🟫⬜⬜⬜⬛
+🟩🟦🟦🟦🟥
+====
+🟪🕚🕛🕐🟨
+🕙 ↖ ⬆ ↗ 🕑
+🕘 ⬅🎯➡ 🕒 
+🕗 ↙ ⬇ ↘ 🕓
+🟩🕖🕕🕔🟥
+
+# we can't see the states, but we know they exist:
+# (even these rules dont really exist in the system, this is just a way to represent them)
+🟧 => 🕚
+🟧 => 🕐
+🟧 => 🕛
+🟫 => 🕙
+🟫 => 🕘
+🟫 => 🕗
+🟦 => 🕖
+🟦 => 🕕
+🟦 => 🕔
+⬛ => 🕑
+⬛ => 🕒
+⬛ => 🕓
+⬜ => ↖
+⬜ => ⬅
+⬜ => ↙
+⬜ => ⬆
+⬜ => 🎯
+⬜ => ⬇
+⬜ => ↗
+⬜ => ➡
+⬜ => ↘
+
+
+# PLAN: in each state, we can see which of the outgoing edges (transitions) are possible.  Location is therefore mappable based on that
+# so, we define according to the set of possible transitions which state we are in
+
+# - corners:
+# by definition, we can recognize the corner states and then measure distance from there
+# NOTE: these aren't visible rules to the agent either.  
+⬛ (⬛ ⤴ => 🟧) => 🕑 # says ⬛ == 🕑
+🟧 (🟧 ⤴ => 🟫) => 🕚 # (note: imply rule might not work here cuz no ⤴.  ⤴ ⤵ combo?)
+🟫 (🟫 ⤴ => 🟦) => 🕗
+🟦 (🟦 ⤴ => ⬛) => 🕔
+# - center:
+# (this one's cheating, the agent hasnt discovered it yet)
+⬜ (⬜ ⤴ => ⬜) (⬜ ⤴2 => ⬜) (⬜ ⤴3 => ⬜) => 
+# - corners2:
+⬛ ⤴ (⬛ ⤴ => 🟧) => 🕐 # says turn left at ⬛🟧 corner to find 🟧 == 🕐
+🟧 (🟧 ⤵ => ⬛) => 🕐 # alt
+🟧 ⤴ (🟧 ⤴ => 🟫) => 🕙
+🟫 (🟫 ⤵ => 🟧) => 🕙
+🟫 ⤴ (🟫 ⤴ => 🟦) => 🕖
+🟦 (🟦 ⤵ => 🟫) => 🕖
+🟦 ⤴ (🟦 ⤴ => ⬛) => 🕓
+⬛ (⬛ ⤵ => 🟦) => 🕓
+# - center crosshairs
+⬛ ⤴2 (⬛ ⤴ => 🟧) => ⬆  # note: same problem as imply, no ⤴
+🟧 ⤴2 (🟧 ⤴ => 🟫) => ⬅
+🟫 ⤴2 (🟫 ⤴ => 🟦) => ⬇
+🟦 ⤴2 (🟦 ⤴ => ⬛) => ➡
+
+
+# exercise: all you know is the top-left corner. how do you get everything else from there?
+# seed just top corner:
+🟧 ⤴4 (🟧 ⤴4 => 🟫 ⤴3) => 🕚
+🟧 ⤴ (🟧 ⤴ => 🟫) => 🕙
+🟧 ⤴2 (🟧 ⤴2 => 🟫 ⤴) => ⬅ # fun. need to enforce that corner is recognized in the first turn
+# 🟧 ⤴2 (🟧 ⤴ => 🟫) => ⬅ # this is too ambiguous.  could be ⬅ or 🕙
+🟧 ⤴3 (🟧 ⤴3 => 🟫 ⤴2) => ⬆
+# 🟧 ⤴2 👉 (🟧 ⤴ => 🟫) (🟫 ⤴ => ⬜) (⬜ 👉 => ⬜) => # SHITTY:  we might have a syntax problem
+  # we can say this, I guess:  "turn left at the 🟧 corner and you should see a 🟫.  Turn left at 🟫 to see ⬜.  Go straight ⬜ => ⬜"
+  # but that is super verbose, and it's all here because we can't specify the order of ⤴2 👉
+🟧 ⤴2 👉 (🟧 ⤴2 👉 => ⤴ 👉 🟫) (🟫 ⤴ 👉 => 👉 ⬜) (⬜ 👉 => ⬜) => ↙
+  # this is more definitive, as each step has conditionals forcing the ordering.  but then we still need to build those subrules in an automated way
+🟧 ⤴2 👉 (🟧 ⤴2 👉 => ⤴ 👉 🟫) (🟫 ⤴ 👉 => 👉 ⬜) => ↙ # the last rule can still be left off as it's implied (⬜ 👉 => ⬜)
+  # "look for a 🟧 corner, turn left, then turn left again, then go forward"
+  # relatively happy with this.
+🟧 ⤴2 👉 (🟧 ⤴2 👉 (🟧 ⤴ => 🟫) => ⤴ 👉 🟫) (🟫 ⤴ 👉 => 👉 ⬜) => ↙ # to be a stickler "it must use this corner rule"
+# moving on:
+# 🟧 ⤵ (🟧 ⤵ => ⬜) => ⬆ # this doesnt work!  why?  🟧 ⤵ => ⬜ is not unique like the corner
+🟧 ⤴ ⤵2 (🟧 ⤴ ⤵2 => 🟫 ⤵2) => ⬆ # need to do this instead to enforce recognizing the corner
+🟧 ⤴3 👉 (🟧 ⤴3 👉 => ⤴2 👉 🟫) (🟫 ⤴2 👉 => ⤴ 👉 ⬜) (⬜ ⤴ 👉 => ⤴ ⬜) => 🎯 # finally we got the center!
+# ... rest are just carrying on these patterns and moving around
+
+# Exercise: defining distance from a corner without knowing the moves
+# in a sense, an action is just another transition, we don't need to include it as an input - the transition itself could be it:
+👉 => (⬜ => ⬜)
+👉 => (⬜ => ⬛)
+👉 => (⬜ => 🟧)
+👉 => (⬜ => 🟫)
+👉 => (⬜ => 🟦)
+# aka: 👉 => (⬜ => ⏹)
+# blocks:
+👉 => (⬛ => ⬛) # 🛑
+👉 => (🟧 => 🟧) # 🛑
+👉 => (🟫 => 🟫)# 🛑
+👉 => (🟦 => 🟦) # 🛑
+# aka: 👉 => (⏹' => ⏹') including white => white
+# free rotate:
+⤴ => (⬜ => ⬜) # rotations all basically the same from white
+⤴ => (⬜ => ⬛)
+⤴ => (⬜ => 🟧)
+⤴ => (⬜ => 🟫)
+⤴ => (⬜ > 🟦)
+↔ => (⬜ => ⬜)
+↔ => (⬜ => ⬛)
+↔ => (⬜ => 🟧)
+↔ => (⬜ => 🟫)
+↔ => (⬜ => 🟦)
+⤵ => (⬜ => ⬜)
+⤵ => (⬜ => ⬛)
+⤵ => (⬜ => 🟧)
+⤵ => (⬜ => 🟫)
+⤵ => (⬜ => 🟦)
+# aka: ↪️ => (⬜ => ⏹) 
+# corners:
+⤴ => (⬛ => 🟧) # nice rotation pattern showing corners:
+⤴ => (🟧 => 🟫) 
+⤴ => (🟫 => 🟦)
+⤴ => (🟦 => ⬛)
+⤵ => (⬛ => 🟦)
+⤵ => (🟦 => 🟫)
+⤵ => (🟫 => 🟧)
+⤵ => (🟧 => ⬛) 
+# rotations all basically the same from white
+⤴ => (⬛ => ⬜)
+⤴ => (🟧 => ⬜)
+⤴ => (🟫 => ⬜)
+⤴ => (🟦 => ⬜)
+↔ => (⬛ => ⬜)
+↔ => (🟧 => ⬜)
+↔ => (🟫 => ⬜)
+↔ => (🟦 => ⬜)
+⤵ => (⬛ => ⬜)
+⤵ => (🟧 => ⬜)
+⤵ => (🟫 => ⬜)
+⤵ => (🟦 => ⬜)
+
+# then e.g.:
+🟧 ⤴ => 🟧 (🟧 => 🟫) => 🟫
+# which is giving me strong lambda calculus vibes lol
+# but this representation also means:
+🟧 ⤴ => 🟧 (🟫 => 🟦) => 🟧 # maybe? or INVALID  choice: should this be invalid since (🟫 => 🟦) not possible?  Or does that simply not trigger?
+  # if invalid: it means (🟫 => 🟦) is NOT an "implies", which is fair.  It's actually a "produces", and needs to be fulfilled in order to be true/valid.  
+# other scenarios:
+⬜ ⤴ => ⬜ (⬜ => ⬜) => ⬜
+⬜ ⤴ => ⬜ (⬜ => ⬛) => ⬛ # which both make sense
+
+
+# GENERAL TINKERING: TRANSITION RULES ARE TOKENS ===============
+# a token can be a transition rule, because all tokens ARE transition rules
+⤵ => (🟧 => ⬛) # + other options
+    ⤵ => (⬜ => ⬛)
+    ⤵ => (⬜ => 🟧)
+    ...
+🟧 <=> (🟧 => 🟧) # only rule (Identity)
+# in this way, pretty much any token can be represented in the pathway of transitions from the 🎬 starting token
+# and similarly, distance from the 🏁 finish token
+# this is in line with a poset from category theory, where the system is just an ordered chains which are all connected by splits and merges between the start and finish
+
+
+# SPACE of all accessible state transitions (with a single move or rotate)
+# center
+⬜ => ⬜
+⬜ => ⬛
+⬜ => 🟧
+⬜ => 🟫
+⬜ => 🟦
+# corners:
+⬛ => 🟧 # nice rotation pattern showing corners:
+🟧 => 🟫 
+🟫 => 🟦 
+🟦 => ⬛ 
+⬛ => 🟦
+🟦 => 🟫
+🟫 => 🟧
+🟧 => ⬛
+# rotations back to center
+⬛ => ⬜
+🟧 => ⬜
+🟫 => ⬜
+🟦 => ⬜
+# blocks: (all identities but we should still include them)
+⬛ => ⬛ # since we A) never know when they're not identities
+🟧 => 🟧 # and B) not all squares have identities for all moves
+🟫 => 🟫
+🟦 => 🟦
+# ====
+# generalized:
+⬜ => ⏹
+⬛ => 🟧
+🟧 => 🟫 
+🟫 => 🟦 
+🟦 => ⬛ 
+⬛ => 🟦
+🟦 => 🟫
+🟫 => 🟧
+🟧 => ⬛
+🔳 => ⬜
+🔳' => 🔳'
+# negative space:
+⬛ => 🟫
+🟧 => 🟦
+🟫 => 🟧
+🟦 => ⬛
+# (the only not-allowed rules lol. cant reach opposite wall in one move)
+
+# SPACE OF 👉: 
+⬜ => ⬜
+⬜ => ⬛
+⬜ => 🟧
+⬜ => 🟫
+⬜ => 🟦
+⬛ => ⬛
+🟧 => 🟧
+🟫 => 🟫
+🟦 => 🟦
+# generalized:
+⬜ => 🔳
+⏹' => ⏹' 
+
+# SPACE OF ⤴:
+⬜ => ⬜
+⬜ => ⬛
+⬜ => 🟧
+⬜ => 🟫
+⬜ => 🟦
+⬛ => ⬜
+🟧 => ⬜
+🟫 => ⬜
+🟦 => ⬜
+⬛ => 🟧
+🟧 => 🟫 
+🟫 => 🟦 
+🟦 => ⬛
+# generalized:
+⬜ => ⏹
+⏹ => ⬜
+⬛ => 🟧
+🟧 => 🟫 
+🟫 => 🟦 
+🟦 => ⬛
+
+
+# SPACE OF ↔:
+⬜ => ⬜
+⬜ => ⬛
+⬜ => 🟧
+⬜ => 🟫
+⬜ => 🟦
+⬛ => ⬜
+🟧 => ⬜
+🟫 => ⬜
+🟦 => ⬜
+# generalized:
+⬜ => ⏹
+⏹ => ⬜
+
+# SPACE OF ⤵:
+⬜ => ⬜
+⬜ => ⬛
+⬜ => 🟧
+⬜ => 🟫
+⬜ => 🟦
+⬛ => ⬜
+🟧 => ⬜
+🟫 => ⬜
+🟦 => ⬜
+⬛ => 🟦
+🟧 => 🟫
+🟫 => 🟧
+🟦 => ⬛
+# generalized:
+⬜ => ⏹
+⏹ => ⬜
+⬛ => 🟦
+🟧 => 🟫
+🟫 => 🟧
+🟦 => ⬛
+
+
+# SPACE OF 👉2:
+⬜ => 🔳 # strictly WILL run into edge (and/or absorb)
+🔳' => 🔳'
+
+# SPACE OF ⤴2: == SPACE OF ↔
+⬜ => ⏹
+⏹ => ⬜
+# loses the corner values cuz it either comes or ends in white always
+
+# SPACE OF ↔2:
+⬜ => ⬜
+⬛ => ⬛
+🟧 => 🟧
+🟫 => 🟫
+🟦 => 🟦
+# general:
+⏹' => ⏹'
+
+# SPACE OF ⤵2: == SPACE OF ↔
+⬜ => ⏹
+⏹ => ⬜
+# ditto for corners
+
+# SPACE OF [👉,⤴] (ordered):
+⬜ => ⏹
+⬛ => 🟧
+🟧 => 🟫 
+🟫 => 🟦 
+🟦 => ⬛
+
+# SPACE OF [⤴,👉] (ordered):
+⬜ => ⏹
+⬛ => 🟧 # note it is possible to go left from center then to edge
+🟧 => 🟫 
+🟫 => 🟦 
+🟦 => ⬛
+🔳 => ⬜ (rightmost wall start)
+
+# SPACE OF 👉 ⤴ (either order):
+⬜ => ⏹
+⬛ => 🟧
+🟧 => 🟫 
+🟫 => 🟦 
+🟦 => ⬛
+🔳 => ⬜
+
+
+# SPACE OF [👉,↔] (ordered):
+⬜ => 🔳 => ⬜
+⬜ => ⬜ => ⏹
+⬛ => ⬛ => ⬜
+🟧 => 🟧 => ⬜
+🟫 => 🟫 => ⬜
+🟦 => 🟦 => ⬜
+# generalized:
+⬜ => ⏹
+⏹ => ⬜
+
+# SPACE OF [↔,👉] (ordered):
+⬜ => ⏹' => ⏹'
+⏹ => ⬜ => 🔳
+⏹ => ⬜ => ⬜
+# generalized
+⏹ => ⏹'
+
+# SPACE OF 👉 ↔ (either order):
+⏹ => ⏹'
+
+# SPACE OF [👉,⤵] (skipping right stuff)
+⬜ => ⏹
+⬛ => 🟦
+🟧 => 🟫
+🟫 => 🟧
+🟦 => ⬛
+
+# SPACE OF [⤵,👉] (skipping right stuff)
+⬜ => ⏹
+⬛ => 🟦
+🟧 => 🟫
+🟫 => 🟧
+🟦 => ⬛
+🔳 => ⬜ # left corner of wall
+
+# SPACE OF ⤵ 👉 unordered
+⬜ => ⏹
+⬛ => 🟦
+🟧 => 🟫
+🟫 => 🟧
+🟦 => ⬛
+🔳 => ⬜
+
+# SPACE OF [⤴,↔] (ordered):
+⬜ => ⏹ => ⬜
+⏹ => ⬜ => ⏹
+⬛ => 🟧 => ⬜
+🟧 => 🟫 => ⬜
+🟫 => 🟦 => ⬜
+🟦 => ⬛ => ⬜
+# generalized:
+⏹ => ⏹'
+
+# SPACE OF [↔,⤴] (ordered):
+⬜ => ⏹ => ⬜
+⬜ => ⏹ => ⏹'
+⏹ => ⬜ => ⏹'
+# generalized:
+⏹ => ⏹'
+
+# SPACE OF ⤴ ↔ (either order):
+⏹ => ⏹'
+
+# SPACE OF [⤴,⤵] (ordered):
+# SPACE OF [⤵,⤴] (ordered):
+# SPACE OF ⤵ ⤴ (either order):
+⬜ => ⏹
+⏹ => ⬜
+
+
+# SPACE OF 👉3:
+⬜ => 🔳 # strictly WILL run into edge (and absorb)
+🔳' => 🔳'
+
+# SPACE OF ⤴3: == SPACE OF ⤵
+⬜ => ⏹
+⏹ => ⬜
+⬛ => 🟦
+🟧 => 🟫
+🟫 => 🟧
+🟦 => ⬛
+
+# SPACE OF ↔3: == SPACE OF ↔
+⬜ => ⏹
+⏹ => ⬜
+
+# SPACE OF ⤵3: == SPACE OF ⤴
+⬜ => ⏹
+⏹ => ⬜
+⬛ => 🟧
+🟧 => 🟫 
+🟫 => 🟦 
+🟦 => ⬛
+
+
+# SPACE OF [👉,👉,⤴]:
+# ... you get it!
+
+
+
+
+# GENERAL TINKERING: MULTI STEP RULES =============================================
+# Multi-step rules formatting experiments: ("instancing")
+# method 1: all tokens needed, plus the previous 2-step rule: (only 1 step ever at a time, but preserves sequence)
+⬜ 👉3 (⬜ 👉2 (⬜ 👉 => ⬜) => 🔳) => 🔳 # 
+# method 2: show each step separately: (but doesnt preserve sequence...) (n-1 steps, since last step is innate to formulas)
+⬜ 👉3 (⬜ 👉 => ⬜) (⬜ 👉 => ⏹) => 🔳 # 
+# method 3: change the arrow syntax... (ewww.  would rather have rules be their own thing)
+⬜ 👉3 =(⬜ 👉 => ⬜),(⬜ 👉 => ⏹),(⬜ 👉 => ⏹)=> 🔳 #
+# method 4: all tokens are functions: (verbose but just to think about it:)
+(⬜=>⬜) (👉3=>👉3) (⬜=>⬜ 👉=>👉 => ⬜=>⬜) (⬜=>⬜ 👉=>👉 => ⏹=>⏹) => 🔳=>🔳 # 
+# method 5: shorthand: ehhh, just one extra token
+⬜ 👉3 ⬜👉⬜ ⬜👉⏹=> 🔳 # shorthand
+# method 6: 3 transitions (show all basically)
+⬜ 👉3 (⬜ 👉 => ⬜) (⬜ 👉 => ⏹) (⬜ 👉 => ⏹) => 🔳 
+# method 7: instancing: trivial implication (self-referential rule) (this is the most general form)
+⬜ 👉 (⬜ 👉 => ⬜) => ⬜ 
+    # to be fair, this says "the rule (⬜ 👉 => ⬜) is valid and you have ⬜ 👉.  So therefore you can produce ⬜"
+    # I think with 1-rules the (⬜ 👉 => ⬜) part can always be implied (it's itself!)
+    # but that's probably not always the case with e.g. general rules
+# method 8: general rules trivial implication (instance of a general rule)
+⬜ 👉 (⬜ 👉 => ⏹) => ⬜ # this is a specific instance of the general rule (⬜ 👉 => ⏹) being applied
+    # which is the same as ⬜ 👉 => ⬜ since it's true either way
+    # BUT - if there were multiple paths from ⬜ 👉 possible then (⬜ 👉 => ⏹) would enforce a particular path 
+# conclusion:  probably method 1. it preserves order.  method 2 could work when order doesnt matter though (it's more general/flat)
+    # shorthand works but just not needed much
+    # probably dont use method 3 (arrow syntax)
+
+

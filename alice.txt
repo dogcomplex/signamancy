@@ -1,0 +1,60 @@
+https://arxiv.org/pdf/2406.02061
+Alice has 3 sisters. Her mother has 1 sister who does not have children - she has 7 nephews and
+nieces and also 2 brothers. Alice's father has a brother who has 5 nephews and nieces in total, and
+who has also 1 son. How many cousins does Alice's sister have? Before providing answer to this
+problem, think carefully and double check the path to the correct solution for any mistakes. Provide
+then the final answer in following form: "### Answer: ". [92]
+
+easier:
+Alice has four brothers and she also has a sister. How many sisters does Alice's brother have?
+
+
+👧 <=> Alice
+🚺 <=> Sister
+🚹 <=> Brother
+🚺? <=> sisters_unknown
+👧(🚺?) => 👧(🚺3)
+👧(🚺) <=> Alice's_sister
+🤶 <=> Mother
+🎅 <=> Father
+🎅🤶 <=> Parent
+👧(🤶?) => 👧(🤶)
+👧(🤶) <=> Alice's_mother
+👧(🤶(🚺?)) => 👧(🤶(🚺))
+👧(🤶(🚺)) <=> Alice's_mother's_sister <=> Alice's_aunt
+👶 <=> Child
+👧(🤶(🚺(👶?))) => 👧(🤶(🚺(👶0)))
+👧(🤶(🚺(👶0))) <=> Alice's_aunt's_child*0
+👨‍👩‍👧‍👦 <=> Family
+🚺(👶?) <=> Sister's_child => niece_or_nephew
+🚹(👶?) <=> Brother's_child => niece_or_nephew
+⛹️‍♂️ <=> niece_or_nephew
+👧(🤶(🚺(⛹️‍♂️?))) => 👧(🤶(🚺(⛹️‍♂️7)))
+👧(🤶(🚺(⛹️‍♂️))) <=> Alice's_aunt's_niece_or_nephew
+👧(🤶(🚺(🚹?))) => 👧(🤶(🚺(🚹2)))
+👧(🤶(🚺(🚹))) <=> Alice's_aunt's_brother <=> Alice's_uncle
+👧(🎅?) => 👧(🎅)
+👧(🎅) <=> Alice's father
+👧(🎅(🚹?)) => 👧(🎅(🚹))
+👧(🎅(🚹)) <=> Alice's father's brother <=> Alice's uncle
+👧(🎅(🚹(⛹️‍♂️?))) => 👧(🎅(🚹(⛹️‍♂️5)))
+👧(🎅(🚹(⛹️‍♂️))) <=> Alice's_uncle's_niece_or_nephew
+👧(🎅(🚹(👶?))) => 👧(🎅(🚹(👶)))
+👧(🎅(🚹(👶))) <=> Alice's_uncle's_child <=> Alice's_cousin
+
+🎅(🚹(👶)) => Cousin
+🎅(🚺(👶)) => Cousin
+🤶(🚹(👶)) => Cousin
+🤶(🚺(👶)) => Cousin
+🤸‍♂️ <=> Cousin
+
+🧍‍♂️ <=> Person
+🧍‍♂️ => 🚺? 🚹? 🤶? 🎅? 👶? ⛹️‍♂️? 🤸‍♂️?  # a person may have sisters, brothers, mothers, fathers, children, nieces_or_nephews, cousins (all unknown)
+
+START => 👧(🧍‍♂️) # Alice is a person
+
+👧(🚺? 🚹? 🤶? 🎅? 👶? ⛹️‍♂️? 🤸‍♂️?) => 👧(🚺3 🚹? 🤶1 🎅1 👶? ⛹️‍♂️? 🤸‍♂️?)
+
+# TODO NOTE: this is hard.  good example of a problem that's difficult to break down
+
+

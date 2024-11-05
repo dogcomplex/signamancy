@@ -1,0 +1,486 @@
+
+https://chatgpt.com/share/672556e6-235c-8003-bb04-811deac96ed4
+
+An attempt to theoretically ground this system of equations in relation to other equation systems using similar category-theory concepts.  We try to show the same expressivity can be achieved with minimal syntax changes, and hope to use these in later isomorphic mappings.
+
+Reminder this is a symbolic state change system, where we can really just swap in any arbitrary function to represent inputs => outputs, but ideally we want to maintain the ability to express most of the intermediate steps naturally without getting too abstract with syntax.  Basically, we're trying to keep things at assembly-code level, while still being able to represent all the following sophisticated systems.
+
+
+
+SET
+  ~= discrete topological spaces
+  ~= boolean algebras (AND OR NOT)
+  ~= power sets
+  ~= permutations
+  ~= discrete dynamical systems (e.g. FSM states)
+  ~= decision trees
+  ~= binary relations (who knows who)
+  ~= cake slicing
+  ~= family trees
+
+GROUP
+  ~= group actions on sets
+  ~= covering spaces (topological groups)
+  ~= automorphism groups (teams where players can swap but team stays the same)
+  ~= representation theory (dance formations)
+  ~= fundamental groups (loops in spaces, e.g. ways to walk around a park)
+  ~= permutation groups (rearranging books)
+  ~= galois groups (different ways to solve a puzzle) 
+
+RING
+  - numbers with addition + multiplication
+  ~= affine schemes in algebraic geometry
+  ~= modules
+  ~= ideal theory
+  ~= algebraic geometry (schemes)
+    - terrain in landscape, topology is geometric figures
+
+VECT_K
+  ~= matrices
+  ~= modules over division ring
+  ~= lego blocks
+  ~= dual spaces (shadow vector)
+  ~= linear transformations (e.g. dance instructions to move)
+  ~= tensor products (e.g. mixing colors)
+
+TOP
+  ~= homotopy groups (e.g. loops. roller coaster types
+  ~= CW complexes (e.g. simpler skeletons of center point + loop surface)
+
+POSET
+  ~= lattices
+  ~= galois connections
+    - inverse relationships
+  ~= directed acyclic graphs
+  ~= thin category
+  ~= to-do list with dependencies
+
+CAT
+  ~= groupoid (undoable moves)
+  ~= games
+  ~= natural transformations (e.g. format changing)
+
+AB
+  == addition and order doesnt matter
+  ~= modules over Z
+  ~= sheaves
+    - e.g. local vs global weather
+  ~= abelian categories
+  
+MON
+  ~= endofunctors (functions which only apply within app ecosystem)
+  ~= operads 
+  ~= 
+
+REL
+  ~= bipartite graphs
+  ~= relational database
+  ~= graph theory
+
+
+
+
+
+
+
+
+
+
+
+# =================== PRODUCTION RULES:
+
+1. Petri Nets ==================
+Example: A simple production system that manufactures a product from two components: Component A and Component B.
+
+Places: A_storage, B_storage, Assembly, Product_storage
+Transitions: A_to_Assembly, B_to_Assembly, Assemble, Store_Product
+Arcs: Connecting places to transitions and vice versa.
+Tokens: Represent components or products.
+Petri Net Configuration:
+
+Initial Marking:
+A_storage(10 tokens), B_storage(5 tokens), Assembly(0 tokens), Product_storage(0 tokens)
+
+Transitions:
+A_to_Assembly: Moves 1 token from A_storage to Assembly.
+B_to_Assembly: Moves 1 token from B_storage to Assembly.
+Assemble: Consumes 1 token each from Assembly and produces 1 token in Product_storage.
+Store_Product: Moves tokens from Assembly to Product_storage.
+Firing Sequence:
+
+A_to_Assembly fires, Assembly has 1 A token.
+B_to_Assembly fires, Assembly has 1 B token.
+Assemble fires, producing 1 Product token in Product_storage.
+Abilities Demonstrated: Places, Transitions, Arcs, Tokens, Marking, Firing Rules.
+
+Abilities Not Demonstrated: Inhibitor Arcs, Reset Arcs, Capacity Constraints, Colored, Timed, and Stochastic Petri Nets.
+
+# RECIPE SYNTAX:
+Places: 🅰📦 🅱📦 ⚙ 🎁
+Transitions: ...
+
+🎬 => 🅰📦10 🅱📦5 ⚙0 🎁0
+🅰📦 => ⚙
+🅱📦 => ⚙
+⚙ => 🎁
+
+Additional Example: A coffee making process using a Petri net with colored tokens to differentiate between types of coffee and milk.
+
+Colored Petri Nets: Different colors represent different types of coffee beans and milk.
+Timed Petri Nets: Each transition has a time delay representing brewing and preparation time.
+Stochastic Petri Nets: The probability of certain transitions, like choosing types of coffee or milk.
+Petri Net Configuration:
+
+Places: Bean_storage, Milk_storage, Brewer, Coffee_ready
+Transitions: Start_brewing (time delay: 2 mins), Add_milk (time delay: 30 secs)
+Tokens: Bean_storage (red for Arabica, blue for Robusta), Milk_storage (white for regular, pink for almond)
+Arcs: Directed from storage to Brewer to Coffee_ready
+Abilities Demonstrated: Colored Tokens, Timed Transitions, Stochastic Transitions.
+
+Total Abilities Demonstrated: 10
+Abilities Not Demonstrated: Inhibitor Arcs, Reset Arcs, Capacity Constraints.
+
+Places: ☕📦 🥛📦 🔥 ☕🎁
+Transitions: 
+  ☕ ⏰2 => ☕🔥 # brew coffee
+  ☕🔥 🥛 ⏰0.5 => ☕✅ # add milk
+  # wrap each in 🔥() to specify it must be done at brewer.  otherwise universal
+  
+Arcs: ☕📦(☕) => 🔥(☕) # pass Arabica from storage to brewing
+  🥛📦(🥛) => 🔥(🥛) # move milk to brewer
+  🔥(☕✅) => ☕🎁(☕✅) # move coffee to ready
+  
+☕ => Arabica
+☕💙 => Robusta
+🥛 => Regular milk
+🥛💚 => Almond milk
+
+Additional Example: A ticket booking system with capacity constraints and reset arcs for session timeouts.
+
+Inhibitor Arcs: Prevent booking if a session has timed out.
+Reset Arcs: Clear the current selection if the session times out.
+Capacity Constraints: Limit the number of tickets that can be booked in one transaction.
+Petri Net Configuration:
+
+Places: Session_active, Tickets_selected, Tickets_booked
+Transitions: Select_ticket, Complete_booking, Timeout
+Arcs: 
+  - Directed from Session_active to Select_ticket (normal)
+  - Inhibitor arc from Timeout to Select_ticket (prevents booking on timeout)
+  - Reset arc from Timeout to Tickets_selected (clears selection on timeout)
+Capacity: Tickets_selected (max 5 tickets)
+Total Abilities Demonstrated: 13
+Abilities Not Demonstrated: None (all demonstrated).
+
+session_active => ✅
+tickets_selected => 🎟️🔓
+tickets_booked => 🎟️🔒
+🎬 => ✅ # start with active session
+✅ => ✅ 🎟️🔓 # select ticket if active
+❗ ✅ ⌛100 => ⌛100 # not active after timeout.
+❗ 🎟️🔓 ⌛100 => ⌛100 # tickets reset on timeout
+❗ 🎟️🔓6 => 🎟️🔓5 # max 5 tickets
+
+
+2. REWRITING SYSTEMS ==================
+
+2. Rewriting Systems
+Capabilities and Syntax Tools:
+
+Objects: Entities subject to rewriting.
+Rewriting Rules: Pairs of patterns and replacements defining transformations.
+Contexts: Surrounding structures in which rewriting occurs, influencing rule applicability.
+Strategies: Define the order and choice of rule applications.
+Term Rewriting Systems: Apply rules to syntactic expressions, often in a functional programming context.
+String Rewriting Systems: Specialize in transformations of strings.
+Graph Rewriting Systems: Extend rules to graph structures, altering nodes and edges.
+Conditional Rewriting: Rules apply only if certain conditions are met.
+Advanced Tools:
+
+Confluence and Termination Properties: Ensuring that rewriting leads to a unique result (confluence) and that it terminates.
+Modular and Higher-Order Rewriting: Handling composite or nested structures and rules that take rules as arguments.
+
+Example:
+x*x → x^2
+x*1 → x
+0*x → 0
+x+x → 2*x
+
+# recipes:
+x x => x2
+x0 => # empty
+x1 => x
+"x*x" => "x^2" # this is tricky as we dont do multiplication typically
+x2 * 🍎3 => x🍎6 # this syntax might be supported tho (combining the things)  
+x2 * x3 => xx6 # in which case this works too
+x * x => xx # though this is what you get with x*x
+xx <=> "x^2" # different syntax same thing
+xx6 / 🍎3 => "xx/🍎"2
+xx6 / x3 => x2 # probably but would want to make this an explicit rule relating xx to x  
+# I'm less inclined to support * with general arithmetic.  
+# when things are tokens, x2 * 🍎3 could be saying a lot of different things:
+# e.g. "for every x, pair it with 3 apples" == x2 * 🍎3 => x🍎3 x🍎3 <=> x🍎6
+# division should be the inverse of *, so maybe it means stripping out the 🍎3s
+# e.g. x🍎6 / 🍎3 => x2 # which is consistent at least
+# ultimately mult/division should just be helpers
+
+# old tictactoe problem revisited:
+❌ 1️⃣ ➡ ❌1️⃣ ⭕ ⌛
+❌ 2️⃣ ➡ ❌2️⃣ ⭕ ⌛
+❌ 3️⃣ ➡ ❌3️⃣ ⭕ ⌛
+❌ 4️⃣ ➡ ❌4️⃣ ⭕ ⌛
+❌ 5️⃣ ➡ ❌5️⃣ ⭕ ⌛
+❌ 6️⃣ ➡ ❌6️⃣ ⭕ ⌛
+❌ 7️⃣ ➡ ❌7️⃣ ⭕ ⌛
+❌ 8️⃣ ➡ ❌8️⃣ ⭕ ⌛
+❌ 9️⃣ ➡ ❌9️⃣ ⭕ ⌛
+
+❌ * #️⃣5 => ❌#️⃣5 ⭕ ⌛ 
+# could do that (with #️⃣5 == 5️⃣) 
+# but it doesn't really help still because ❌#️⃣5 is non-unique and the sum will be added to with subsequent checkmarks
+# we would need to get into primes n shit, which is silly
+
+
+Example:
+Rule: Add_friend (connect two unconnected nodes)
+Rule: Remove_friend (remove an existing edge between two nodes)
+Rule: Influence (modify a node's attribute based on connected nodes' attributes)
+
+🧑 👧🏻 => 🧑 👧🏻 🧑👧🏻 # add friend
+🧑👧🏻 => # remove friend
+🧑 👧🏻 🧑📖 => 👧🏻📖 # did you know hannah reads? 
+
+
+# GENERAL TINKERING: FUNCTIONS, MATRICES AND SUBTRACTION EQUIVALENTS: ================
+
+(❌ 9️⃣ => ❌9️⃣ ⭕ ⌛) <=> -❌ -9️⃣ ❌9️⃣ ⭕ ⌛ 
+    # with a rule that in order for this state change to be possible (with a given inventory) all must be >=0
+# conditional logic gets a bit funky:
+(✅ 🍎 => ✅ 🍌) => -✅ 🍎 ✅ 🍌 
+  # you can NOT eliminate ✅ and -✅ though because -✅ is needed to ensure this transition is valid / possible 
+  # so this system can NOT eliminate negatives from formulas, and must treat them as separate entities from positives until they affect the inventory itself (after that it's fine)
+  # bonus though: functions syntax now fully commutative (order doesnt matter at all)
+    # nice to have when e.g. neurotransmitters.
+
+# this opens the possibilities of -✅ and ✅ being entirely-distinct operations that aren't simply related by arithmetic
+# which is more accurate to real life anyway.  removing something and adding something are not always reliably inverse, sometimes they have subtle complexity
+# it means you can set a default behavior, but the actual rules of any given property could have separate rules for ✅ and -✅
+# e.g. the actual inventory might be represented instead as just two always-growing balances of ✅ and -✅ (surpluses and deficits)
+# and those might have rules associated with them (e.g. a max deficit, or an additional cost/complexity to increasing either)
+
+# this also means gpu operations are now simply adding, no subtracting, and a compare operation (✅ vs -✅) to ensure positive.  
+# can be asyncronously checked for each individual ingredient separately against a given inventory matrix, and as long as each one passes it's valid
+# so all it costs it double the memory, but massively parallel, and potentially more accurate to reality
+
+
+# ================== CHEMICAL REACTION RULES:
+3. Chemical Reaction Networks
+Capabilities and Syntax Tools:
+
+Species: Chemical substances involved in reactions.
+Reactions: Defined by stoichiometric coefficients relating reactants to products.
+Rate Laws: Expressions defining the speed of reactions as a function of concentrations.
+Reaction Mechanisms: Stepwise breakdown of complex reactions into simpler steps.
+Equilibrium Constants: Define the balance point of reversible reactions.
+Catalysts: Substances that affect the rate of a reaction without being consumed.
+Advanced Tools:
+
+Dynamic Simulation: Using differential equations to model the time evolution of species concentrations.
+Stochastic Modeling: Considering the random nature of reaction events, particularly in systems with low concentrations of reactants.
+
+
+Example: Basic photosynthesis reaction.
+
+Species: CO2 (carbon dioxide), H2O (water), O2 (oxygen), Glucose.
+Reaction: 6CO2 + 6H2O → C6H12O6 + 6O2
+Rate Laws: Assume mass action kinetics, where rate = k[CO2][H2O].
+Chemical Process:
+
+plaintext
+Copy code
+Reactants: 6 CO2 molecules, 6 H2O molecules
+Products: 1 Glucose molecule, 6 O2 molecules
+Abilities Demonstrated: Species, Reactions, Rate Laws, Reaction Mechanisms, Equilibrium Constants.
+
+Abilities Not Demonstrated: Catalysts, Dynamic Simulation, Stochastic Modeling.
+
+# RECIPE SYNTAX:
+# note: + and whitespace should probably be interchangeable formats anyway 
+# TODO consider swapping format to be number-first inline with arithmetic and chemistry lol 
+'CO2'6 'H2O'6 => 'C6H12O6' 'O2'6 # valid syntax
+6CO2 6H2O => C6H12O6 6O2 # with number-first syntax (if we swapped to that)
+but frankly: 
+'CO2' <=> 😤
+H2O <=> 💧
+'C6H12O6' <=> glucose <=> 🍭
+'O2' <=> 💨
+😤6 💧6 => 🍭 💨6 # much more fun lol 
+
+# concentration/rate:
+😤6 💧6 ⌛ => 🍭 💨6 # add time concern
+😤12 💧12 ⌛ => 🍭2 💨12 # upping volume without affecting relative concentrations produces more in the same time
+😤6 💧6 🧪12 ⌛4 => 🧪12 🍭 💨6 # halving concentrations in same volume takes 2 * 2 longer to produce the same amount (here 🧪 is used for other inert mix to de-concentrate) 
+# if e.g. we set model rate k[CO2][H2O]^2 (instead of k[CO2][H2O]):
+😤6 💧6 ⌛ => 🍭 💨6 # lets say this is the same
+😤6 💧6 🧪12 ⌛8 => 🧪12 🍭 💨6 # halving concentrations in same volume takes 2 * 2^2 longer to produce the same amount (here 🧪 is used for other inert mix to de-concentrate)
+# raising concentrations?  lol uhoh
+# think we just have to set a standard here of what we consider the basic equation and rate for a given volume (max possible concentration)
+# and then adjust accordingly
+# so readjust all equations if you want represent even higher concentrations
+
+
+Additional Example: Simulating the Haber process dynamically and stochastically.
+
+Dynamic Simulation: Model the formation of ammonia over time using differential equations.
+Stochastic Modeling: Incorporate randomness in reaction rates, reflecting real-world variability.
+Reaction and Simulation:
+
+plaintext
+Copy code
+N2 + 3H2 → 2NH3 (dynamic rate equation: rate = k[N2][H2]^3)
+💩 ⚛️3 ⌛ => 🟡2 # lol
+  
+# see above
+
+Stochastic modeling in chemical reaction networks is often necessary when dealing with systems where molecular concentrations are so low that the discrete nature of particle interactions cannot be ignored, and random fluctuations in reaction rates become significant. This type of modeling is commonly described using the Gillespie algorithm or Master equations, which provide a framework to simulate the time evolution of such systems. Let's explore how stochastic modeling can be implemented and represented in chemical reaction network syntax, focusing on a simple reaction for illustration.
+
+Example: Stochastic Modeling of a Simple Reaction
+Consider a basic bimolecular reaction where two reactants A and B react to form a product C. The reaction can be denoted as:
+
+𝐴
++
+𝐵
+→
+𝐶
+A+B→C
+
+Reaction Setup:
+Reactants: A and B
+Product: C
+Reaction Rate Constant: 
+𝑘
+k (rate at which the reaction occurs)
+Stochastic Modeling Representation
+In stochastic modeling, the state of the system is represented by the number of molecules of each reactant and product, rather than concentrations. The probability of the reaction occurring within a small time interval is proportional to the number of possible reactant pairs and the reaction rate constant.
+
+Chemical Reaction Notation with Stochastic Elements:
+𝐴
++
+𝐵
+→
+𝑘
+𝐶
+A+B 
+k
+​
+ C
+
+Here, 
+𝑘
+k is typically a rate constant with units of volume/time/molecule, reflecting that the reaction likelihood depends on the likelihood of two specific molecules encountering each other in a small volume.
+
+
+
+Calculate the time to the next reaction (
+𝜏
+τ) based on the propensity. If 
+𝑎
+a is the total propensity of all reactions, 
+𝜏
+τ can be computed from an exponential distribution with rate 
+𝑎
+a, i.e., 
+𝜏
+=
+−
+log
+⁡
+(
+𝑢
+)
+𝑎
+τ= 
+a
+−log(u)
+​
+  where 
+𝑢
+u is a uniformly distributed random number between 0 and 1.
+
+tau*a = -log(u)
+
+
+
+e^-tau*a = u
+
+k * 🅰 * 🅱 <=> k🅰🅱 <=> a
+k * 🅰7 * 🅱3 <=> k🅰🅱21 <=> a21
+
+🎲 => 1 - uniform random 0 to 0.1 number (lets say in 0.1 intervals lol so 🎲9 is (1-0.9*random 0-0.1)
+-log(🎲) 🎲5 => -log(5 * 0.1) -log(🎲) => -log(5) -log(0.1) -log(🎲) => (2.3 to infinite but not really)
+arbitrarily set 🎲📉 as .693 + 2.3 = 3 -log(🎲) => 🎲📉3  so 3-20+ish range
+🎲📉3 # lol building log tables, for no reason
+-log(🎲) 🎲 => 🎲📉3
+# blah too complicated, redo later doesnt matter anyway
+
+🎲📉 / a => "🎲📉/a" => 🎲⌛ # some random amount of time between log bounds, modifiable by 'a'
+
+# final formula lol:
+🅰 🅱 🎲⌛ => 🔤
+# where A and B are molecules, and 🎲⌛ is the random tau time delay from Gillespie algorithm (for 1 of each A,B)
+# adjust 🎲⌛ in formula as A B increase
+
+
+Additional Example: Using a catalyst in the decomposition of hydrogen peroxide (H2O2) into water (H2O) and oxygen (O2).
+
+Catalysts: Manganese dioxide (MnO2) speeds up the decomposition without being consumed.
+Chemical Reaction:
+
+plaintext
+Copy code
+2H2O2 → 2H2O + O2 (Catalyst: MnO2)
+Total Abilities Demonstrated: 9
+Abilities Not Demonstrated: None (all demonstrated).
+
+# catalysts are easy, just conditionals:
+"H2O2"2 "MnO2" => "MnO2" 💧2 💨
+
+
+
+# OPERADS ==========================================
+4. Operads
+Capabilities and Syntax Tools:
+
+Operations: Functions with multiple inputs and one output, structured in trees.
+Composition: Rules for nesting or chaining operations, maintaining associative and symmetric properties.
+Identities: Special operations that act as neutral elements in composition.
+Symmetry: Handling of operations that are invariant under permutations of inputs.
+Advanced Tools:
+
+Colored Operads: Extend operads to handle multiple types of operations, distinguished by 'colors'.
+Infinity Operads: Handle operations at all homotopical levels, used in advanced algebraic topology.
+
+
+
+Example: Algebraic operations combining addition and multiplication.
+
+Operations: Add, Multiply.
+Composition:
+add(multiply(x, y), z)
+Mathematical Expression:
+
+(x * y) + z
+Abilities Demonstrated: Operations, Composition, Identities, Symmetry.
+
+Abilities Not Demonstrated: Colored Operads, Infinity Operads.
+
+x5 * y3 => xy15 # im fine with this syntax... probably
+# but how does it map back to helpers?  how could we replicate it
+📏x 📐y => 🍰??
+# if we go:
+🎬 => 🍓x
+🍓 => 🍰y
+that'll work, we'll get 🍰(x*y)
+so now how to get those numbers without making a formula that knows what x/y are?
+🎬 => 📏x 📐y (📏 => 🍰y) # this works lol if only requirement is x y are pre-specified.
+# but what if y values change later in the program? (this is fine for x now but not y)

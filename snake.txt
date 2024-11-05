@@ -1,0 +1,370 @@
+
+# (TIC TAC TOE) PIXEL-BASED ASYNC ATTEMPT: (each grid cell only knows itself and its neighbors. just defining the state machine for itself)
+# init:
+# imagine this as an internalized state machine of resources being churned on, with inputs and outputs in each cardinal and diagonal direction
+# use ⬅( ⬅❌ ) to denote listening to left for signals (neurotransmitters?), which trigger self-signals => ...signals
+🎬 => 🔳 ❌_turn ⬅ ➡ ⬆ ⬇ ↖ ↗ ↘ ↙ # neighbor listeners
+🔳 ❌_turn => ❌ ⭕_turn # remember these are choices.  either could be explored and flipped at any time
+🔳 ⭕_turn => ⭕ ❌_turn
+# note: listeners are transitions this cell can't control.  it can choose when to listen but not what it will hear
+# depending on what it sees, these are the acceptable transitions it can react with
+⬅( 🚫 ) => ⬅🚫 # empty, left signaled stop/timeout (wall)
+⬅( ⬅❌ ) ❌ => ⬅ ❌ ⬅❌ # left signaled X_left, self is X, and keep propagating X_left
+⬅( ⬅❌ ) ⭕ => ⬅ ⭕ ⬅🤝 # left signaled X_left, self is O, and propagate tie_left (since conflict)
+⬅( ⬅⭕ ) ⭕ => ⬅ ⭕ ⬅⭕ # left signaled O_left, self is O, and keep propagating O_left
+⬅( ⬅⭕ ) ❌ => ⬅ ❌ ⬅🤝 # left signaled O_left, self is X, and rebroadcast tie_left
+⬅( ⬅🤝 ) => ⬅  ⬅🤝 # left signaled tie_left, rebroadcast tie_left and tie_right (self-status cant change this)
+❗ ⬅( ❌👑 ) => ❌👑 🏁 # left signaled X_win, and broadcast X_win, finish
+⬅( 🤝✅ ) => ⬅🤝✅ # left signaled it sees a tie in every direction, so done listening to it
+❗ ⬅( ❌_turn ) => ⬅ ❌_turn # left signaled X_turn, keep listening and propagate X_turn
+❗ ⬅( ⭕_turn ) => ⬅ ⭕_turn # left signaled O_turn, keep listening and propagate O_turn
+# ⬅() => ⬅ # else keep listening
+⬅🚫 ❌ => ❌ ⬅❌ # if nothing left, then X_left is true trivially
+⬅🚫 ⭕ => ⭕ ⬅⭕
+# = repeat this for every direction 8 * 12 = 96 rules
+# ====== tie checks:
+⬅🚫 ⬆🚫 ➡🤝 ⬇🤝 ↖🚫 ↗🚫 ↘🤝 ↙🚫 => 🤝✅ # top-left cell tie check
+# ... 9 of these.  all can be passed to each cell, they will only qualify if they're the right type
+# ====== tie check checks lol: (needs to search for confirmations that the other cells are all resolved)
+⬅🚫 ⬆🚫 ➡🤝✅ ⬇🤝✅ ↖🚫 ↗🚫 ↘🤝✅ ↙🚫 => 🤝 🏁 # we see a tie in every direction AND see every other cell thinks the same, so stop processing this cell and conclude tie
+# ... 9 of these. all can be passed to each cell, they will only qualify if they're the right type
+# ====== win checks:
+❗ ⬅❌ ❌ ➡❌ => ❌👑 🏁
+❗ ⬅❌ ❌ ➡🚫 => ❌👑 🏁
+❗ ⬅⭕ ⭕ ➡⭕ => ⭕👑 🏁
+❗ ⬅⭕ ⭕ ➡🚫 => ⭕👑 🏁
+# ...8*4 of these
+# ====== GRAND TOTAL = 3 + 96 + 9 + 9 + 8*4 = 149 rules
+# note that listeners could be implemented fairly trivially lol:
+# - literally just prepend everything inside ⬅( ⬅❌ ) with the leading symbol (so ⬅⬅❌) and that's a cacheable rule
+# - so you can just combine all inventories of each cell, just prepending contents and copying them to each other
+# - or: just do that copying when they actually listen and interact.  it's just a heavy-duty cudgel way of doing it
+# note: system needs to have pings and timeouts to detect if neighbor or not (🚫 signal)
+# note the use of ❗ still to force greedy listening for win and turn signals.  tie signals should resolve naturally
+# lol if we wanted a timeout clock:
+=> ⏰ # increment clock every set time period (system-provided, or clock listener)
+⬅ ⏰100 => ⬅🚫 ⏰100 # at 100t, close listener (clock keeps incrementing)
+# could add ⏰100 => ⏰1 to every successful listen, resetting clock too 
+# CONCLUSION: should work!
+
+
+# (SNAKE) PIXEL-BASED ASYNC ATTEMPT: (each grid cell only knows itself and its neighbors. just defining the state machine for itself)
+# init:
+# imagine this as an internalized state machine of resources being churned on, with inputs and outputs in each cardinal and diagonal direction
+# use ⬅( ⬜ ) to denote listening to left for signals (neurotransmitters?), which trigger self-signals => ...signals
+🎬 => ⬅ ➡ ⬆ ⬇ ↖ ↗ ↘ ↙ 🌎 # blank cell, listening for neighbors
+🎬 => 🐍 👉 ⬅ ➡ ⬆ ⬇ ↖ ↗ ↘ ↙ 🌎 # OR snake head cell, spawned with direction right, listening for neighbors
+🎬 => 🍒 ⬅ ➡ ⬆ ⬇ ↖ ↗ ↘ ↙ 🌎 # OR food cell, listening for neighbors
+# move snake right into empty cell (snake=1):
+🐍 👉 ⌛ => # empty snake cell (length=1 scenario)
+❗ 🐍2 👉 ⌛ => 🐍 👉 ⌛ ⬜ # fill cell
+  #  == net effect: 🐍X 👉 ⌛ => ⬜X-1 (using priority ❗ to ensure ALL move)
+⬅(🐍X 👉) ⌛ => ⬅🐍X 👉 # damn. how to do listeners without X? need to be able to modify aka neurotransmit
+# move snake right into filled cell:
+❗99 🐍 👉 ➡(⬜) ⌛ => 💀 # hit wall, dead snake, game over
+  # 🐍 ⬅(⬜ 👉) ⌛ => # do nothing if snake crashes into you (rule not needed)
+# move snake right into food cell:
+❗ 🐍 👉 ➡(🍒) ⌛ => ⬜ # eat food if present (higher priority than blank)
+# TODO ---------------- switched to neurotransmitter syntax:
+🍒 ⬅(🐍2 👉) ⌛ => 🐍2 👉 ⌛ # 
+# ... repeat for all snake lengths
+❗ ⬜ ⌛ => 🔳 # deplete filled square each tick
+⌛ => 🔳99 # else empty square
+
+
+
+# NEUROTRANSMITTER syntax (instead of listeners it's inputs and output gates)
+# a listener check (presence check) can still be done without changing adjacent cell, but it requires ➡(⬜) => ➡(⬜) same on both sides
+# if ➡(⬜) => on left side, it's taking an input (removing it from e.g. right cell)
+# if => ➡(⬜) on right side, it's producing an output (adding it to e.g. right cell)
+# if multiple cells are fighting for the same resources (both listening to same cell), then either one receiving is valid.  Use priority ❗ if one should take precedence
+# 0,0 cell needs special time wiring for this to work
+❗99 💀 => 💀 🏁 # game over, dead snake
+❗99 🐍  👉 ⌛ ➡(⬜) ➡  => 💀 ➡(⬜) # hit tail, dead snake, game over (no change to right cell)
+❗99 🐍  👉 ⌛ ➡(🧱) ➡  => 💀 ➡(🧱) # hit wall, dead snake, game over (no change to right cell)
+❗3  🐍  👉 ⌛ ➡(🍒) ➡  => ⬜ ➡(🐍2 👉) # eat food, snake grows and leaves tail cell
+❗2  🐍2 👉 ⌛        ➡  => 🐍 👉 ⌛ ⬜  ➡(🐍) # fill current cell and move snake right (length>1, leaving cell filled)
+❗   🐍  👉 ⌛        ➡  => ➡(🐍 👉) # move snake right (length=1, leaving cell empty)
+❗98     👉➡         ➡  => ➡(👉➡ 👉⬇) # propagate move command globally (x axis)
+❗98     👉⬇           ⬇  => 👉 ⬇(👉⬇) # propagate move command globally (y axis) 
+❗97         ⌛➡      ➡  => ➡(⌛➡ ⌛⬇) # propagate time tick globally (x axis)
+❗97         ⌛⬇        ⬇  => ⌛ ⬇(⌛⬇) # propagate time tick globally (y axis)
+# TODO ... repeat all above for each 4 move directions
+❗   ⬜ ⌛ =>  # filled squares deplete over time (snake tail)
+⌛ =>  # and empty squares simply waste their time
+
+# initialization:grow
+# assume we have 0,0 cell access only
+🎬 => 📍 🎮 ⌛ 📍(📏99 📐99) 
+  # init: origin point, controls, time tick, origin width and height of grid
+🎮 => 👉 🎮 # move options (these can change at any point.  or they might not change at all!)
+🎮 => 👈 🎮
+🎮 => 👆 🎮
+🎮 => 👇 🎮
+# SEE GENERAL GRID SOLUTION BELOW (lotta pain to get here):
+# mainly: detecting and marking walls is painful.  as is establishing connections (effectively: creating new cells)
+📏2 => ➡ ⬅ 📏2 # any width>1 unlocks right-left path lol
+📏 => ⬅ 🧱 # else endpoint (no right connection)
+❗2 📏99 ⬅ => 🧱 📏99 # if left col, cut left-connection (wall)
+❗ 📏 ➡ => ➡(📏 📐99) # once connections established, siphon growth rightwards
+# then repeat for y:
+📐2 => ⬇ ⬆ 📐2 # any height>1 unlocks down-up path lol
+📐 => ⬆ 🧱 # else endpoint (no down connection)
+❗2 📐99 ⬆ => 📐99 🧱 # if top row, cut up-connection (wall)
+❗ 📐 ⬇ => ⬇(📐) # once connections established, siphon growth downwards
+
+# TODO:
+- add snake head and food on init
+- add food as it's eaten (random?!?!)
+   - produce a random x,y then check if it's empty? else repeat?    
+- add win condition (all cells filled)
+- question: is this simpler if cells know their position lol (this would be easy to preserve from init)
+
+
+
+
+# GENERAL: ======================
+
+# TINKERING: EQUALITY CHECK:
+# 🅰=🅱 => ✅
+# 🅰!=🅱 => ❎
+
+=> ✅ # default true if both empty
+❗ 🅰 🅱 => # deplete pairs
+🅰 => ❎
+🅱 => ❎
+❗ ✅ ❎ => ❎ # contradiction takes precedent (absorb ✅)
+# note: destructive to 🅰 🅱.  use copies for this if they're needed after
+
+# TINKERING: GREATER THAN CHECK:
+# 🅰>🅱 => ⬆
+# 🅰<🅱 => ⬇
+
+❗ 🅰 🅱 => # deplete
+🅰 => ⬆
+🅱 => ⬇
+# note: destructive to 🅰 🅱.  use copies for this if they're needed after
+
+# TINKERING: RANDOM NUMBER GENERATION:
+🎲2 => ✅     # produces ✅ with D2 odds (i.e. coin flip 50%) 
+🎲10 => ✅    # produces ✅ with D10 odds (i.e. 1/10 10%) 
+🎲1 => ✅     # produces ✅ never (false. D1) for posterity. dont use though
+🎲0 => ✅     # (same as  => ✅) produces ✅ always (true. D0)  for posterity. 
+🎲2 🍎 => ✅  # produces ✅ with D2 odds, always consumes 🍎 regardless 
+🍎 => ✅ 🎲2  # ...hmmmmmm produces randomness as a resource to use in subsequent recipes..?
+# alternative:
+🎲2 🍎 => 🎲3 ✅ # consumes 🍎 with D2 odds, produces ✅ with D3 odds... 
+🍎 => 🎲3 ✅ # always consumes, D3 odds to produce
+🎲2 🍎 => ✅ # always produces, D2 odds to consume
+# alternative:
+🍎 🎲4=> ✅ # does the entire recipe with D4 odds, or not at all
+# alternative (we probably need ingredient-level granularity for this to work):
+🍎2🎲4 🍌🎲3 => ✅🎲5 # consumes 🍎2 with D4 odds, consumes 🍌 with D3 odds (independent), produces ✅ with D5 odds (independent of costs)
+# alternative: sometimes we want dependence.  e.g. probably caught a fish, but which one:
+🎣 => 🐟%20 🐠%30 🐡%40  # last %10 is nothing.  no chance of 2 fish from one line
+# alternative:
+🎣 => 🎲2 🐟
+🐟 => 2🎲4 🐠 # blegh I hate it no
+# TODO LATER
+
+# GRID GENERATION AUTOMATA SOLUTION TINKERING/RAMBLING (saved for posterity and proof I'm dumb I guess?)
+
+❗3 ⬇🌱99 ➡🌱99 => 🧱 ⬇ ➡ ➡(⬇🌱99 ➡🌱98) ⬇(⬇🌱98 ➡🌱99) # origin corner
+
+# ❗2 ⬇🌱99 ➡🌱X => 🧱 ⬇ ➡ ⬅ ➡(⬇🌱99 ➡🌱X-1) ⬇(⬇🌱98 ➡🌱X) # top row, spread down first
+❗ ⬇🌱99 ➡🌱 => 🧱 ⬇ ➡ ⬅ ➡(⬇🌱99) ⬇(⬇🌱98 ➡🌱) # top row, spread down first
+❗2 ⬇🌱99 ➡🌱2 => ⬇🌱99 🧱 ⬇ ➡ ⬅ ➡(⬇🌱99 ➡🌱) ⬇(⬇🌱98 ➡🌱2) # top row, spread down first
+
+
+# establish right connection:
+❗3 ⬇🌱4 ⬆ => ⬇🌱4 🧱 # top row is a wall, so replace up connection
+❗3 ➡🌱4 ⬅ => ➡🌱4 🧱 # left col is a wall
+# if right connected already, prefer transfer of growth to right:
+❗2 ➡🌱2 ➡ ⬇ => ➡🌱 ➡(➡🌱2) ⬇(➡🌱2) # while there's extra growth, pass it on (favor right)
+❗2 ➡🌱 ➡ ⬇ => ⬇(➡🌱2)
+❗2 ⬇🌱2 ➡ ⬇ => ➡(⬇🌱2) ⬇(⬇🌱2)
+
+❗ 🌱2 => 🌱 ➡ ⬅ ⬇ ⬆ # if there's extra growth, share it
+➡🌱 => 🧱 ➡ ⬅  # establish a left-right channel if not present
+⬇🌱 => 🧱 ⬇ ⬆  # establish an up-down channel if not present
+
+
+4,4🧱 => 3,4 => 2,4 => 1,4 => 0,4
+4,3 => 3,3 => 2,3 => 1,3 => 0,3
+4,2 => 3,2 => 2,2 => 1,2 => 0,2
+4,1 => 3,1 => 2,1 => 1,1 => 0,1
+4,0 => 3,0 => 2,0 => 1,0 => 0,0
+
+❗4 🌱4 ⬆ => ➡(🌱4) 🧱 # top row is a wall, spread right along it
+❗3 🌱4 ⬅ => 🧱 # left col is a wall (no spread by convention)
+❗2 🌱 ⬇ => ⬇(🌱) # gravity diffusion
+❗ 🌱2 => 🌱 ➡ ⬅ ⬇ ⬆ # if there's extra growth, share it
+🌱 => 🧱 ➡ ⬅ ⬇ ⬆ # else calcify into a wall
+
+
+
+# GENERAL NOTES:
+# general zero-check (how we we effectively check for zero-ness (it's an IF-ELSE))
+🅰0 🅱3 => 💰7 # example <=
+❗ 🅰 🅱3 => 🅰 💸 # IF A > 0 do blah (and spend B condition)
+🅱3 => 💰7 # ELSE A is 0 (unreachable otherwise)
+
+# establishing a grid from origin width x,y: (down/right are arbitrary)
+# NOTE: this does not merge the grid, and if it did it would be overlaying the indexes to make a larger grid
+📍 => 📏x 📐y ➡ ⬇ # widths and cardinal directions to pass things
+# AKA 📏x 📐y => ➡ ⬇ ➡(📏x-1 📐y) ⬇(📏x 📐y-1) # ALL WE WANT
+❗ 📏2 📐2 => 📏 📐 ➡ ⬇ ➡(📏 📐) ⬇(📏 📐)
+📐 => ➡ ➡(📐)
+📏 => ⬇ ⬇(📏)
+
+
+
+5,5/R0,0/D0,0 (target 0,0/R4,5/D5,4)
+=> 4,4/0,0/0,0 
+=> 3,3/1,1/1,1 
+=> 2,2/2,2/2,2 
+=> 1,1/3,3/3,3 
+=> 0,0/4,5/5,4
+4,5/RR0,0/RD0,0 (target 0,0/RR3,5/RD4,4)
+=> 3,4/0,0/0,0  
+=> 2,3/1,1/1,1
+=> 1,2/2,2/2,2
+=> 0,1/3,4/4,3
+=> 0,0/3,5/4,4
+5,4/DR0,0/DD0,0 (target 0,0/DR4,4/DD5,3)
+=> 4,3/0,0/0,0
+=> 3,2/1,1/1,1
+=> 2,1/2,2/2,2
+=> 1,0/3,4/4,3
+=> 0,0/4,4/5,3
+
+1,5/RRRRR0,0/RRRRD0,0 (target 0,0/RRRRR0,5/RRRRD1,4)
+=> 0,4/0,0/0,0
+=> 0,3/0,1/0,1
+=> 0,2/0,2/0,2
+=> 0,1/0,3/0,3
+=> 0,0/0,4/0,4 # EFFFFFF
+
+
+📍 => 📏x 📐y ➡ ⬇ # widths and cardinal directions to pass things
+# 📏x 📐y => ➡ ⬇ ➡(📏x-1 📐y) ⬇(📏x 📐y-1) # ALL WE WANT
+❗ 📏2 📐2 => 📏 📐 ➡ ⬇ ➡(📏 📐) ⬇(📏 📐)
+📐 => ➡ ➡(📐)
+📏 => ⬇ ⬇(📏)
+
+
+
+1,5/RRRRR0,0/RRRRD0,0 (target 0,0/RRRRR0,5/RRRRD1,4)
+=> 0,5/0,0/1,0
+=> 0,4/0,1/1,1
+=> 0,3/0,2/1,2
+=> 0,2/0,3/1,3
+=> 0,1/0,4/1,4
+=> 0,0/0,5/1,5
+
+# 📏x 📐y => ➡ ⬇ ➡(📏x-1 📐y) ⬇(📏x 📐y-1) # ALL WE WANT
+
+❗ 📏2 📐2 => 📏 📐 ➡ ⬇ ➡(📏 📐) ⬇(📏 📐)
+📐 => ➡ ➡(📐)
+📏 => ⬇ ⬇(📏)
+
+# problem: all interior cells get doubled
+x,y => x-1,y => x-2,y => ... => 1,y => 0,y
+x,y-1 => 2(x-1,y-1 => 2(x-2,y-1 => ... => 2(1,y-1 => 2(0,y-1
+x,y-2 => x-1,y-2 => x-2,y-2 => ... => 1,y-2 => 0,y-2
+...
+x,1 => x-1,1 => x-2,1 => ... => 1,1 => 0,1
+x,0 => x-1,0 => x-2,0 => ... => 1,0 => 0,0
+
+# solutions: double edge cells too and then halve all? Nope: cant double cells they'll double forever.. unless...
+
+# other problem!  either 0 or more than one connection generated when x y are even nums
+
+# 📏x 📐y => ➡ ⬅ ⬇ ⬆ ➡(📏x-1 📐y) ⬇(📏x 📐y-1) # ALL WE WANT
+
+# solution: (to the connections issue)
+📏 => ➡ ⬅ 📏 # any width unlocks right-left path lol
+📐 => ⬇ ⬆ 📐 # any height unlocks down-up path lol
+❗2 📏2 📐2 ➡ ⬇ => 📏 📐 ➡(📏 📐) ⬇(📏 📐) # once connections established, siphon growth evenly
+❗ 📐 ➡ => ➡(📐) # then siphon growth to the right
+❗ 📏 ⬇ => ⬇(📏) # and down
+# should deplete growth in both directions before they can try to re-attempt connection forming
+
+# so now once again just the 2* interior cells doubled issue
+
+❗3 📏x ⬅ => 📏2x  # how bout trade left connection for 2x if leftmost col? 
+❗3 📐y ⬆ => 📐2y # or top row
+# then the usual:
+📏 => ➡ ⬅ 📏 # any width unlocks right-left path lol
+📐 => ⬇ ⬆ 📐 # any height unlocks down-up path lol
+❗2 📏2 📐2 ➡ ⬇ => 📏 📐 ➡(📏 📐) ⬇(📏 📐) # once connections established, siphon growth evenly
+❗ 📐 ➡ => ➡(📐) # then siphon growth to the right
+❗ 📏 ⬇ => ⬇(📏) # and down
+# now everything should be 2x 2y in the end.  Good enough.
+
+# then to reduce back down to 1x 1y:
+❗2 📏2 📐2 ➡ ⬇ => ➡(📏 📐) ⬇(📏 📐) # always preserve quantity, instead
+
+# problem: still want to be able to close the right-connection at end of row
+# we have no way to actually detect the end yet hmm...
+
+# SEMIFINAL ANSWER: (TODO detect edge)
+❗3 📏x ⬅ => 📏2x  # how bout trade left connection for 2x if leftmost col? 
+❗3 📐y ⬆ => 📐2y # or top row
+# then the usual:
+📏 => ➡ ⬅ 📏 # any width unlocks right-left path lol
+📐 => ⬇ ⬆ 📐 # any height unlocks down-up path lol
+❗2 📏2 📐2 ➡ ⬇ => ➡(📏 📐) ⬇(📏 📐) # once connections established, siphon growth evenly
+❗ 📐 ➡ => ➡(📐) # then siphon growth to the right
+❗ 📏 ⬇ => ⬇(📏) # and down
+
+
+# FINAL ANSWER???
+# last idea: (detect edge)
+# then the usual:
+📏2 => ➡ ⬅ 📏2 # any width>1 unlocks right-left path lol
+📐2 => ⬇ ⬆ 📐2 # any height>1 unlocks down-up path lol
+📏 => ⬅ # else endpoint
+📐 => ⬆
+# once connection established, siphon out growth:
+❗3 📏x ⬅ => 📏2x  # if left col, cut left-connection (wall) and double
+❗3 📐y ⬆ => 📐2y # if top row, cut up-connection (wall)
+❗2 📏2 📐2 ➡ ⬇ => ➡(📏 📐) ⬇(📏 📐) # once connections established, siphon growth evenly
+❗ 📐 ➡ => ➡(📐) # then siphon y-growth to the right
+❗ 📏 ⬇ => ⬇(📏) # and x-growth down
+
+# OH GOD ITS WORSE THAN THAT HE'S DEAD JIM, DEAD JIM, DEAD JIM
+# IT"S NOT DOUBLING ITS SQUARING IM DUMB
+
+x,y => x-1,y => x-2,y => ... => 1,y => 0,y
+x,y-1 => 2x-1,2y-1) => (2x-2 + x-2= 3x-4),(2y-2 + y= 3y-2) => ... => (x-1)(1,y-1 => x(0,y-1
+x,y-2 => x-1,y-2 => x-2,y-2 => ... => 1,y-2 => 0,y-2
+...
+x,1 => x-1,1 => x-2,1 => ... => 1,1 => 0,1
+x,0 => x-1,0 => x-2,0 => ... => 1,0 => 0,0
+
+# OH GOD:
+4,4 3,4 2,4 1,4 0,4
+4,3 6,7 7,11 7,15 6,19 .... forever??
+...
+
+
+# SMART ANSWER: (just do x in 1D, THEN do y for each x)
+# ignore second dimension: JUST 1D X
+📏2 => ➡ ⬅ 📏2 # any width>1 unlocks right-left path lol
+📏 => ⬅ # else endpoint
+❗2 📏x ⬅ => 📏x # if left col, cut left-connection (wall)
+❗ 📏 ➡ => ➡(📏 📐y) # once connections established, siphon growth rightwards
+# then repeat for y:
+📐2 => ⬇ ⬆ 📐2 # any height>1 unlocks down-up path lol
+📐 => ⬆ # else endpoint
+❗2 📐y ⬆ => 📐y # if top row, cut up-connection (wall)
+❗ 📐 ⬇ => ⬇(📐) # once connections established, siphon growth downwards
+
+
+# NOTE:
+# this would be stupidly simple if we already had the connections established:
+📏 ➡ => ➡(📏 📐y)
+📐 ⬇ => ⬇(📐)
+# now I feel extra dumb how obvious this is
+
