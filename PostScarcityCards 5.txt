@@ -1,0 +1,923 @@
+🚢Kariba Lock              🗿100k tons     ⚙️30k tons    📏100 m       💰100m        🚢100m tons/yr 
+🚢Cahora Bassa Lock        🗿100k tons     ⚙️30k tons    📏100 m       💰100m        🚢100m tons/yr 
+🎡Bucket Wheel Excavator   ⛏️100m tons/yr  ⚙️3k tons     ⚡️3 MW        💰30m
+🏭Plasma Processor         🗿100k tons/yr  📏10 m        ⚡️100 KW      💰300k
+🏭Plasma Refinery          🗿10m tons/yr   📐1k m2       ⚡️10 MW       💰30m
+🚇Plasma Tunneler          ⛏️100m tons/yr  📏1 km/yr     ⚡️1 GW        ⭕10 m 
+🚇Plasma MicroTunneler     ⛏️1m tons/yr    📏1 km/yr     ⚡️100 MW      ⭕1 m 
+🌞Solar Farm PV            ⚡️1 GW          📐10m m2      💰1b
+🌞Solar Farm PV            ⚡️1 MW          📐10k m2      💰1m
+🥔Cylinder Farm            👤10k pop       🥔10k ton/yr  📐1 km2       💧3m  ton/yr  
+🥔Dacha Farm               👤1 pop         🥔1 ton/yr    📐100 m2      💧300 ton/yr 
+🥔Taro Farm                👤1 pop         🥔1 ton/yr    📐100 m2      💧300 ton/yr
+🌿Greenhouse Biomes        👤10m pop       🥔10m tons    📐1m m2       🪞1m m2       🪵1m ton
+🌿Biomes Backup            🌿300k          🥔300k ton/yr 📐300m m2     💧300m ton/yr 🎓300k pop/yr
+
+🫘Coffee Farm              🫘3k ton/yr     📐1m m2
+
+🛍ZimShop                  🎓300 pop/yr    📐1k m2
+🛍ZimShops                 🎓1m pop/yr     📐3m m2
+
+🏟️Kariba Barge             👤10k pop       ⚙️10k tons    📐30k m2      ⚡️1 MW       💰30m
+🏟️Kariba Floating Stadium  👤100k pop      🏟️10
+
+🖥️Operations Center        📱1m            📐10k m2      💰10m         🧠100
+📲Electronics Fab          📱1m/yr         📐300 m2      📲30m         💰3m         
+📱Census Device            📱1m            📐10k m       💰100m
+📱Electronics Shops        📱1m/yr         📐1k m2       💰1m          💵300m
+
+
+🇿🇼Zimbazi Seaport          🗿300k tons     ⚙️100k tons   📏1k km       ⛏️10b ton     🎡100     💰3b        
+
+
+
+📡Space Center             🚀10k LEO/yr   📦100 tons/yr  ⛽️300k ton     ⚙️1m tons/yr 🛰️10k/yr  💨300k ton 📲100k 💰300m/yr
+🚀LEO Rocket               🏎️10k m/s      📦10 kg        ⛽️30 ton       ⚙️100 ton    🛰️1       💨30 ton   📲10   💰30k
+🛰️Satellite Payload        🛰️10 kg        📲100          🔋10 wh        🌞10w        💫3k/yr   
+⛽️Rocket Fuel              ⛽️1 ton        💰1k
+
+
+
+⛏️Limestone Quarry         🐚100m tons/yr  📐10m m2      🎡1
+🔥Cement Calcinators       🗿10m ton/yr    📐10k m2      ⚡️1GW         💰100k        🐚1m ton/yr
+🌞Cement Solar Farm PV     🥉3k tons       📐10m m2      ⚡️1GW         💰1b  
+
+🌊Kariba Hydroelectric Dam 🗿3m tons       📏100 m       ⚡️1 GW
+⚙️Kariba Steel Refinery    ⚙️1m tons/yr    📐3m m2       ⚡️1 GW
+
+🏭Iron Refinery - Gas      ⚙️1m tons/yr    📐1m m2       ⚡️300 MW
+🏭Iron Refinery - Hydrogen ⚙️1m tons/yr    📐1m m2       ⚡️1 GW
+🏭Iron Refinery - Blast    ⚙️1m tons/yr    📐1m m2       ⚡️1 GW
+
+
+
+
+
+
+⭕Cylinder                 🗿10k tons      📏30 m        📐30k m2      ⭕60 m
+🏭Cylinder Printer Farm    🏭300m/yr       🏗️300k        ⚡️30 MW       ♻️100k ton/yr 💰300m    🦾100
+🏭Cylinder 5-Axis Farm     🏭3b/yr         🏗️10k         ⚡️30 MW       ⚙️10k ton/yr  💰300m    🦾1k
+🏭Cylinder Warehouse       📦30k           📦30k tons    📐30k m2      ⚙️300 tons    💰3m      🦾10    
+
+🏫Cylinder Library         👤1m pop        📚10m         📐30k m2      
+🏫Cylinder Edu             🎓1k            🏫100         📐10k m2      🪵300 tons    🪞10k m2
+
+
+🌱Soil-Nullabor Cylinders  🌱10b tons/yr         
+🌱Cylinder Soil            🗿10k tons      📏30 m        📐3k m2     
+
+
+💍ZimShop                  💍3k/yr         🎓300/yr      📐100 m2      💵10m         🥇30 kg/yr
+💍ZimShops                 💍10k/y         🎓1m/yr       📐30k m2      💵30b         🥇30 ton/yr
+
+🏫ZimSchool                👤10            🎓300         📐1k     
+🏫ZimSchools               👤100k          🎓3m          📐10b m2      🏫10k
+
+☕️ZimShop - Coffee         🫘1 ton/yr      ☕️100k        📐30 m2       💵300k
+☕️ZimShops - Coffee        🫘3k ton/yr     ☕️300m        📐100k m2     💵1b
+🍲ZimShop - Dining         🥔100 ton/yr    🍲1m/yr       📐1k m2       💵100m
+🍲ZimShops - Dining        🥔300k ton/yr   🍲3b/yr       📐300k m2     💵300b
+
+
+🍲World Kitchen            🍲3b/yr         🥔300k ton/yr 📐3m m2       🌿300k         ✈️10
+
+
+✈️Airplane - Passenger     👤1m pop/yr     🛫3k/yr       ⛽️10k tons    💰100m      
+✈️Airline                  👤10m pop/yr    🛫30k/yr      ⛽️100k tons   💰1b           ✈️10
+🌿Bamboo Forest            🪵3k ton/yr     💧3m m3/yr    📐1 km2 
+
+
+🧪Ammonia NH3 Plant        🧪1m ton/yr     💧3m m3 /yr   ⚡️300 MW      💰1B
+🧪Ammonia NH3 Plant Plasma 🧪1m ton/yr     💧3m m3 /yr   ⚡️300 MW      💰300m
+
+
+🏗️Manufacturing - Mini     🏭100k #/yr     🛠️1           📐100 m2      🎓100 pop/yr   💰10k      
+🏗️Manufacturing - Major    🏭10m #/yr      🛠️10          📐1k m2       🎓1k pop/yr    💰1m        
+🏗️Manufacturing - Macro    🏭100m #/yr     🛠️100         📐10k m2      🎓10k pop/yr   💰10m       
+🏗️Manufacturing Hubs       🏭1b #/yr       🛠️1k          📐1m m2       🎓1m pop/yr    💰100m
+
+
+🌊Canal                    ↔️10 m          ↕️10 m        📐100 m2/m    ⛏️300k ton     📏1 km  
+🌊Canal - Deepwater        ↔️100 m         ↕️30 m        📐3k m2/m     ⛏️10m ton      📏1 km   
+🔼Canal Lock               🗿10k tons      ⚙️30 tons     📐1 km2       ⬆️10 m         💰300k
+🔼Canal Lock - Deepwater   🗿100k tons     ⚙️30k tons    📐1 km2       ⬆️10 m         💰10m
+
+
+🚢Barge - Concrete         🗿300 tons      📐3k m2       📦3k tons     🏎️3 m/s  
+🚢Barge - Steel            ⚙️3k tons       📐3k m2       📦3k tons     🏎️3 m/s 
+🚢Barge - Bridge           ⚙️3k tons       📐3k m2       📦3k tons     🏎️3 m/s        🌉30          🌉10k/yr
+🚢Cargo Ship               ⚙️100k tons     📏60 m        📦10k tons    🏎️30 m/s 
+
+🚢Barge Factory - Concrete 🗿1m tons/yr    🚢30k/yr            
+🚢Barge Factory - Steel    ⚙️1m tons/yr    🚢3k/yr       ⚡️1 MW        🦾100
+
+
+
+🏜️Kalahari Canals - Dig    💧10b ton       ⛏️10b tons    🥔1b ton/yr   🎡100          📏100k km    📐300k km2   💰3b
+🏜️Kalahari Canals - Farms  💧10b ton
+🏜️Kalahari Canals - Barges 📦1b tons/yr    🚢10k         📏1k km       🏎️3 m/s        🔂300k sec   🔁30/yr       
+🏜️Kalahari Canals Bridges  🌉10k/yr        📏10 km       🗿300k ton
+
+🌉Bridge - Bailey          ⚙️10 ton        📏10 m        💰30k
+🪨Bridge - Precast         🗿30 ton        📏10 m        💰30k
+
+🍰
+
+
+
+
+🦾Cobot                    🥉3 kg          ⚙️10 kg       ♻️10 kg       📲100          📐1 m2       💰10k          
+🦾Cobot Factory            🥉3k ton/yr     ⚙️10k ton/yr  ♻️10k ton/yr  📲100m/yr      📐10k m2     🦾1k           
+
+
+🛞Motor Factory - 1 W      🛞1m/yr         🥉3 ton/yr    ⚙️10 ton/yr   🧲3 ton/yr     📐1k m2      💰3m
+🛞Motor Factory - 10 W     🛞1m/yr         🥉100 ton/yr  ⚙️30 ton/yr   🧲10 ton/yr    📐1k m2      💰3m
+🛞Motor Factory - 100 W    🛞1m/yr         🥉300 ton/yr  ⚙️300 ton/yr  🧲30 ton/yr    📐1k m2      💰3m
+🛞Motor Factory - 1 KW     🛞1m/yr         🥉3k ton/yr   ⚙️1k ton/yr   🧲300 ton/yr   📐10k m2     💰10m
+
+🧲Magnet Factory           🧲1k ton/yr     ⚙️1k ton/yr   🪙300 ton/yr  ⚡️300 KW       📐3k m2      💰10m
+🛸Drone Factory            🛸1m/yr         🛞3m/yr       ♻️10k ton/yr  📲10m/yr       📐10k m2     💰10m
+
+
+🥉Copper Refinery          🥉1m ton/yr     ⚙️10k ton     ⛏️100m ton/yr ⚡️1 GW         📐100k m2    💰300m
+🥉Rare Earth Refinery      🪙1k ton/yr     ⚙️10k ton     ⛏️1m ton/yr   ⚡️100 MW       📐30k m2     💰100m
+
+🛢️Oil Refinery             🛢️1m ton/yr     ⛽️300k ton/yr ♻️100k ton/yr ⚫️3k ton/yr    📐30k m2     💰300m
+
+⏫Upweller                 ⚙️1k ton        ⬇️100m        🌡️10          ⚡️300kw        📐300 km2    💰1m         ⭕60 m      🌊100b ton/yr
+⏫Upweller Array           ⚙️3m ton        ⏫3k          🌊300t ton/yr ⚡️1 GW         📐1m km2     💰3b
+
+
+
+
+
+🛣️MicroRoad                📏1km           ↔️1 m         ⚫️300 tons    🪨1k ton       🗿300 ton    ⛏️10k ton
+🛣️Highway - Tar            📐1 m2          ↕️100 mm      ⚫️.3 tons     
+
+
+🛣️Highway - 8 Lane         📏1km           ↔️30 m        ⚫️10k tons    🪨30k ton      🗿10k ton    ⛏️300k ton
+🛣️Highway - Tar            📐1 m2          ↕️100 mm      ⚫️.3 tons     
+
+
+
+🇦🇴Angola Highway           📏1k km         ↔️30 m        ⚫️10m tons    🪨30m ton      🗿10m ton    ⛏️300m ton
+
+
+
+
+⛺️Kspan                    📐300k m2/yr    ⚙️30k m2/yr   👤10          🗓️1 yr         💰3m
+⛺️Kspan - Team             📐1k m2         ⚙️100 m2      👤10          ⏰1 day        💰10k
+⛺️Kspan - Mass             📐1 m2          ⚙️.1 ton      💰10  
+
+
+🔁Belts                    📏1km           🐚100m ton/yr ⚙️300 ton     ⚡️3 MW         💰1m         🏀10 ton
+🚡Cableway                 📏1km           🐚100m ton/yr ⚙️300 ton     ⚡️3 MW         💰3m 
+🔥Calcinator               📐1k m2         🐚1m ton/yr   ⚙️100 ton     ⚡️30 MW        💰100k       
+🏭BWE Fab                  🎡30 /yr        ⚙️300k ton/yr 📐30k m2      ⚡️3 MW         💰30m        🥉100 tons/yr
+
+🔁Nullabor Belts           📏3k km         🐚30b ton/yr  ⚙️1m ton      ⚡️10 GW        💰3b         🏀30k ton
+🔁Nullabor Belts           📏3k km         🐚30b ton/yr  ⚙️1m ton      ⚡️10 GW        💰3b         🏀30k ton
+
+
+🌊Nullabor Canal Pump      ↕️100 m         💧1b ton/yr   ⚙️3k ton      ⚡️30 MW        💰10m
+🌊Nullabor Concrete Pump   ↕️100 m         💧30b ton/yr  ⚙️100k ton    ⚡️1 GW         💰300m
+
+🌊Nullabor Canals          📏3k km/yr      ⛏️3m ton
+🌊Nullabor Canal           📏1 km          ↔️100 m       ↕️10 m        📐1k m2        ⛏️3m ton
+🚢Nullabor Barge           📦30k ton       ↔️30 m        ↗️300 m       ⚡️1 MW         💰3m         🗿10k ton      
+🚢Nullabor Barges          📦30b tons/yr   🚢3k          🗿300k ton    ⚡️3 GW         💰1bm
+🚢Nullabor Barge Cycle     📦10m ton/yr    📏30 km       🔁300/yr      🏎️1 m/s
+🏭Nullabor Barge Fab       🚢3k /yr        🗿300k ton/yr 📐300k m2     ⚡️30 MW        💰1bm
+
+
+🗿Concrete Mixing Recipe   🗿1m ton/yr     🐚300k ton/yr 🏝️300k ton/yr 🪨300k ton/yr  💧300k ton/yr     
+🗿Concrete Giga Recipe     🗿1b ton/yr     🐚300m ton/yr 🏝️300m ton/yr 🪨300m ton/yr  💧300m ton/yr  
+🗿Nullabor GigaRecipe      🗿100b ton/yr   🐚30b ton/yr  🏝️30b ton/yr  🪨30b ton/yr   💧30b ton/yr 
+
+
+
+🇦🇺Outback Farm             👤10b           🥔10b ton/yr  📐1t m2       💧1t ton/yr    💩1t ton
+🇦🇺Outback Canals           ⚙️1m ton        ⛏️100b ton    📐1t m2       🎡300          💰10b        💧100b ton     ↔️30 m
+
+🇦🇺Upweller - Aus Bight     ⚙️1m ton        ⏫1k          📐300b m2     ⚡️300 MW       💰1b         💧3t ton/yr
+
+⏫Upweller                 ⚙️1k ton        📐300k km     ⬇️100m        🌡️10C          ⭕60 m       ⚡️300kw        💰1m
+
+
+💧Desalination Pop         👤1            💧.1 ton       ⏰1 day       🔁1 day
+💧Desalination             🚰1b ton/yr     ⚙️1k ton      📐300k m2     ⚡️300 MW       💰1b         💧1b ton/yr    ♻️30k ton
+💧Desalination Nullabor    🚰10t ton/yr    ⚙️100k ton    📐30m m2      ⚡️1 TW         💰3b         💧10t ton/yr   ♻️300k ton
+
+
+
+⚡️Steam Power Plant        ⚡️1 GW          ⚙️30k ton     📐30k m2      🥉3k ton       💰1b         💨30m ton/yr 
+
+⚡️Steam Turbine            ⚡️1 GW          ⚙️300 ton     📐30k m2      🥉3k ton       💰1m         💨30m ton/yr 
+
+
+⚙️Steel from Hydrogen      ⚙️1 ton         ⚙️1 ton       💨30 kg       
+⚙️Iron Ore Reduction       ⚙️1 ton         
+
+
+
+🏭Iron Ore Reduction       ⚙️10m ton/yr    ⚙️30k ton     📐300k m2     ⚡️3 GW         💰30m
+
+
+⚙️Steel Factory - Only     ⚙️10m ton/yr    ⚙️30k ton     📐300k m2     ⚡️300 MW       💰100m
+⚙️Steel Factory - H2       ⚙️10m ton/yr    ⚙️300k ton    📐1m m2       ⚡️10 GW        💰300m
+⚙️Steel Factory - SMR      ⚙️10m ton/yr    ⚙️300k ton    📐1m m2       ⚡️10 GW        💰300m
+
+⏩NatGas Compressor Gas    ⛽️10m ton/yr    ⚙️3k ton      📏100 km      ⛽️100k ton/yr  💰100k
+⏩NatGas Compressor Solar  ⛽️10m ton/yr    ⚙️3k ton      📏100 km      ⚡️10 MW        💰10m
+
+⛽️NatGas Pipeline          ⛽️10m ton/yr    ⚙️100 ton     📏1 km        ⭕1 m          💰100k 
+⛽️Nullabor Interconnect    ⛽️30m ton/yr    ⚙️300k ton    📏3k km       ⭕1 m          💰1b         ⏩30
+
+
+
+💨Hydrogen - Electrolysis  💨300k ton/yr   ⚙️100k ton    📐300k m2     ⚡️3 GW         💰300m
+💨Hydrogen - NatGas SMR    💨300k ton/yr   ⚙️30k ton     📐300k m2     ⚡️3 GW         💰300m
+💨Hydrogen - NatGas SMR    💨1m ton/yr     ⚙️100k ton    📐300k m2     ⚡️10 GW        💰300m
+
+
+
+
+
+
+
+🪢 Seaweed Textile Factory 🪢1b tons/yr    ⚙️30k ton     📐1m m2       ⚡️300MW        💰300m       
+🪢 Seaweed Textile Factory 🌿3b tons/yr    💧10b tons    💧1b tons/yr
+🪢 Seaweed Dyeing          🎨10m tons/yr   🧂10m tons/yr 🧪10m tons/yr
+
+
+
+🧪Hydrocholoric Acid Plant 🐚300m ton/yr   ⚙️1m          📐3m m2       ⚡️300GW        💰1b         ⚙️1m ton       💨10m ton/yr                                 
+
+🐚Accelerant Factory CaCl  🐚300m ton/yr   ⚙️100k        📐1m m2       ⚡️300MW        💰1b         🗿3m ton       🧪300m ton/yr
+
+
+🗿Concrete Mixing Plant    🗿1m ton/yr     ⚙️30          📐300 m2      ⚡️30 KW        💰30k      
+🗿Concrete GigaMixer       🗿1b ton/yr     ⚙️3k ton      📐300k m2     ⚡️30 MW        💰30m        
+🗿Nullabor GigaMixer       🗿100b ton/yr   ⚙️300k ton    📐300m m2     ⚡️3 GW         💰3b         
+
+
+🏝️MSand Machine            🏝️10m ton/yr    ⚙️10 ton      📐100 m2      ⚡️300 kW       💰100k       
+🏝️MSand Nullabor Machines  🏝️30b ton/yr    ⚙️30k ton     📐300k m2     ⚡️1 GW         💰300m   
+ 
+
+🏭Nullabor BWE Fabs        🎡300 /yr       ⚙️3m ton/yr   📐300k m2     ⚡️30 MW        💰300m       🥉1k ton /yr   🏭10
+🏭Nullabor Calcinator Fab  🔥10k /yr       ⚙️10m ton/yr  📐300k m2     ⚡️30 MW        💰300m
+
+
+🚢Nullabor Lock            🗿100k tons     ⚙️30k tons    📏100 m       💰100m         🚢100m tons/yr 
+
+⛺️Nullabor BWE Kspan       📐300k m2       ⚙️30k ton     👤100         ⏰30 day       💰30m
+⛺️Nullabor Kiln Kspan      📐10m m2/yr     ⚙️1m ton      👤300         🗓️1 yr         💰1b
+
+🎡Nullabor BWE             🎡300           🐚30b ton/yr  ⚙️1m ton      ⚡️1 GW         💰10b        
+🔥Nullabor Calcinator      📐10m m2        🔥10k         ⚙️10m ton     ⚡️1 TW         💰3b
+☢️Tsar                     📐1m m2         ☢️3 mt        💥10k/yr      ⚡️3 TW         💰1b
+🪨Nullabor CO2 Mixer       💨30b co2/yr    🐚30b ton/yr  🏝️30b ton/yr  🗿100b ton/yr  
+
+🔥Calcinator               📐1k m2         🐚3m ton/yr   ⚙️1k ton      ⚡️30 MW        💰100k   
+
+🧪S-50 Tube                📏10 m          ⚙️.3 ton      📐1 m2        ⚡️1 KW 
+☢️S-50 Refinery            💥1 #/yr        🧪100         📐1k m2       ⚡️100 KW       ☢️10 kg/yr
+☢️Nullabor Refinery        💥10k #/yr      🧪1m          📐100k m2     ⚡️1 GW         💰3b
+☢️Fizzle Fusion            ☢️300 ton
+
+🏀Rubber Factory           🏀100k ton/yr   ⚙️10k ton     📐100k m2     ⚡️10 MW        💰100m      ⛽10k ton/yr   💧1m ton/yr   
+
+
+✈️Airplane                 👤100k/yr       👤300         📏10k km      ⛽30k tons/yr  💰100m      💵30m/yr
+✈️Airplane Flight          👤300           🛬300         📏10k km      ⛽30 tons      💰30k       💵100k
+✈️Airline                  👤1m/yr         ✈️10          📐30k m2      ⛽300k tons/yr 💰1b        💵300m/yr
+
+
+
+🏗️Crane                    🏗️3 ton         ⚙️30k ton     📏100m        ⚡️30 KW        💰30k      📦300 ton/day  🔁100/day
+⭕️Cylinder                 👤300           🗿10k ton     📐10k m2      ⚡️300 KW       💰300k
+🏬Cylinder Tower           👤3k            🗿100k ton    📐100k m2     ⚡️3 MW         💰3m       ⭕️10 
+
+
+
+🇿🇼Zimbabwe                 🥇30 tons/yr    🫘3k ton/yr
+
+
+
+🅿️Parking Lot              📐1 m2          💰300
+🏬Retail                   📐1 m2          💰3k
+🏬Luxury Retail            📐1 m2          💰30k
+🏬UltraLuxury Retail       📐1 m2          💰100k
+
+
+
+
+🇦🇴Angola                   👤30m           🏠10m         📐1m km2
+🇿🇼Zimbabwe                 👤10m           🏠3m          📐300k km2
+🇧🇼Botswana                 👤3m            🏠1m          📐300k km2
+🇺🇸USA                      👤300m          🏠100m        📐300m km2
+🇪🇺EU                       👤300m          🏠100m        📐3m km2
+🇨🇳China                    👤1b            🏠300m        📐10m km2
+🇦🇺Australia                👤30m           🏠10m         📐10m km2
+🇺🇸Canada                   👤30m           🏠10m         📐10m km2
+🇮🇳India                    👤1b            🏠100m        📐3m km2
+🇷🇺Russia                   👤100m          🏠30m         📐30m km2
+🇬🇧United Kingdom           👤100m          🏠30m         📐300k km2
+🇪🇬Egypt                    👤100m          🏠30m         📐1m km2
+🇸🇦Saudi Arabia             👤30m           🏠10m         📐3m km2
+🇳🇬Nigeria                  👤300m          🏠100m        📐1m km2
+🇵🇰Pakistan                 👤300m          🏠30m         📐1m km2
+🇧🇩Bangladesh               👤100m          🏠30m         📐100k km2
+🇮🇩Indonesia                👤300m          🏠100m        📐3m km2
+🇹🇷Turkey                   👤100m          🏠30m         📐1m km2
+🇵🇭Philippines              👤100m          🏠30m         📐300k km2
+🇻🇳Vietnam                  👤100m          🏠30m         📐300k km2
+🇦🇷Argentina                👤30m           🏠10m         📐3m km2
+🇰🇷South Korea              👤30m           🏠30m         📐100k km2
+🇯🇵Japan                    👤100m          🏠30m         📐300k km2
+🇧🇷Brazil                   👤300m          🏠100m        📐10m km2
+🇩🇪Germany                  👤100m          🏠30m         📐300k km2
+🇫🇷France                   👤100m          🏠30m         📐1m km2
+🇮🇹Italy                    👤100m          🏠30m         📐300k km2
+🇲🇽Mexico                   👤100m          🏠30m         📐3m km2
+🌍Africa                   👤1b            🏠300m        📐30m km2
+🌏Asia                     👤3b            🏠300m        📐30m km2
+
+
+🇯🇵 Tokyo                   👤30m
+🇰🇷 Seoul                   👤10m
+🇮🇳 Delhi                   👤30m
+🇨🇳 Chongqing               👤30m
+🇨🇳 Shanghai                👤30m
+🇨🇳 Guangzhou               👤30m
+🇨🇳 Beijing                 👤30m
+🇨🇳 Tianjin                 👤10m
+🇨🇳 Shenzhen                👤10m
+🇨🇳 Wuhan                   👤10m
+🇨🇳 Chengdu                 👤10m
+🇨🇳 Hangzhou                👤10m
+🇨🇳 Harbin                  👤10m
+🇨🇳 Jinan                   👤10m
+🇨🇳 Shenyang                👤10m
+🇨🇳 Qingdao                 👤10m
+🇨🇳 Nanjing                 👤10m
+🇨🇳 Xi'an                   👤10m
+🇨🇳 Dalian                  👤10m
+🇨🇳 Kunming                 👤10m
+🇺🇸 New York                👤10m
+🇺🇸 Los Angeles             👤10m
+🇺🇸 Dallas Ft Worth         👤10m
+🇺🇸 Chicago                 👤10m
+🇲🇽 Mexico City             👤10m
+🇧🇷 São Paulo               👤10m
+🇦🇷 Buenos Aires            👤10m
+🇨🇱 Santiago                👤10m
+🇬🇧 London                  👤10m
+🇫🇷 Paris                   👤10m
+🇷🇺 Moscow                  👤10m
+🇪🇬 Cairo                   👤10m
+🇯🇵 Osaka                   👤10m
+🇹🇭 Bangkok                 👤10m
+🇵🇭 Manila                  👤10m
+🇮🇩 Jakarta                 👤10m
+🇮🇩 Ho Chi Minh City        👤10m
+🇮🇩 Bandung                 👤10m
+🇮🇩 Surabaya                👤10m
+🇻🇳 Hanoi                   👤10m
+🇧🇩 Dhaka                   👤10m
+🇮🇳 Mumbai                  👤10m
+🇮🇳 Bangalore               👤10m
+🇮🇳 Hyderabad               👤10m
+🇮🇳 Chennai                 👤10m
+🇮🇳 Surat                   👤10m
+🇮🇳 Ahmedabad               👤10m
+🇮🇳 Pune                    👤10m
+🇮🇳 Kolkata                 👤10m
+🇵🇰 Karachi                 👤10m
+🇵🇰 Lahore                  👤10m
+🇳🇬 Lagos                   👤10m
+🇳🇬 Kano                    👤10m
+🇨🇩 Kinshasa                👤10m
+🇸🇦 Riyadh                  👤10m
+🇹🇷 Istanbul                👤10m
+🇮🇷 Tehran                  👤10m
+🇮🇷 Isfahan                 👤3m
+🇸🇦 Jeddah                  👤3m
+🇸🇦 Mecca                   👤3m
+🇵🇰 Islamabad               👤3m
+🇵🇰 Faisalabad              👤3m
+🇮🇳 Kanpur                  👤3m
+🇹🇷 Ankara                  👤3m
+🇦🇺 Melbourne               👤3m
+🇦🇺 Sydney                  👤3m
+🇨🇦 Toronto                 👤3m
+🇩🇪 Berlin                  👤3m
+🇮🇹 Rome                    👤3m
+🇵🇹 Porto                   👤3m
+🇪🇸 Madrid                  👤3m
+🇿🇦 Johannesburg            👤3m
+🇩🇰 Copenhagen              👤3m
+🇸🇪 Stockholm               👤3m
+🇳🇴 Oslo                    👤3m
+🇺🇦 Kyiv                    👤3m
+🇲🇾 Kuala Lumpur            👤3m
+🇦🇷 Córdoba                 👤3m
+🇨🇴 Bogotá                  👤3m
+🇨🇮 Abidjan                 👤3m
+🇨🇲 Douala                  👤3m
+🇵🇪 Lima                    👤3m
+🇵🇱 Warsaw                  👤3m
+🇳🇱 Amsterdam               👤3m
+🇧🇪 Brussels                👤3m
+🇧🇬 Sofia                   👤3m
+🇳🇿 Auckland                👤3m
+🇷🇴 Bucharest               👤3m
+🇷🇸 Belgrade                👤3m
+🇯🇴 Amman                   👤3m
+🇦🇿 Baku                    👤3m
+🇭🇺 Budapest                👤3m
+🇱🇧 Beirut                  👤3m
+🇬🇷 Athens                  👤3m
+🇮🇶 Baghdad                 👤3m
+🇩🇿 Algiers                 👤3m
+🇲🇦 Casablanca              👤3m
+🇻🇪 Caracas                 👤3m
+🇰🇪 Nairobi                 👤3m
+🇹🇳 Tunis                   👤3m
+🇮🇪 Dublin                  👤3m
+🇺🇬 Kampala                 👤3m
+🇲🇿 Maputo                  👤3m
+🇱🇾 Tripoli                 👤3m
+🇲🇬 Antananarivo            👤3m
+🇿🇼 Harare                  👤3m
+🇿🇲 Lusaka                  👤3m
+🇹🇿 Dar es Salaam           👤3m
+🇸🇩 Khartoum                👤3m
+🇦🇴 Luanda                  👤3m
+🇪🇹 Addis Ababa             👤3m
+🇲🇲 Yangon                  👤3m
+🇺🇿 Tashkent                👤3m
+🇰🇷 Busan                   👤3m
+🇹🇼 Taipei                  👤3m
+🇰🇿 Almaty                  👤3m
+🇦🇫 Kabul                   👤3m
+🇾🇪 Sana'a                  👤3m
+🇱🇰 Colombo                 👤3m
+🇳🇵 Kathmandu               👤3m
+🇧🇩 Chittagong              👤3m
+🇫🇮 Helsinki                👤3m
+🇧🇼 Gaborone                👤1m
+
+
+Population
+👤person                   👤1 pop     
+🏠neighborhood             👤10 pop 
+🏡suburb                   👤100 pop 
+🛖village                  👤1k pop 
+🏘️town                     👤10k pop      🏙️100k
+🌆small city               👤100k pop     🏙️3k
+🌇big city                 👤1m pop       🏙️1k
+🏙️metropolis               👤10m pop      🏙️100
+🌁mega city                👤30m pop      🏙️10
+🌎earth                    👤10b pop      
+
+Population Density
+💺seat                     📐.3 m2      👤1
+🛏️bunk                     📐1 m2       👤1
+🛏️bed                      📐3 m2       👤1
+🛋️room                     📐10 m2      👤1 
+🛋️apartment                📐30 m2      👤1      
+🏠house                    📐100 m2     👤1 
+🏡mansion                  📐300 m2     👤1   
+🏯estate                   📐1k m2      👤1
+🏰palace                   📐1k m2      👤1
+
+
+🏚️poverty                  💵10k        👤1
+🏠working                  💵30k        👤1
+🏡middle                   💵100k       👤1
+🏯upper                    💵300k       👤1
+🥂elite                    💵1m         👤1
+
+
+Economy
+💵Global GDP               💵100t   
+💰Global Assets            💰300t
+
+🎀Hello Kitty              💰100b 
+🐢Teenage Mutant Ninja T   💰10b
+
+
+
+
+
+
+
+🌎Earth                    👤10b pop       🏠300m        📐100m km2    ⚡️️e20 j/yr
+🌊Ocean                    📐300m km2
+🏔️Mountain                 📐30m km2
+🏜️Desert                   📐30m km2
+❄️Polar                    📐30m km2
+❄️Siberia                  📐10m km2
+❄️Antarctica               📐10m km2
+
+🏜️Outback                  📐10m km2
+🏜️Sahara                   📐10m km2 
+🏜️Kalahari                 📐1m km2     
+🏜️Nullabor                 📐300k km2    
+
+
+🌊Ocean Crossing           📏10k km
+🌐Equator                  📏30k km
+
+
+⚡️Power                    ⚡️1 kw          ⚡️1 hp        ⚡️3k j/sec
+
+
+Energy
+⚡️nuke                     ⚡️E16j          ☢️3 mt 
+⚡️tsar nuke                ⚡️E17j          ☢️100 mt
+⚡️tsar nuke                ⚡️E21j/yr       ☢️100 mt      ☢️10k/yr
+🌎Humanity Earth           ⚡️E20j/yr
+🇺🇸usa                      ⚡️E19j/yr
+
+🪵biomass                  ⚡️E9j           🪵1 ton
+⚙️steel                    ⚡️E10j          ⚙️1 ton
+🗑️aluminum                 ⚡️E11j          🗑️1 ton
+📲cvd silicon              ⚡️E12j          📲1 ton
+
+Astro
+⚡️k0 civ                   ⚡️E10j/yr       👤1 pop
+⚡️k1 civ                   ⚡️E20j/yr       👤10b pop
+⚡️k2 civ                   ⚡️E30j/yr       👤100bb pop
+⚡️k3 civ                   ⚡️E40j/yr       👤1tbb pop
+⚡️k4 civ                   ⚡️E50j/yr       👤10tbbb pop
+
+💫Orbit - GEO              ⌚️300 ms        📏30k km      💾10 MBit/s   🏎️3k  m/s     💫300/yr  
+💫Orbit - LEO              ⌚️30 ms         📏1k km       💾1 GBit/s    🏎️10k m/s     💫3k/yr  
+💫Orbit - MEO              ⌚️100 ms        📏10k km      💾100 MBit/s  🏎️3k m/s      💫1k/yr  
+💫Orbit - SSO              ⌚️30 ms         📏1k km       💾1 GBit/s    🏎️10k m/s     💫3k/yr
+
+
+
+🌈Fiber Optic              ⌚️100 ms        📏10k km      💾1 TBit/s
+🌈Fiber Optic              ⌚️10 ms         📏1k km       💾100 GBit/s
+📡Microwave Link           ⌚️3 ms          📏30 km       💾1 GBit/s
+🗼4G Cell                  ⌚️10 ms         📏30 km       💾100 MBit/s   📐3k km2
+🗼5G Cell                  ⌚️10 ms         📏10 km       💾100 MBit/s   📐300 km2
+🗼5G Cell - High speed     ⌚️10 ms         📏1 km        💾1 GBit/s     📐3 km2
+🛜Wifi                     ⌚️10 ms         📏100 m       💾1 GBit/s     📐.03 km2
+🔌Ethernet LAN             ⌚️1 ms          📏100 m       💾10 GBit/s
+🔌Ethernet LAN - Advanced  ⌚️1 ms          📏100 m       💾100 GBit/s
+
+
+☁️Personal Cloud           ⚡️30 w          👤1           💾1 TB         📐.03 m2     💰30          🧠.03
+💾Data Center - Rack       ⚡️1 kw          🥑1           💾10 TB        📐1 m2       💰30k 
+💾Data Center              ⚡️10 mw         👤1m          💾1m TB        📐10k m2     💰30m         
+💾Data Center - National   ⚡️300 mw        👤30m         💾30m TB       📐300k m2    💰1b
+💾Data Center - AI         ⚡️300 mw        🥑1m          💾10m TB       📐300k m2    💰1b          🧠100/yr
+🧠AI                       ⚡️3 mw          🥑10k         💾100 TB       📐3k m2      💰10m
+🥑GPU                      ⚡️300 w         🥑1           💾.1 TB        📐.3 m2      💰1k          🧠1           📲100         👤30
+
+
+
+🏥Hospital                 👤1m            🛏️300         🩺 100         📐30k m2     💰100m
+🏥Clinic                   👤30k           🛏️10          🩺 10          📐1k m2      💰3m
+🏥AI Clinics               👤30k           🛏️3           🩺 1           📐100        💰300k        🧠1           📱100
+📚AI School                👤3k            🎓300         🍎3            📐1k         💰100k        🧠1           📱100
+🏫School                   👤3k            🎓300         🍎10           📐1k         💰3m
+
+
+🎭AI Culture Center        👤30k           🎭1k          🎨100          📐3k m2      💰30k         🧠1           📱100
+🎭Culture Center           👤30k           🎭1k          🎨100          📐3k m2      💰3m    
+🎭Culture Center - National👤1m            🎭30k         🎨3k           📐100k m2    💰100m
+
+📰Journalism School        📰10            🎓1k          🍎10           📐10k m2     💰3m          🧠10          📱1k
+
+
+
+
+
+🚀Orion - Super            📦10m ton       ☢️1k          ⭕300 m
+🚀Orion - Earth to L5      📦3b ton/yr     ☢️3k/yr       ☢️100 mt       🔁300/yr
+
+🚀Orion - Cylinders        📦100m m3       ⭕1k            
+
+
+🌾Farm - Earth             🌞1 kw          ⚡️1 kw        📐1 m2
+🌾Farm - Space             🌞3 kw          ⚡️3 kw        📐1 m2
+
+🌾Farm - Plant Efficiency  🌞1 kw          ⚡️10 w        📐1 m2
+
+
+🛰️L5 Farm                  📐300b m2       
+🛰️L5 Farm - Construction   ⚙️10b ton       💧10b ton     💩30b ton     🪞10b ton     💰10t        💨10b ton     🚀30         
+🛰️L5 Farm - Operation      👤10b           🥔10b ton/yr  📦10b ton/yr  🚀3
+
+
+🪨Ore                      ⚒️1%            ⚖️3 ton/m3    🪨1 ton
+🪨Iron Ore                 ⚒️30%           💰100         🪨1 ton
+🪨Copper Ore	               ⚒️1%            💰10k         🪨1 ton
+🪨Gold Ore	               ⚒️0.001%        💰30k         🪨1 ton
+🪨Silver Ore	               ⚒️0.1%          💰1k          🪨1 ton
+🪨Bauxite                  ⚒️30%           💰30          🪨1 ton
+🪨Nickel Ore	               ⚒️1%            💰10k         🪨1 ton
+🪨Zinc Ore	               ⚒️10%           💰3k          🪨1 ton
+🪨Lead Ore	               ⚒️3%            💰3k          🪨1 ton
+🪨Tin Ore	               ⚒️1%            💰10k         🪨1 ton
+🪨Uranium Ore	           ⚒️0.1%          💰100k        🪨1 ton
+🪨Platinum Ore	           ⚒️0.001%        💰30k         🪨1 ton
+🪨Cobalt Ore               ⚒️0.3%          💰30k         🪨1 ton
+🪨Lithium Ore              ⚒️1%            💰10k         🪨1 ton
+🪨Rare Earths              ⚒️0.1%          💰30k         🪨1 ton
+🪨Manganese Ore            ⚒️20%           💰100         🪨1 ton
+🪨Chromite Ore             ⚒️30%           💰100         🪨1 ton
+🪨Tungsten Ore             ⚒️1%            💰30k         🪨1 ton
+🪨Molybdenum Ore           ⚒️1%            💰30k         🪨1 ton
+🪨Phospherite Ore          ⚒️30%           💰30          🪨1 ton
+🪨Potassium Ore            ⚒️30%           💰300         🪨1 ton
+🪨Neodymium Ore            ⚒️1%            💰3k          🪨1 ton
+💧Water                    ⚖️1 ton/m3      💰1           🪨1 ton
+💧Water - Bottled          ⚖️1 ton/m3      💰1k          🪨1 ton
+💧Bottled - Desal          ⚖️1 ton/m3      💰3           🪨1 ton 
+🛢️Oil - Crude              ⚖️1 ton/m3      💰300         🪨1 ton      🛢️10 bbl
+🛢️Oil - Bunker             ⚖️1 ton/m3      💰300         🪨1 ton
+🛢️Gasoline                 ⚖️1 ton/m3      💰1k          🪨1 ton
+⛽️BioFuel                  ⚖️1 ton/m3      💰1k          🪨1 ton 
+⛽️Fuel                     ⚖️1 ton/m3      💰1k          🪨1 ton 
+⛽️Rocket Fuel              ⚖️1 ton/m3      💰1k          🪨1 ton 
+⛽️NatGas                   ⚖️.1 ton/m3     💰300         🪨1 ton      🔥10 mwh
+⛽️LNG                      ⚖️.3 ton/m3     💰300         🪨1 ton      🔥10 mwh
+⚫️Tar                      ⚖️1 ton/m3      💰1k          🪨1 ton
+♻️Polymer                  ⚖️1 ton/m3      💰1k          🪨1 ton
+🏀Rubber                   ⚖️1 ton/m3      💰1k          🪨1 ton
+🧲Magnet                   ⚖️10 ton/m3     💰100k        🪨1 ton
+📦Cardboard                ⚖️1 ton/m3      💰100         🪨1 ton
+🌿Kelp                     ⚖️1 ton/m3      💰30          🪨1 ton
+🪵Biomass                  ⚖️1 ton/m3      💰30          🪨1 ton      🔥1 mwh
+🪵Fuelwood                 ⚖️1 ton/m3      💰30          🪨1 ton      🔥1 mwh
+🪵Wood - Softwood          ⚖️1 ton/m3      💰100         🪨1 ton
+🪵Wood - Hardwood          ⚖️1 ton/m3      💰300         🪨1 ton
+🎋Wood - Bamboo            ⚖️1 ton/m3      💰100         🪨1 ton
+🧱Bricks                   ⚖️3 ton/m3      💰100         🪨1 ton      #️⃣300
+🐚Limestone                ⚖️1 ton/m3      💰30          🪨1 ton
+🪨Gravel                   ⚖️3 ton/m3      💰30          🪨1 ton
+🪨Aggregate                ⚖️3 ton/m3      💰30          🪨1 ton
+🗿Concrete                 ⚖️3 ton/m3      💰100         🪨1 ton
+🌱Soil                     ⚖️3 ton/m3      💰1k          🪨1 ton
+🌾Wheat                    ⚖️1 ton/m3      💰300         🪨1 ton
+🍚Rice                     ⚖️1 ton/m3      💰300         🪨1 ton
+🍞Flour                    ⚖️1 ton/m3      💰300         🪨1 ton
+🌽Corn                     ⚖️1 ton/m3      💰100         🪨1 ton
+🥔Potatoes                 ⚖️1 ton/m3      💰100         🪨1 ton
+🫘Coffee Bean              ⚖️1 ton/m3      💰3k          🪨1 ton
+🧪H2SO4 Sulfuric Acid      ⚖️3 ton/m3      💰300         🪨1 ton
+🧪NH3 Ammonia              ⚖️1 ton/m3      💰300         🪨1 ton
+🥑GPU                      ⚖️1 ton/m3      💰300k        🪨1 ton      #️⃣300
+📚Books                    ⚖️1 ton/m3      💰30k         🪨1 ton      #️⃣3k
+🛰️Satellite - LEO          ⚖️1 ton/m3      💰30m         🪨1 ton
+🛰️Satellite - GEO          ⚖️1 ton/m3      💰100m        🪨1 ton
+♻️Plastic                  ⚖️1 ton/m3      💰1k          🪨1 ton
+💩Soil                     ⚖️1 ton/m3      💰30          🪨1 ton
+💩Fertilizer               ⚖️1 ton/m3      💰300         🪨1 ton
+🚽Sewage                   ⚖️1 ton/m3      💰1           🪨1 ton
+🚽Black Water              ⚖️1 ton/m3      💰1           🪨1 ton
+🚿Grey Water               ⚖️1 ton/m3      💰1           🪨1 ton
+🌾Soybeans                 ⚖️1 ton/m3      💰300         🪨1 ton
+🌾Barley                   ⚖️1 ton/m3      💰100         🪨1 ton
+🌾Oats                     ⚖️1 ton/m3      💰100         🪨1 ton
+🏝️Sand                     ⚖️1 ton/m3      💰30          🪨1 ton
+🪨Iron                     ⚖️10 ton/m3     💰300         🪨1 ton
+⚙️Steel                    ⚖️10 ton/m3     💰1k          🪨1 ton
+🪞Glass                    ⚖️3 ton/m3      💰300         🪨1 ton      📐100 m2      ↕️3 mm
+🥉Copper                   ⚖️10 ton/m3     💰10k         🪨1 ton
+🥇Gold                     ⚖️30 ton/m3     💰100m        🪨1 ton
+🥈Silver                   ⚖️10 ton/m3     💰30k         🪨1 ton
+🗑️Aluminum                 ⚖️3 ton/m3      💰3k          🪨1 ton
+🪙Nickel                   ⚖️10 ton/m3     💰30k         🪨1 ton
+🪙Zinc                     ⚖️10 ton/m3     💰3k          🪨1 ton
+🪙Lead                     ⚖️10 ton/m3     💰3k          🪨1 ton
+🥫Tin                      ⚖️10 ton/m3     💰30k         🪨1 ton
+☢️Uranium                  ⚖️30 ton/m3     💰300k        🪨1 ton
+🪙Platinum                 ⚖️30 ton/m3     💰30m         🪨1 ton
+🪙Cobalt                   ⚖️10 ton/m3     💰30m         🪨1 ton
+🪙Lithium                  ⚖️.3 ton/m3     💰10m         🪨1 ton
+🪙Rare Earths              ⚖️3 ton/m3      💰100k        🪨1 ton
+🪙Maganese                 ⚖️10 ton/m3     💰300         🪨1 ton
+🪙Chromite                 ⚖️3 ton/m3      💰300         🪨1 ton
+💡Tungsten                 ⚖️30 ton/m3     💰30k         🪨1 ton
+🪙Molybdenum               ⚖️10 ton/m3     💰30k         🪨1 ton
+🪙Phospherous              ⚖️3 ton/m3      💰1k          🪨1 ton
+🪙Potassium                ⚖️3 ton/m3      💰1k          🪨1 ton
+🪙Neodymium                ⚖️3 ton/m3      💰100k        🪨1 ton
+🧂Chlorine                 ⚖️1 kg/m3       💰100         🪨1 ton
+
+💨Hydrogen                 ⚖️.1 kg/m3      💰10k         🪨1 ton
+💨Helium                   ⚖️1 kg/m3       💰3k          🪨1 ton
+💨Nitrogen                 ⚖️1 kg/m3       💰1k          🪨1 ton
+💨Argon                    ⚖️.1 kg/m3      💰1k          🪨1 ton
+💨Oxygen (O₂)              ⚖️1 kg/m3       💰300         🪨1 ton
+💨Neon (Ne)                ⚖️1 kg/m3       💰300         🪨1 ton
+💨Krypton (Kr)             ⚖️3 kg/m3       💰3k          🪨1 ton
+💨Xenon (Xe)               ⚖️3 kg/m3       💰10k         🪨1 ton
+💨Radon (Rn)               ⚖️10 kg/m3      💰100         🪨1 ton
+💨Methane (CH₄)            ⚖️1 kg/m3       💰300         🪨1 ton
+💨Ethane (C₂H₆)            ⚖️1 kg/m3       💰300         🪨1 ton
+💨Propane (C₃H₈)           ⚖️3 kg/m3       💰300         🪨1 ton
+💨Butane (C₄H₁₀)           ⚖️3 kg/m3       💰1k          🪨1 ton
+💨Carbon Dioxide (CO₂)     ⚖️3 kg/m3       💰30          🪨1 ton
+💨Nitrous Oxide (N₂O)      ⚖️3 kg/m3       💰100         🪨1 ton
+💨Sulfur Hexafluoride (SF₆)⚖️10 kg/m3      💰30k         🪨1 ton 
+
+
+🪞Glass                    📏3mm           📐1 m2        💰30
+🪞Glass                    📏10mm          📐1 m2        💰300
+
+
+
+
+📚Library                  📚300           📐1 m2        📏3 m
+📚Library Storage          📚3k            📐1 m2        📏3 m
+        
+
+🛠️3D printer               🏭1k #/yr       ⚡️100 watt     📐.1 m2      💰1k          ♻️1 ton/yr
+🛠️5 Axis CNC               🏭30k #/yr      ⚡️3  kw        📐3 m2       💰30k         ⚙️100 ton/yr
+🛠️Laser CNC                🏭100k #/yr     ⚡️10 kw        📐3 m2       💰10k         🪵10 ton/yr
+🛠️Circuit Mill             🏭30k #/yr      ⚡️1 kw         📐.3 m2      💰3k          🥉1 ton/yr
+
+
+
+
+🌾 Rice                    🌾 1b tons/yr   💵300b
+🌽 Corn                    🌽 1b tons/yr   💵300b
+🥔 Potato                  🥔 300m tons/yr 💵100b
+🍞 Wheat                   🍞 300m tons/yr 💵100b
+🍅 Tomatoes                🍅 300m tons/yr 💵100b
+🍚 Barley                  🍚 300m tons/yr 💵30b
+🍇 Grapes                  🍇 100m tons/yr 💵100b
+🥜 Soybeans                🥜 100m tons/yr 💵100b
+🥒 Cucumbers               🥒 100m tons/yr 💵30b
+🌶️ Peppers                 🌶️ 100m tons/yr 💵30b
+🍠 Sweet Potatoes          🍠 100m tons/yr 💵30b
+🍌 bananas                 🍌 100m tons/yr 💵30b
+🍍 Pineapples              🍍 100m tons/yr 💵30b
+🍊 Oranges                 🍊 100m tons/yr 💵30b
+🍏 Apples                  🍏 100m tons/yr 💵30b
+🍉 Watermelons             🍉 100m tons/yr 💵30b
+🍋 Lemons                  🍋 100m tons/yr 💵30b
+🥥 Coconuts                🥥 100m tons/yr 💵30b
+🥦 Broccoli                🥦 100m tons/yr 💵10b
+🥬 Cabbages                🥬 100m tons/yr 💵10b
+🥕 Carrots                 🥕 100m tons/yr 💵10b
+🌰 Nuts                    🌰 30m tons/yr  💵30b
+🍓 Strawberries            🍓 30m tons/yr  💵10b
+🍑 Peaches                 🍑 30m tons/yr  💵10b
+🍒 Cherries                🍒 30m tons/yr  💵10b
+🥭 Mangoes                 🥭 30m tons/yr  💵10b
+🍈 Avocados                🍈 30m tons/yr  💵10b
+🍈 Sorghum                 🍈 30m tons/yr  💵3b
+🍆 Eggplants               🍆 30m tons/yr  💵3b
+🍐 Pears                   🍐 30m tons/yr  💵3b
+
+ 
+
+
+Area
+🏞️km2                      📐1m m2   📐100 ha
+📐ha                       📐10k m2  📐3 acres
+📐m2                       📐10 ft2
+
+Distance
+📏Inch                     📏.1 m    📏1 in
+📏Foot                     📏.3 m    📏1 ft
+📏Meter                    📏1 m     📏1 yrd
+📏Kilometer                📏1m m    📏1 km
+
+Volume
+📦m3                       ↔️1 m  ↕️1 m  ↗️1 m  📏1 m   📐1 m2
+↔️Width                    ↔️1 m
+↕️Height                   ↕️1 m
+↗️Depth                    ↗️1 m
+
+Density/Pressure
+⚖️Atmosphere               ⚖️1 atm      ⚖️ 1 ton/m2  ⚖️10 psi ⚖️1 bar 
+💧Water                    ⚖️1 ton/m3  
+⬇️Depth                    ⚖️1 atm      ⬇️10 m        
+
+
+Time
+🗓️Year                     🗓️1 📆10 📅30 ⏰300 🕰️10k  ⏲️300k  ⏱️30m   ⌚️30b
+📆Month                        📆1  📅3  ⏰30  🕰️1k   ⏲️30k   ⏱️3m    ⌚️3b
+📅Week                              📅1  ⏰10  🕰️300  ⏲️10k   ⏱️1m    ⌚️1b
+⏰Day                                    ⏰1   🕰️30   ⏲️1k    ⏱️100k  ⌚️100m
+🕰️Hour                                         🕰️1    ⏲️100   ⏱️3k    ⌚️3m
+⏲️Minute                                              ⏲️1     ⏱️100   ⌚️100k
+⏱️Second                                                      ⏱️1     ⌚️1k
+⌚️Millisec                                                            ⌚️1
+
+
+
+🚶‍♀️Walk                     🏎️1 m/s         📦10 kg       
+🏃Run                      🏎️3 m/s         📦1 kg
+🚲Bike                     🏎️10 m/s        📦10 kg       ⚙️.01 ton    
+🚲EBike                    🏎️10 m/s        📦10 kg       ⚙️.01 ton     🔋3 kg        🔋1 kwh      
+🚗Car - Electric           🏎️30 m/s        📦1 ton       ⚙️1 ton       🔋.3 ton      🔋100 kwh
+🚢Ship                     🏎️10 m/s        📦100k ton    ⚙️100k ton    ⛽️3k ton
+🚗Car                      🏎️30 m/s        📦1 ton       ⚙️1 ton       ⛽️.03 ton  
+🚄Train - Cargo            🏎️30 m/s        📦10k ton     ⚙️3k ton      ⛽️10 ton
+🚄Train - Passenger        🏎️30 m/s        📦1k ton      ⚙️1k ton      ⛽️10 ton
+🚄Train - High Speed       🏎️100 m/s       📦1k ton      ⚙️1k ton      ⛽️10 ton
+✈️Plane                    🏎️300 m/s       📦10 ton      ⚙️300 ton     ⛽️10 ton
+🚀Starship                 🏎️10k m/s       📦100 ton     ⚙️100 ton     ⛽️1k ton     
+🚀Orion                    🏎️300k m/s      📦10k ton     ☢️300         ⭕30 m
+🚀Orion - Super            🏎️10m m/s       📦10m ton     ☢️1k          ⭕300 m
+
+
+📦Shipping Container       📦10 ton        📏10 m        📏3 m         📐30 m2 
+
+
+
+🚶‍♀️Walk                     🏎️1 m/s         🏎️3 km/hr
+🏃Run                      🏎️3 m/s         🏎️10 km/hr
+✈️Mach 1                   🏎️300 m/s       🏎️1k km/hr
+🚀Escape Velocity          🏎️10k m/s   
+🔆Lightspeed               🏎️300m m/s
+
+⌚️Latency                  ⌚️1 ms
+
+
+Sun & sky
+🌞Solar Energy Surface     ⚡️1 KW          📐1 m2
+🌞Solar PV Earth           ⚡️300w          📐1 m2        %30           🕰️3k hrs/yr  
+🌞Solar PV Space           ⚡️300w          📐1 m2        %30           🕰️10k hrs/yr  
+
+
+Rainfall
+🏜️desert                   🌧️0 m/m2/yr     📐1 m2
+🏞️plains                   🌧️1 m/m2/yr     📐1 m2
+🎋jungle                   🌧️3 m/m2/yr     📐1 m2
+🌴rainforest               🌧️10 m/m2/yr    📐1 m2
+
+🔥heat                     🔥1 mwh 
+🌡️temperature (c)          🌡️1 c           💧1 m3        🔥kwh
+
+
+Water
+💧Water - Survival         💧10 kg         👤1 pop        ⏰1 day 
+💧Water - Daily            💧100 kg        👤1 pop        ⏰1 day
+💧Water - Agriculture      💧1 ton         👤1 pop        ⏰1 day
+💧Water - Cash Crops       💧10 ton        👤1 pop        ⏰1 day
+ 
+💧olympic pool             💧3k ton
+
+
+Architecture
+🏢Residential - Floor      ↕️3 m 
+🏢Residential - Wood       🪵1 ton         👤1 pop
+🏢Residential - Steel      ⚙️3 ton         👤1 pop
+🏢Residential - Concrete   🗿10 ton        👤1 pop
+🏢Residential              📐10 m2         👤1 pop
+🏢Office                   📐3 m2          👤1 pop
+ 
+🏭Industrial - Heavy       🗿3 ton         📐1 m2 
+🏭Industrial - Medium      🗿1 ton         📐1 m2 
+🏭Industrial - Light       🗿.1 ton        📐1 m2 
+
+
+Pop
+👤Human                    🍖30 kg         📐10 m2       💨3 m3/hr     💧.1 ton/day  🥔3 kg/day 🔥100 w ⚡️️1 kw  ⛽️1 kd/day
+
+
+Energy
+🇺🇸USA                      ⚡️️30 kwh/day    👤1 pop
+🇨🇦Canada                   ⚡️️30 kwh/day    👤1 pop
+🇨🇳China                    ⚡️️10 kwh/day    👤1 pop
+🇬🇧China                    ⚡️️10 kwh/day    👤1 pop
+🇮🇳India                    ⚡️️3 kwh/day     👤1 pop
+🇧🇷Brazil                   ⚡️️3 kwh/day     👤1 pop
+🇳🇬Nigeria                  ⚡️️1 kwh/day     👤1 pop
+
+CO2
+🌐World                   🌫️30b tons/yr
+🇨🇳China                   🌫️10k tons/yr
+🇺🇸United States           🌫️10k tons/yr
+🇮🇳India                   🌫️3k tons/yr
+🇷🇺Russia                  🌫️3k tons/yr
+🇯🇵Japan                   🌫️1k tons/yr
+🇩🇪Germany                 🌫️1k tons/yr
+🇮🇷Iran                    🌫️1k tons/yr
+🇸🇦Saudi Arabia            🌫️1k tons/yr
+🇰🇷South Korea             🌫️1k tons/yr
+🇨🇦Canada                  🌫️300 tons/yr
+🇧🇷Brazil                  🌫️300 tons/yr
+🇮🇩Indonesia               🌫️300 tons/yr
+🇲🇽Mexico                  🌫️300 tons/yr
+🇬🇧United Kingdom          🌫️300 tons/yr
+🇹🇷Turkey                  🌫️300 tons/yr
+🇮🇹Italy                   🌫️300 tons/yr
+🇿🇦South Africa            🌫️300 tons/yr
+🇦🇺Australia               🌫️300 tons/yr
+🇫🇷France                  🌫️300 tons/yr
+🇵🇱Poland                  🌫️300 tons/yr
+

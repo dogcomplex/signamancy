@@ -1,0 +1,140 @@
+
+Conversions to computation and presentation forms:
+
+# Base Unit Normalization (to computational form)
+
+# Note to self: if 👨‍🎤 and 🧮 arent present it can get stuck.
+
+# normalize plural:
+🏷_ton  => 🏷_tons 🧮  # neutral on which is more presentable?
+🏷k_ton 👨‍🎤 <=> 🏷k_tons 🧮
+🏷m_ton 👨‍🎤 <=> 🏷m_tons 🧮
+🏷b_ton 👨‍🎤 <=> 🏷b_tons 🧮
+
+# 🏷_tons => 🧮 # ton being the default unit universally?
+🏷_tons  🙂🗿 👨‍🎤  <=>  🙂🗿  🧮  # could be default for 🗿 at least
+
+🏷{prefix}/yr 👨‍🎤 <=> 🏷{prefix}  ⏳year  🧮
+
+# Unit Prefix Normalization
+🔢N 🏷_tons 👨‍🎤 <=> 🔢{N*1000} 🏷_kg 🧮
+🔢N 🏷k_tons 👨‍🎤 <=> 🔢{N*1000} 🏷_tons 🧮
+🔢N 🏷m_tons 👨‍🎤 <=> 🔢{N*1000} 🏷k_tons 🧮
+🔢N 🏷b_tons 👨‍🎤 <=> 🔢{N*1000} 🏷m_tons 🧮
+
+# rounding to 1 or 3 units
+# assumes pessimistic (lower is always worse) rounding:
+# KILLS accuracy, so one-way only:
+🔢{N>300 && N<1000} 🧮X => 🔢300 👨‍🎤
+🔢{N>100 && N<300} 🧮X => 🔢100 👨‍🎤
+🔢{N>30 && N<100} 🧮X => 🔢30 👨‍🎤
+🔢{N>10 && N<30} 🧮X => 🔢10 👨‍🎤
+🔢{N>3 && N<10} 🧮X => 🔢3 👨‍🎤
+🔢{N>1 && N<3} 🧮X => 🔢1 👨‍🎤
+
+# plural or singular: (bonus style)
+🔢{N==1} 🏷_tons => 🔢1 🏷_ton 👨‍🎤
+🔢{N==1} 🏷k_tons => 🔢1 🏷k_ton 👨‍🎤
+🔢{N==1} 🏷m_tons => 🔢1 🏷m_ton 👨‍🎤
+🔢{N==1} 🏷b_tons => 🔢1 🏷b_ton 👨‍🎤
+
+
+# test:
+🗿100k_tons :> 🆔1  🔢100  🙂🗿  🏷k_tons  #️⃣27  👨‍🎤2           # 🗿100k_tons  👨‍🎤2
+🔢100  🙂🗿  🏷k_tons 👨‍🎤2 => 🔢100000  🙂🗿  🏷_tons 🧮  👨‍🎤   # 🗿100000_tons 👨‍🎤 🧮
+    by:  🔢N 🏷k_tons 👨‍🎤 <=> 🔢{N*1000} 🏷_tons 🧮
+🔢100000  🙂🗿  🏷_tons 🧮  👨‍🎤 =>  🔢100000  🙂🗿  🧮2        # 🗿100000 🧮2
+    by: 🏷_tons  🙂🗿 👨‍🎤  <=>  🙂🗿  🧮  
+🔢100000  🙂🗿  🧮2   =>  🔢100000  🙂🗿  🏷_tons 🧮  👨‍🎤      # 🗿100000_tons 👨‍🎤 🧮
+    by reverse: 🏷_tons  🙂🗿 👨‍🎤  <=>  🙂🗿  🧮
+🔢100000  🙂🗿  🏷_tons 🧮  👨‍🎤 =>  🔢100  🙂🗿  🏷k_tons 👨‍🎤2  # 🗿100k_tons 👨‍🎤2
+    by reverse:  🔢N 🏷k_tons 👨‍🎤 <=> 🔢{N*1000} 🏷_tons 🧮
+# explanation:  just run greedy conversions towards 🧮 (computational normal form) on initial data til maxed
+# then during display, run greedy conversions towards max 👨‍🎤 (optimal display simplicity).  Can differentiate further for like, accuracy, visual vs text, etc too 
+# would even work for e.g. emoji encoding vs just text, or custom picture vs emojis
+# as long as we can do greedy search, this scales...
+
+
+
+
+# Concrete signs:
+
+🗿100k_tons  :>  🆔1  🔢100  🙂🗿  🏷k_tons  #️⃣27
+🗿100k_tons/yr  :>  🆔19  🔢100  🙂🗿  🏷k_tons/yr  #️⃣59
+🗿300k_tons  :>  🆔85  🔢300  🙂🗿  🏷k_tons  #️⃣204
+🗿10m_ton/yr  :>  🆔126  🔢10  🙂🗿  🏷m_ton/yr  #️⃣253
+🗿3m_tons  :>  🆔129  🔢3  🙂🗿  🏷m_tons  #️⃣265
+🗿10k_tons  :>  🆔136  🔢10  🙂🗿  🏷k_tons  #️⃣301
+🗿300_tons  :>  🆔245  🔢300  🙂🗿  🏷tons  #️⃣501
+🗿1m_tons  :>  🆔257  🔢1  🙂🗿  🏷m_tons  #️⃣531
+🗿300k_ton  :>  🆔275  🔢300  🙂🗿  🏷k_ton  #️⃣565
+🗿30_ton  :>  🆔279  🔢30  🙂🗿  🏷ton  #️⃣577
+🗿300_ton  :>  🆔340  🔢300  🙂🗿  🏷ton  #️⃣675
+🗿10k_ton  :>  🆔349  🔢10  🙂🗿  🏷k_ton  #️⃣685
+🗿10m_ton  :>  🆔353  🔢10  🙂🗿  🏷m_ton  #️⃣690
+🗿300k_ton/yr  :>  🆔406  🔢300  🙂🗿  🏷k_ton/yr  #️⃣802
+🗿1m_ton/yr  :>  🆔412  🔢1  🙂🗿  🏷m_ton/yr  #️⃣807
+🗿1b_ton/yr  :>  🆔417  🔢1  🙂🗿  🏷b_ton/yr  #️⃣812
+🗿100b_ton/yr  :>  🆔421  🔢100  🙂🗿  🏷b_ton/yr  #️⃣817
+🗿3m_ton/yr  :>  🆔492  🔢3  🙂🗿  🏷m_ton/yr  #️⃣1003
+🗿100k_ton  :>  🆔562  🔢100  🙂🗿  🏷k_ton  #️⃣1187
+🗿10_ton  :>  🆔1341  🔢10  🙂🗿  🏷ton  #️⃣3722
+🗿3_ton  :>  🆔1345  🔢3  🙂🗿  🏷ton  #️⃣3737
+🗿1_ton  :>  🆔1347  🔢1  🙂🗿  🏷ton  #️⃣3742
+🗿.1_ton  :>  🆔1349  🔢0.1  🙂🗿  🏷ton  #️⃣3747
+
+
+
+🗿Concrete  <=> 🗿1
+🗿1 <=> 🗿
+
+
+
+
+
+
+
+
+Token pessimism mapping (under or over approximating tracking)
+
+📉N  # Pessimistic down
+📈N  # Pessimistic up
+
+# Example conversion that preserves pessimistic direction
+🗿N efficiency% => 🗿(100-N) inefficiency% 
+
+🗿N ±M  # Where M represents the pessimistic margin
+
+
+
+other format ideas:
+
+# Scientific Notation Format 🔬
+🗿N 🔬=> 🗿(N×10^-E)e{E}_tons    WHERE E = floor(log10(N))
+
+# SI Unit Format 📏
+🗿N 📏=> 🗿{N}{SI_prefix}g    # Using strict SI prefixes (kg, Mg, Gg, etc)
+
+# Comparison Format 🤔 (for human comprehension)
+🗿N 🤔=> 🗿{N÷weight}_{object}s    # e.g. "equivalent to X elephants"
+
+# Range Format 📊 (for approximations)
+🗿N 📊=> 🗿{floor(N/10^k)}~{ceil(N/10^k)}_{unit}    # Shows magnitude range
+
+# Mixed Unit Format 📝 (like imperial measurements)
+🗿N 📝=> 🗿{B}_b_tons+{M}_m_tons+{K}_k_tons+{R}_tons    # Where B,M,K,R are calculated components
+
+
+
+
+#  Notes on :> (Properties):
+
+# I think this is equivalent:
+
+🚢Cargo_Ship  :>  📦10k_tons  🏎️30_m/s
+# same as:
+🚢Cargo_Ship  <=>  🚢Cargo_Ship📂  🚢Cargo_Ship📦10k_tons  🚢Cargo_Ship🏎️30_m/s
+
+# we (maybe?) need the custom token to show it's expanded so these properties are specific to it
+# we certainly need to couch cargo and speed as specific to the ship (cant be shared)
+
