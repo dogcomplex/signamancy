@@ -171,7 +171,7 @@ class SignamancyEngine:
             if k["ban"]:
                 # Project State onto Bans
                 # Any presence > 0 triggers ban
-                presence = torch.sparse.mm(k["ban"]["mat"].t(), state.float().t()).t()
+                presence = torch.sparse.mm(k["ban"]["mat"], state.float().t()).t()
                 validity &= (presence == 0)
                 
         return validity
@@ -227,7 +227,7 @@ class SignamancyEngine:
             # Calculate Scores: log(weight) + Gumbel
             # Add -inf to invalid rules to prevent selection
             
-            group_weights = weights_t.unsqueeze(0) * group_mask.float()  # [B, R]
+            group_weights = weights_t.unsqueeze(0).expand(bs, -1) * group_mask.float()  # [B, R]
             gumbel = -torch.log(-torch.log(torch.rand_like(group_weights)))
             
             scores = torch.log(group_weights + 1e-9) + gumbel
@@ -303,6 +303,8 @@ class SignamancyEngine:
         """
         # BYTE Overflow
         raw = self.state[BlockType.BYTE] # int16
+        if raw.shape[1] == 0:
+            return
 
         # 1. Identify Overflows using per-token thresholds if available
         gpub = self.gpu_blocks[BlockType.BYTE]
@@ -313,6 +315,8 @@ class SignamancyEngine:
         else:
             # Threshold is maximum representable value; overflow when value >= threshold+1
             max_vals = (thresholds + 1).to(dtype=raw.dtype)
+        # Avoid divide-by-zero just in case
+        max_vals = torch.clamp(max_vals, min=1)
 
         # Broadcast to batch dimension
         max_vals_b = max_vals.unsqueeze(0).expand(raw.shape[0], -1)
