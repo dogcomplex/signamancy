@@ -24,6 +24,7 @@ class BlockKernels:
     inputs: SparseMatrixData      # What is consumed/checked
     outputs: SparseMatrixData     # What is produced
     inhibitors: SparseMatrixData  # What must be absent (🚫)
+    outputs_std: Optional[SparseMatrixData] = None  # StdDev for chaos ranges
     
     # For Byte Block only: Unit conversion lookup
     # Maps Token_Local_ID -> Parent_Token_Local_ID
@@ -69,6 +70,7 @@ class SignamancyCompiler:
             bt: {
                 "in": [[], []], "in_val": [],
                 "out": [[], []], "out_val": [],
+                "out_std": [[], []], "out_std_val": [],
                 "ban": [[], []], "ban_val": []
             }
             for bt in BlockType
@@ -102,10 +104,16 @@ class SignamancyCompiler:
             in_mat = self._build_sparse(
                 raw_data[bt]["in"], raw_data[bt]["in_val"], (num_rules, block_sizes[bt])
             )
-            # Output Matrix
+            # Output Matrix (mean)
             out_mat = self._build_sparse(
                 raw_data[bt]["out"], raw_data[bt]["out_val"], (num_rules, block_sizes[bt])
             )
+            # Output StdDev Matrix (optional)
+            out_std_mat = None
+            if raw_data[bt]["out_std_val"]:
+                out_std_mat = self._build_sparse(
+                    raw_data[bt]["out_std"], raw_data[bt]["out_std_val"], (num_rules, block_sizes[bt])
+                )
             # Inhibitor Matrix
             ban_mat = self._build_sparse(
                 raw_data[bt]["ban"], raw_data[bt]["ban_val"], (num_rules, block_sizes[bt])
@@ -120,6 +128,7 @@ class SignamancyCompiler:
             final_blocks[bt] = BlockKernels(
                 inputs=in_mat,
                 outputs=out_mat,
+                outputs_std=out_std_mat,
                 inhibitors=ban_mat,
                 unit_map=unit_map,
                 overflow_thresholds=overflows
@@ -139,13 +148,16 @@ class SignamancyCompiler:
         # Resolve Global ID -> (BlockType, Local Index)
         b_type, local_id = self.registry.get_local_id(token.token_id)
         
-        # Handle Quantity (Tuple range or float)
+        # Handle Quantity (Tuple range -> mean/std)
         val = token.quantity
+        std_val = 0.0
         if isinstance(val, tuple):
-            # Range: Store Mean for now. 
-            # (Engine will handle variance if is_chaotic is set on token)
-            val = (val[0] + val[1]) / 2
-            
+            a, b = float(val[0]), float(val[1])
+            mean = (a + b) / 2.0
+            # Uniform distribution std ≈ (b - a) / sqrt(12)
+            std_val = (b - a) / 3.46410161514
+            val = mean
+
         # Determine which matrix (Input, Output, Inhibitor)
         if is_input:
             if token.is_inhibitor:
@@ -163,6 +175,12 @@ class SignamancyCompiler:
             data[b_type]["out"][0].append(rule_idx)
             data[b_type]["out"][1].append(local_id)
             data[b_type]["out_val"].append(val)
+
+            # Variance (only if we had a range)
+            if std_val > 0.0:
+                data[b_type]["out_std"][0].append(rule_idx)
+                data[b_type]["out_std"][1].append(local_id)
+                data[b_type]["out_std_val"].append(std_val)
 
     def _build_sparse(self, indices, values, shape) -> SparseMatrixData:
         if not values:

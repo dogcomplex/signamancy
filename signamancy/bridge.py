@@ -79,19 +79,45 @@ class SignamancyBridge:
         local_id = meta.local_id
         
         target_tensor = self.engine.state[bt]
-        
-        # Apply to ALL universes in the batch
-        # We treat manual injection as a 'Global Truth' update
-        if operation == "ADD":
-            target_tensor[:, local_id] += quantity
-        elif operation == "SET":
-            target_tensor[:, local_id] = quantity
-        elif operation == "SUB":
-            target_tensor[:, local_id] -= quantity
-            
-        # Clamp if necessary (BYTE logic)
-        if bt == BlockType.BYTE:
-             self.engine.state[bt] = torch.clamp(target_tensor, 0, 255).to(torch.int16)
+
+        # Apply to ALL universes in the batch (global broadcast)
+        if bt == BlockType.BIT:
+            cur = target_tensor[:, local_id].to(torch.int16)
+            if operation == "ADD":
+                new_val = cur + int(quantity)
+            elif operation == "SET":
+                new_val = torch.full_like(cur, int(quantity))
+            elif operation == "SUB":
+                new_val = cur - int(quantity)
+            else:
+                return
+            self.engine.state[bt][:, local_id] = torch.clamp(new_val, -1, 1).to(torch.int8)
+
+        elif bt == BlockType.BYTE:
+            cur = target_tensor[:, local_id].to(torch.int16)
+            if operation == "ADD":
+                new_val = cur + int(quantity)
+            elif operation == "SET":
+                new_val = torch.full_like(cur, int(quantity))
+            elif operation == "SUB":
+                new_val = cur - int(quantity)
+            else:
+                return
+            # Clamp to non-negative; physics kernel will handle overflow/carry
+            self.engine.state[bt][:, local_id] = torch.clamp(new_val, 0)
+
+        else:  # FLOAT
+            cur = target_tensor[:, local_id]
+            q = float(quantity)
+            if operation == "ADD":
+                new_val = cur + q
+            elif operation == "SET":
+                new_val = torch.full_like(cur, q)
+            elif operation == "SUB":
+                new_val = cur - q
+            else:
+                return
+            self.engine.state[bt][:, local_id] = new_val
 
     def get_particle_distribution(self, token_str: str) -> List[float]:
         """

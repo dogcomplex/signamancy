@@ -107,14 +107,12 @@ class SignamancyParser:
             outputs = [self._parse_token(t) for t in branch.split()]
             
             # Calculate Branch Probability
-            # If tokens have probabilities (Apple%50), extract to rule level
+            # If tokens have probabilities (Apple%50 or Apple_1-3%50), extract to rule level
             branch_prob = 1.0
             for out in outputs:
                 if out.is_probability:
-                    if isinstance(out.quantity, float):
-                        branch_prob *= out.quantity
-                        out.quantity = 1.0 # Reset token qty
-            
+                    branch_prob *= float(getattr(out, "probability_val", 1.0))
+
             # CPU Check (Simple Heuristic)
             requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + outputs)
 
@@ -138,16 +136,29 @@ class SignamancyParser:
             return ParsedToken(self.registry.register(token_str, BlockType.BIT))
 
         inhibitor_char, symbol, quant_str = match.groups()
-        # Normalize: strip trailing underscores that are often separators before quantities,
-        # and trim whitespace.
+        # Normalize symbol, strip separators
         symbol = symbol.rstrip("_").strip()
         is_inhibitor = bool(inhibitor_char)
+
+        # Extract optional probability suffix like "%20" even if combined with ranges
+        prob_val = 1.0
+        is_prob = False
+        if "%" in quant_str:
+            # Find last %number pattern
+            m = re.search(r"%(?P<pct>-?\d+(?:\.\d+)?)\s*$", quant_str)
+            if m:
+                try:
+                    prob_val = float(m.group("pct")) / 100.0
+                    is_prob = True
+                    # Remove the matched probability from quant_str before parsing quantity
+                    quant_str = quant_str[:m.start()] + quant_str[m.end():]
+                except:
+                    pass
         
-        # Quantity Parsing
+        # Quantity Parsing (remaining part may be empty or a range/number)
         quantity = self._parse_quantity(quant_str)
         
         # Type Inference
-        is_prob = "%" in quant_str
         is_range = isinstance(quantity, tuple)
         
         type_hint = BlockType.BYTE
@@ -166,7 +177,8 @@ class SignamancyParser:
             token_id=token_id,
             quantity=quantity,
             is_inhibitor=is_inhibitor,
-            is_probability=is_prob
+            is_probability=is_prob,
+            probability_val=prob_val
         )
 
     def _parse_quantity(self, q_str: str) -> Union[float, Tuple[float, float]]:

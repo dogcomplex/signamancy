@@ -81,6 +81,11 @@ class TokenRegistry:
         for meta in self._tokens.values():
             blocks[meta.block_type].append(meta)
             
+        # Ensure BYTE sentinel exists and sorts first
+        # We create a special token that is never used by rules
+        void_id = self.register("__VOID_BYTE__", BlockType.BYTE)
+        self._tokens[void_id].usage_count = max(self._tokens[void_id].usage_count, 10**9)
+
         # Sort each block by Usage (Descending) -> Hot tokens get low indices
         for b_type in blocks:
             blocks[b_type].sort(key=lambda x: x.usage_count, reverse=True)

@@ -30,8 +30,12 @@ class SignamancyEngine:
         self.device = torch.device(self.cfg.device)
         
         self.state: Dict[BlockType, torch.Tensor] = {}
+        self.cpu_callbacks = {}
         self._init_memory()
         self._upload_kernels()
+
+    def register_cpu_callback(self, rule_idx: int, callback):
+        self.cpu_callbacks[rule_idx] = callback
 
     def _init_memory(self):
         bs = self.cfg.batch_size
@@ -175,9 +179,12 @@ class SignamancyEngine:
     def _resolve_conflicts(self, valid: torch.Tensor) -> torch.Tensor:
         bs = self.cfg.batch_size
         
-        # 1. Base Probability Check
-        probs = self.rule_meta[:, 1].unsqueeze(0).expand(bs, -1)
-        # TODO: Apply Temperature scaling here
+        # 1. Base Probability Check (temperature-scaled via logits)
+        base_probs = self.rule_meta[:, 1]
+        eps = 1e-9
+        logits = torch.log(base_probs + eps) - torch.log(1.0 - base_probs + eps)
+        scaled_logits = logits / max(self.cfg.temperature, eps)
+        probs = torch.sigmoid(scaled_logits).unsqueeze(0).expand(bs, -1)
         
         # 2. Handle Mutual Exclusion (One-Of)
         # MutexID is in Col 2. 0 means "Independent".
@@ -190,7 +197,7 @@ class SignamancyEngine:
         rand = torch.rand_like(probs)
         independent_fired = valid & (rand < probs) & (~is_mutex.unsqueeze(0))
         
-        # Mutex Rules: Gumbel-Max
+        # Mutex Rules: Gumbel-Max (on temperature-scaled logits)
         # We need to group by MutexID and pick ArgMax(LogProb + Gumbel)
         # This is hard to vectorize purely in PyTorch without a loop over GroupIDs 
         # or scatter_reduce (newer PyTorch).
@@ -202,6 +209,12 @@ class SignamancyEngine:
             # Exclude 0 (non-mutex)
             unique_groups = unique_groups[unique_groups != 0]
         
+        # Prepare weight-based scores for mutex: use rule probabilities as weights
+        # Apply temperature by exponentiating weights with 1/T
+        base_weights = self.rule_meta[:, 1].clamp(min=1e-9)  # [Rules]
+        temp = max(self.cfg.temperature, 1e-9)
+        weights_t = base_weights.pow(1.0 / temp)  # [Rules]
+        
         for gid in unique_groups:
             # Mask for this group
             group_mask = (mutex_ids == gid).unsqueeze(0) # [1, Rules]
@@ -211,19 +224,16 @@ class SignamancyEngine:
             group_valid = valid & group_mask
             
             # If no rules in the group are valid for a universe, none fire.
-            # Calculate Scores: Log(Prob) + Gumbel
-            # Add -1e9 to invalid rules to prevent selection
+            # Calculate Scores: log(weight) + Gumbel
+            # Add -inf to invalid rules to prevent selection
             
-            group_probs = probs * group_mask.float()
-            gumbel = -torch.log(-torch.log(torch.rand_like(probs)))
+            group_weights = weights_t.unsqueeze(0) * group_mask.float()  # [B, R]
+            gumbel = -torch.log(-torch.log(torch.rand_like(group_weights)))
             
-            scores = torch.log(group_probs + 1e-9) + gumbel
+            scores = torch.log(group_weights + 1e-9) + gumbel
             # Mask out invalid
             scores = scores.masked_fill(~group_valid, -float('inf'))
-            
-            # Argmax
-            # We need to know which indices belong to this group to map back
-            # Easy way: set scores of non-group rules to -inf too
+            # Mask out non-group
             scores = scores.masked_fill(~group_mask, -float('inf'))
             
             # Check if ANY rule is valid in the group
@@ -232,10 +242,6 @@ class SignamancyEngine:
             best_idx = scores.argmax(dim=1) # [Batch] indices
             
             # Set fired
-            # Create a scatter mask? 
-            # Or just: mutex_fired[b, best_idx[b]] = 1 where has_valid[b] is true
-            
-            # Vectorized set:
             rows = torch.arange(bs, device=self.device)
             cols = best_idx
             
@@ -274,7 +280,7 @@ class SignamancyEngine:
                 # Note: This sums variances linearly, approximation of uncorrelated noise
                 std_agg = torch.sparse.mm(k["out_std"]["mat"].t(), fired_f.t()).t()
                 noise = torch.randn_like(std_agg)
-                delta += (noise * std_agg)
+                delta += (noise * std_agg * self.cfg.temperature)
             
             # 3. Apply
             # Note: BIT/BYTE stored as int, but math is float. Cast back.
@@ -283,7 +289,8 @@ class SignamancyEngine:
             
             if bt == BlockType.BYTE:
                 # Keep in float/int16 for Physics phase
-                self.state[bt] = new_val.to(torch.int16)
+                new_val = torch.clamp(new_val, min=0)
+                self.state[BlockType.BYTE] = new_val.to(torch.int16)
             elif bt == BlockType.BIT:
                 # Clamp immediately
                 self.state[bt] = torch.clamp(new_val, -1, 1).to(torch.int8)
@@ -366,4 +373,17 @@ class SignamancyEngine:
         self.state[BlockType.BYTE] = remainder.to(torch.uint8)
 
     def _handle_cpu_callbacks(self, fired_mask):
-        pass # Stub for V1
+        # Execute registered Python callbacks for CPU-flagged rules where they fired.
+        cpu_flags = (self.rule_meta[:, 3] > 0.5)  # [Rules]
+        if not cpu_flags.any():
+            return
+        cpu_rule_indices = torch.nonzero(cpu_flags, as_tuple=False).squeeze(1)
+        for r in cpu_rule_indices.tolist():
+            cb = self.cpu_callbacks.get(r)
+            if cb is None:
+                continue
+            rows = torch.nonzero(fired_mask[:, r], as_tuple=False).squeeze(1)
+            if rows.numel() == 0:
+                continue
+            for b in rows.tolist():
+                cb(self, b)
