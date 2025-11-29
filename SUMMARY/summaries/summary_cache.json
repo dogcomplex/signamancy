@@ -1,0 +1,227 @@
+{
+  ".\\categories.txt": {
+    "mtime": 1730501406.0,
+    "size": 19502,
+    "hash": "431f6d569c684038a427a80dcec656a3"
+  },
+  ".\\README.md": {
+    "mtime": 1730771016.0,
+    "size": 4139,
+    "hash": "f6dce91e4b7c92070fc023974035cfa0"
+  },
+  ".\\axiom_types.txt": {
+    "mtime": 1730501052.0,
+    "size": 22580,
+    "hash": "71e5566f4433035b1b8916a69a4d80c0"
+  },
+  ".\\.gitignore": {
+    "mtime": 1740172218.0,
+    "size": 706,
+    "hash": "b9e4ebe2b787fbe7672d7181d68eaa45"
+  },
+  ".\\PostScarcityCards 5.txt": {
+    "mtime": 1740172448.0,
+    "size": 50158,
+    "hash": "1f09c8ad93f48617a3601d36182b5c9f"
+  },
+  ".\\chris_format.octet-stream": {
+    "mtime": 1740172460.0,
+    "size": 50156,
+    "hash": "7859077efc1494cf26050f949ac9a6b7"
+  },
+  ".\\recipe_format_wip.md": {
+    "mtime": 1741248754.0,
+    "size": 124360,
+    "hash": "f08650f0f90393544d2000acc128467b"
+  },
+  ".\\parser.py": {
+    "mtime": 1740446882.0,
+    "size": 1,
+    "hash": "aaa23663da8d05fecd3b0dd39ceaf26e"
+  },
+  ".\\semantic_analyzer.py": {
+    "mtime": 1740450980.0,
+    "size": 3176,
+    "hash": "114cd9750175a8014ebdbdf04036df40"
+  },
+  ".\\progress.json": {
+    "mtime": 1740461796.0,
+    "size": 19,
+    "hash": "d4df81164c37ceb7b52be8cbd6d7f16a"
+  },
+  ".\\NOTES.txt": {
+    "mtime": 1743028106.0,
+    "size": 8942,
+    "hash": "fd52ee04b73fbe5a2c6d2142bd44305f"
+  },
+  ".\\DOCUMENTATION.md": {
+    "mtime": 1743831754.0,
+    "size": 24164,
+    "hash": "8dd3ee5b805b85c08d6cd24e3cf76640"
+  },
+  ".\\BUILD RECIPES.txt": {
+    "mtime": 1679859932.0,
+    "size": 11052,
+    "hash": "530cf07dcff48076422bf377d42da4cf"
+  },
+  ".\\mantles_gradient.txt": {
+    "mtime": 1748831928.0,
+    "size": 2070,
+    "hash": "1307fdae73cd2e33bc5f98acd616dbc2"
+  },
+  ".\\lexicon.txt": {
+    "mtime": 1748831950.0,
+    "size": 6256,
+    "hash": "e256b248e869537188af500a883a775f"
+  },
+  ".\\Origins.md": {
+    "mtime": 1749461524.0,
+    "size": 80368,
+    "hash": "89706e42ed483365ad241703835d3f7b"
+  },
+  ".\\lexicon_2.md": {
+    "mtime": 1763797970.0,
+    "size": 5996,
+    "hash": "5fa8dda2ed9ef78301c6ceec27fcae88"
+  },
+  ".\\games\\alice.txt": {
+    "mtime": 1730500792.0,
+    "size": 2589,
+    "hash": "a11b5c827adf1af76220027f9fa005a8"
+  },
+  ".\\games\\baba.txt": {
+    "mtime": 1722901794.0,
+    "size": 10832,
+    "hash": "02595d810943af494151fd8a2dd3bcab"
+  },
+  ".\\games\\minigrid.txt": {
+    "mtime": 1730501760.0,
+    "size": 6859,
+    "hash": "f75c4f9e6b70595f81a017fa10ef9b63"
+  },
+  ".\\games\\pokemon.txt": {
+    "mtime": 1741162492.0,
+    "size": 50341,
+    "hash": "2a14357738b14091470a92754a7376bd"
+  },
+  ".\\games\\snake.txt": {
+    "mtime": 1723024404.0,
+    "size": 18676,
+    "hash": "14af9d977d1db1a3cf2cbc2d541a3570"
+  },
+  ".\\games\\space.txt": {
+    "mtime": 1730695282.0,
+    "size": 30754,
+    "hash": "eda923b72e1fcf2fe8d0b9b9362d7bbf"
+  },
+  ".\\games\\crafter\\axioms\\AXIOMS.txt": {
+    "mtime": 1725534740.0,
+    "size": 22621,
+    "hash": "a01ffcf1ac9ee4c53f5a36f4f857b138"
+  },
+  ".\\games\\crafter\\axioms\\RULES.txt": {
+    "mtime": 1725425824.0,
+    "size": 20636,
+    "hash": "5d9e5d3cd4666d4eb9545bed0f128dc9"
+  },
+  ".\\games\\crafter\\axioms\\chat_results.txt": {
+    "mtime": 1725251218.0,
+    "size": 11011,
+    "hash": "2ab9de6dec1c94c9f7d6e6df181beab0"
+  },
+  ".\\games\\crafter\\axioms\\gpt-o1.txt": {
+    "mtime": 1726185948.0,
+    "size": 41586,
+    "hash": "8ec198930347270703ab415cada9ffaf"
+  },
+  ".\\games\\farm\\farm.html": {
+    "mtime": 1710131192.0,
+    "size": 44815,
+    "hash": "b7ea7fffb848d50499e89bc336ad66a9"
+  },
+  ".\\games\\farm\\Farm.js": {
+    "mtime": 1695339844.0,
+    "size": 34052,
+    "hash": "0e5d0eea3dceed4a2cc38d51c0ff61de"
+  },
+  ".\\games\\farm\\farm.py": {
+    "mtime": 1701940422.0,
+    "size": 9707,
+    "hash": "0346c5e5d1c75d7dedbe856ff11560ed"
+  },
+  ".\\games\\farm\\farmfresh.py": {
+    "mtime": 1710151852.0,
+    "size": 1370,
+    "hash": "fce4b45b76bb8118f257b682ca067b15"
+  },
+  ".\\games\\farm\\farmgpt.py": {
+    "mtime": 1702082742.0,
+    "size": 11877,
+    "hash": "8137496d757168cc5c6111a5321d7596"
+  },
+  ".\\games\\farm\\game_state.json": {
+    "mtime": 1702082746.0,
+    "size": 165169,
+    "hash": "96829de927719f5a3d7fcc974fd8641c"
+  },
+  ".\\games\\farm\\recipes.csv": {
+    "mtime": 1716162880.0,
+    "size": 21608,
+    "hash": "c923dd77f53ffd7efec2d4912ac01508"
+  },
+  ".\\games\\farm\\recipes.old.csv": {
+    "mtime": 1674002694.0,
+    "size": 23560,
+    "hash": "f27878942316de1f32da26e707838149"
+  },
+  ".\\games\\farm\\recipes2.csv": {
+    "mtime": 1702016848.0,
+    "size": 36686,
+    "hash": "de6571598b3c5089f55ea243b680cd8a"
+  },
+  ".\\games\\farm\\recipes_py.csv": {
+    "mtime": 1701937210.0,
+    "size": 21756,
+    "hash": "1257ca03ad1e521bd229148577ca8b34"
+  },
+  ".\\games\\farm\\farm_prompt.txt": {
+    "mtime": 1743835824.0,
+    "size": 4475,
+    "hash": "40430a3e18be06b67cf5679c01777588"
+  },
+  ".\\games\\farm\\farm_gemini_run.txt": {
+    "mtime": 1743914611.87,
+    "size": 0,
+    "hash": "cae66941d9efbd404e4d88758ea67670"
+  },
+  ".\\engine\\parser.py": {
+    "mtime": 1741161952.0,
+    "size": 14124,
+    "hash": "42b1d41f1f6e1c91fd376316fc9be519"
+  },
+  ".\\engine\\analysis_parser.py": {
+    "mtime": 1740476200.0,
+    "size": 2782,
+    "hash": "ebf2a10bc97a0468bcb7f8b6ff5f5af0"
+  },
+  ".\\engine\\interpreter.py": {
+    "mtime": 1741162278.0,
+    "size": 0,
+    "hash": "cae66941d9efbd404e4d88758ea67670"
+  },
+  ".\\prompts\\analysis_single.md": {
+    "mtime": 1740474922.0,
+    "size": 1441,
+    "hash": "a3c1d5821b0e04c450eadb1b0e3fdb78"
+  },
+  ".\\prompts\\formatting.md": {
+    "mtime": 1740448246.0,
+    "size": 4106,
+    "hash": "7a7bc0902cda731f8e0982b846ff774d"
+  },
+  ".\\prompts\\valid_operation_by_unit_example.md": {
+    "mtime": 1740786854.0,
+    "size": 18046,
+    "hash": "281c85744ffe5d71240f326f0b46632a"
+  }
+}

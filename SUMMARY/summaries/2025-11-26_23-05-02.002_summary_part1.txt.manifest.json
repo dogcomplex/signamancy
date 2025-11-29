@@ -1,0 +1,425 @@
+{
+  "output": "G:\\LOKI\\LOCUS\\SIGNUM\\signamancy\\SUMMARY\\summaries\\2025-11-26_23-05-02.002_summary_part1.txt",
+  "files": [
+    {
+      "path": ".\\categories.txt",
+      "start": 4683,
+      "end": 23719,
+      "lang": ""
+    },
+    {
+      "path": ".\\README.md",
+      "start": 23745,
+      "end": 27790,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\axiom_types.txt",
+      "start": 27816,
+      "end": 50030,
+      "lang": ""
+    },
+    {
+      "path": ".\\.gitignore",
+      "start": 50056,
+      "end": 50709,
+      "lang": ""
+    },
+    {
+      "path": ".\\PostScarcityCards 5.txt",
+      "start": 50735,
+      "end": 100921,
+      "lang": ""
+    },
+    {
+      "path": ".\\chris_format.octet-stream",
+      "start": 100947,
+      "end": 151133,
+      "lang": ""
+    },
+    {
+      "path": ".\\recipe_format_wip.md",
+      "start": 151159,
+      "end": 271620,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\parser.py",
+      "start": 271646,
+      "end": 271661,
+      "lang": "python"
+    },
+    {
+      "path": ".\\semantic_analyzer.py",
+      "start": 271687,
+      "end": 274792,
+      "lang": "python"
+    },
+    {
+      "path": ".\\progress.json",
+      "start": 274818,
+      "end": 274855,
+      "lang": "json"
+    },
+    {
+      "path": ".\\NOTES.txt",
+      "start": 274881,
+      "end": 283656,
+      "lang": ""
+    },
+    {
+      "path": ".\\DOCUMENTATION.md",
+      "start": 283682,
+      "end": 307530,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\BUILD RECIPES.txt",
+      "start": 307556,
+      "end": 318530,
+      "lang": ""
+    },
+    {
+      "path": ".\\mantles_gradient.txt",
+      "start": 318556,
+      "end": 320630,
+      "lang": ""
+    },
+    {
+      "path": ".\\lexicon.txt",
+      "start": 320656,
+      "end": 326858,
+      "lang": ""
+    },
+    {
+      "path": ".\\Origins.md",
+      "start": 326884,
+      "end": 406070,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\lexicon_2.md",
+      "start": 406096,
+      "end": 412034,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\games\\alice.txt",
+      "start": 412060,
+      "end": 414609,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\baba.txt",
+      "start": 414635,
+      "end": 425077,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\minigrid.txt",
+      "start": 425103,
+      "end": 431777,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\pokemon.txt",
+      "start": 431803,
+      "end": 481373,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\snake.txt",
+      "start": 481399,
+      "end": 499725,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\space.txt",
+      "start": 499751,
+      "end": 529648,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\commands.tex",
+      "start": 529674,
+      "end": 538702,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\iclr2022_conference.bst",
+      "start": 538728,
+      "end": 565770,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\iclr2022_conference.sty",
+      "start": 565796,
+      "end": 575073,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\main.bbl",
+      "start": 575099,
+      "end": 584555,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\main.tex",
+      "start": 584581,
+      "end": 585378,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\Makefile",
+      "start": 585404,
+      "end": 586138,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\natbib.sty",
+      "start": 586164,
+      "end": 631374,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\references.bib",
+      "start": 631400,
+      "end": 722013,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\algos\\loop.tex",
+      "start": 722039,
+      "end": 722456,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\algos\\play.tex",
+      "start": 722482,
+      "end": 723060,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\achievements\\figure.tex",
+      "start": 723086,
+      "end": 723699,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\counts\\figure-dreamerv2.tex",
+      "start": 723725,
+      "end": 724034,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\counts\\figure-ppo.tex",
+      "start": 724060,
+      "end": 724345,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\counts\\figure-rainbow.tex",
+      "start": 724371,
+      "end": 724673,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\counts\\figure-random.tex",
+      "start": 724699,
+      "end": 725004,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\counts\\figure-unsup_plan2explore.tex",
+      "start": 725030,
+      "end": 725382,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\counts\\figure-unsup_rnd.tex",
+      "start": 725408,
+      "end": 725724,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\first\\figure.tex",
+      "start": 725750,
+      "end": 726305,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\maps\\figure.tex",
+      "start": 726331,
+      "end": 727224,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\reward\\figure.tex",
+      "start": 727250,
+      "end": 727886,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\scores\\figure.tex",
+      "start": 727912,
+      "end": 728801,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\spectrum\\figure-noreward.tex",
+      "start": 728827,
+      "end": 729465,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\spectrum\\figure-reward.tex",
+      "start": 729491,
+      "end": 730150,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\figures\\textures\\figure.tex",
+      "start": 730176,
+      "end": 732300,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\sections\\abstract.tex",
+      "start": 732326,
+      "end": 733581,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\sections\\appendix.tex",
+      "start": 733607,
+      "end": 734864,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\sections\\crafter.tex",
+      "start": 734890,
+      "end": 749034,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\sections\\discussion.tex",
+      "start": 749060,
+      "end": 750850,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\sections\\experiments.tex",
+      "start": 750876,
+      "end": 758429,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\sections\\intro.tex",
+      "start": 758455,
+      "end": 760154,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\sections\\related.tex",
+      "start": 760180,
+      "end": 764215,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\tables\\act.tex",
+      "start": 764241,
+      "end": 765921,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\tables\\benchmark.tex",
+      "start": 765947,
+      "end": 769656,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\tables\\success_human.tex",
+      "start": 769682,
+      "end": 771329,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\tables\\success_noreward.tex",
+      "start": 771355,
+      "end": 774459,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\tables\\success_reward.tex",
+      "start": 774485,
+      "end": 777579,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\tables\\_reward.tex",
+      "start": 777605,
+      "end": 778745,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\sources\\arXiv-2109.06780v2\\tables\\_score.tex",
+      "start": 778771,
+      "end": 779930,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\axioms\\AXIOMS.txt",
+      "start": 779956,
+      "end": 802157,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\axioms\\RULES.txt",
+      "start": 802183,
+      "end": 822434,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\axioms\\chat_results.txt",
+      "start": 822460,
+      "end": 833246,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\axioms\\gpt-o1.txt",
+      "start": 833272,
+      "end": 873938,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\farm.html",
+      "start": 873964,
+      "end": 917775,
+      "lang": "html"
+    },
+    {
+      "path": ".\\games\\farm\\Farm.js",
+      "start": 917801,
+      "end": 950986,
+      "lang": "javascript"
+    },
+    {
+      "path": ".\\games\\farm\\farm.py",
+      "start": 951012,
+      "end": 960524,
+      "lang": "python"
+    },
+    {
+      "path": ".\\games\\farm\\farmfresh.py",
+      "start": 960550,
+      "end": 961913,
+      "lang": "python"
+    },
+    {
+      "path": ".\\games\\farm\\farmgpt.py",
+      "start": 961939,
+      "end": 973842,
+      "lang": "python"
+    }
+  ]
+}

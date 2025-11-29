@@ -1,0 +1,101 @@
+Building Block Recipes
+
+Secret Protocol Riddle:
+🌱🎱🕒
+⏰~60s 🖥 => 🗝 🖥
+✍/🗝: 📢 🗝 ✍ 🖼 => ✅
+👀/🗝: 📢 🗝 📆0-1 => ✍ 🖼 📆
+(Answer below!)
+
+Build Recipes. 🍎 + 💧 + 💩 + ⏳ => 🌳  Simple equations of resource value flows through a process to form outputs.  You've seen them all over the place - we intuitively understand them, but we rarely seem to formalize and universalize them.  This little pattern is powerful.  It might be sufficient to decompose pretty-much Everything into byte-sized descriptive "recipes", especially when we accept them with some measure of fudge-factor ("low-fidelity" or "softness") and use that to handle both loose napkin-math estimations and more-concrete high-fidelity full process documentation. It is surprising how much one can describe just using this inputs => outputs flow, and how many other protocols/patterns map to this.  Let's pull them together from their siloed homes in code, databases, or grandma's cookbooks and bring them into the light as an open, highly-composable, highly-simulateable description of reality (or at *least* economic reality!)
+
+As a programmer of 10+ years with more exposure to discussions of complexity and elegance than any human being should ever endure, this is a nugget of a protocol idea that surprises me with its versatility, simplicity, and ability to stumble-upon joy.  It feels like something fundamental and (ugh) elegant rests here, and it deserves the philosophical grounding and stability that comes from a trial-by-fire of a bunch of smart researchers picking it apart and applying it en-masse to various applications.  If this process *can't* scale up to describe reality, I want to know its limits, or know they are obscure enough to be practically-universal.  Let's explore the theory, and let's build a protocol to generate, test, and verify these building blocks of reality for the decentralized world to use.
+
+
+- Summary: <will write this paragraph later.  key points tho:>
+Protocol to build... everything?  Let's find out.
+Bringing thousands of little implementations, databases, cookbooks and siloed programs into the light.
+Overall an interesting way of thinking and decomposing complexity to very simple, very scalable rules - which deserve further study to determine philosophical limits, but are also just immediately useful as scaffolding for practical applications.  
+
+
+- We Already Do This:  We can mass-extract and decompose game economies, existing companies, supply chains, Amazon/Alibaba products, Thingiverse, Wikipedia, old Cooking Recipes, etc etc into tokenized composable recipes (and recreate rich descriptions, with a little AI help)
+- Fidelity Scaling (Soft => Hard): We classify recipes by fidelity, accepting both weak generalizations (e.g. "Iron Ore + Heat => Iron") and high-fidelity (entire 20-step math-heavy graph of iron recipe).  This versatility allows us to quickly plan macro scale napkin math at "Lego" fidelity, drill down to "Meccano" fidelity for tighter assumptions, then build with precise physics and sources, all under one system.
+- Handles Black-Box Unknowns: Focusing classification on inputs + outputs rather than precise process allows still-useful low fidelity models, which can be broken down better later
+- Test Framework: trial recipes to verify accuracy in regards to real world (or digital economy it's describing), both atomized and as parts of wider systems (to check assumptions)
+- Marketplace for Research: Ideally designed with bounty/rewards/oracles for generation and verification via swarm.  Get broad low fidelity and zoom in with precision where needed most
+- AI Friendly: simple formatting for easy extraction from existing sources as well as regeneration to full-text (and visual) descriptions of each process.  Self-classification (as a guess) to available fidelity.  Eventual automated testing with simple robotic systems or people
+- Visualization Friendly: Composable reader UI/UX metaphors like card games, flows, inventories, graphs, and games - easy to make beautiful/fun
+- Emoji Friendly: Map resource types to emojis / Stable Diffusion (AI) generated icons for minimally-compact representation, understanding-at-a-glance. 🍅 🥬 🍄3 => 🥗  (Note: emojis aren't necessary or even base-layer, but make a nice compact low-fidelity visualization)
+- Simulation Friendly: Easily map unknown values / ranges to random variables and run Monte Carlo simulations en masse to test new models and double-check assumptions
+- Widely Applicable: Ideal for game developers, economists, business plan generation, and modeling post-scarcity economics as AI perpetually changes what's possible
+- Strengthens With Stress: Changing assumptions on one supply chain, encourages re-examination of fundamentals for stronger next model
+- Ossifies At Scale: Frequent use of recipe => +testing +fidelity +trust and +stability
+- Barter-Economy Model: tokenize processes (=>) or resources (inputs/outputs). Suppliers bid on demand for supply chain segments.  Test framework for quality assurance.  End-to-end process map, to easily compare monolith (in house) designs vs decentralized market (and offer itemized rebates as part of sales models for complex supply chains lest profit-taking at each step markup final product tenfold...  Nerd sniping economists here)
+- Transportation's A Recipe:  🍔 📍Kitchen => 🍔 📍Dining_Table  (serving burger, low fidelity)
+- Time's A Recipe: 🌱 💩🕳 💧3000L ☀180 => 🌳  (growing a tree, low fidelity)
+- Conditional Requirements Are Recipes Too!: ✂ 🐑 => ✂ 🦙 🧵 (shearing sheep requires shears, low fidelity)
+- Math Ain't *That* Tricky:  🍎 🍌1-3 🍇D6 🍓5σ.2 => 🥗🍌1-1.5 (complex recipe for fruit salad, using ranges (1-3), probability (1D6 dice roll), and even mean + standard deviation, oh my!  Just proof of concept that compact visualizations are still doable.  But this is close to all we need for full representation, assuming normal distributions and treating conditionals elsewhere)
+- Matrix Algebra Loves GPUs: Something about just cleverly mapping key/values to hash tables and mass-computing them layer by layer makes a programmer happy.
+
+
+First Example Projects (Specifics First to hone the model):
+- Mapping out low fidelity => high for mass-scale automated factory production (full loop of an economy, including processing and transport).  Already have researchers in progress
+- Mapping early emergency supply chain pathways for food production (trees => glucose very viable).  Presentation in visual book medium for mass distribution + preservation
+- Visualization: grid-based Unreal Engine simulator to map recipe resources => 3d models and quickly populate a game board and zoom down to smaller grids (already mostly built)
+- Economic Simulator App: run arbitrary rules with goals in mind, compute estimated required/resulting resources over time (also mostly built)
+
+Protocol Goals:
+- Establish theoretical/philosophical confidence in model and its boundaries (stress tests by smart researchers, applying to wide varieties of situations/systems.  If it breaks, so be it!)
+- Define model for open-source redistribution and decentralized contribution
+- Create incentive structures to encourage growth of model & database.  Eat the world!
+- Finish up or refine companion pilot projects + tools for rapid prototyping of new applications using this protocol
+
+Open Project Ideas:
+- General Framework for atomizing ALL protocols (soft <=> hard fidelity support)
+- Game Designs / Integrations / Mods
+- Visualization Tools
+- Stable Diffusion Universal Emojis (very doable)
+- Unreal Engine Universal Models (coming soon as a user-friendly AI...)
+- Mass Scraper DB Populator Tool (or just pull from GPT)
+- Testing Frameworks (Robot cooks! coming soon...)
+- Crypto-Backed Assets
+- Crypto-Backed Production Service Contracts
+- Thingiverse Integration (production, assembly)
+- Digital Twin Integration (high fidelity)
+- Game-Playing AI (decompose games to recipes)
+
+Open Questions:
+- What *Isn't* A Recipe?:  ChatGPT is teaching me Category Theory on this one (using cooking analogies and emojis!)  Bad/Good news - recipes are basically morphisms, aka functional programming.  Excessively generalizable!
+- How Do We Map Fidelity?:  Largely a question of hand-waving, what information matters and what can be practically ignored, and where are the stratums?  Fun philosophy topic, hopefully answered by analyzing use cases.  Grade A, B, C?  There's probably economic literature for this one...
+- How Do We Incentivize?:  Focusing on narrowing this down to a useful classifier first, but encouraging low-commitment growth really makes it a protocol.  Betting markets might satisfy the Bayesians.
+- Where's Our Complexity Limit?: Can we get by with less than a Turing Complete programming language here? Maybe some things get full contracts while others are simple value flows
+- How to Deal with Namespace Bloat?: Simple naming of resources/properties goes out the window as you add contexts. Age-old problem.  Ranges of fidelities can make it generally true but not precisely true - that could be fine, with inference.  Hard to have that + classical computing automation though.
+- What's the Deal With Time?: One of the few less-intuitive seams in this model when mapping to everything.  Difference between functional and imperative programming. Time *could* be seen as a resource, or inherently baked into the process, but when does that fail?  
+- Emergent Commonalities?:  Particularly when grouped by low-fidelity, we wonder what unexpected processes have very similar recipes
+- Language as Recipes?:  Sentence: Noun + Noun+adjective ==Verb + Adverbs=> Noun+Adjective + Noun...  Linguist nerd-snipe.
+
+
+Inspirations:
+- Chemistry equations
+- Factorio, Satisfactory, AutomaChef, Valheim, all the Greats
+- Machinations.io => great simulator visualization (though slightly opinionated on time & signaling)
+- Scott McCloud's "Understanding Comics" triangle of reality <=> symbolic (recipe) <=> abstraction (fidelity!).  True in comic books as in any representational calculus
+- BazaarBot: An Open Source Economics Engine
+- @Kojak(Jose Antony)'s suggestion of Heines et al "The Tokenization of Everything: Towards a Framework for Understanding the Potentials of Tokenized Assets"
+
+
+(Riddle Answer):
+🌱🎱🕒: Spring83 (Low Fidelity)
+📢: Publisher (Url)
+✍: Spring-Signature
+🗝: Generated Board Key
+🖼: Board (visual)
+📆: DateTime Modified
+✍/🗝: PUT/<key>
+👀/🗝: GET/<key>
+
+⏰~60s 🖥 => 🗝 🖥  About 60s to generate a key on a typical computer
+✍/🗝: 📢 🗝 ✍ 🖼 => ✅ To publish (PUT), pass your key and new board to publisher using its signature (✅ on success)
+👀/🗝: 📢 🗝 📆0-1 => ✍ 🖼 📆 To view a board (GET), pass your key to publisher to get the board, (optional: only get it if modified since datetime)
+
+💻  🖥

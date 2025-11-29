@@ -1,0 +1,277 @@
+{
+  "output": "G:\\LOKI\\LOCUS\\SIGNUM\\signamancy\\SUMMARY\\summaries\\2025-11-26_23-06-34.691_summary.txt",
+  "files": [
+    {
+      "path": ".\\categories.txt",
+      "start": 2186,
+      "end": 21222,
+      "lang": ""
+    },
+    {
+      "path": ".\\README.md",
+      "start": 21248,
+      "end": 25293,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\axiom_types.txt",
+      "start": 25319,
+      "end": 47533,
+      "lang": ""
+    },
+    {
+      "path": ".\\.gitignore",
+      "start": 47559,
+      "end": 48212,
+      "lang": ""
+    },
+    {
+      "path": ".\\PostScarcityCards 5.txt",
+      "start": 48238,
+      "end": 98424,
+      "lang": ""
+    },
+    {
+      "path": ".\\chris_format.octet-stream",
+      "start": 98450,
+      "end": 148636,
+      "lang": ""
+    },
+    {
+      "path": ".\\recipe_format_wip.md",
+      "start": 148662,
+      "end": 269123,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\parser.py",
+      "start": 269149,
+      "end": 269164,
+      "lang": "python"
+    },
+    {
+      "path": ".\\semantic_analyzer.py",
+      "start": 269190,
+      "end": 272295,
+      "lang": "python"
+    },
+    {
+      "path": ".\\progress.json",
+      "start": 272321,
+      "end": 272358,
+      "lang": "json"
+    },
+    {
+      "path": ".\\NOTES.txt",
+      "start": 272384,
+      "end": 281159,
+      "lang": ""
+    },
+    {
+      "path": ".\\DOCUMENTATION.md",
+      "start": 281185,
+      "end": 305033,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\BUILD RECIPES.txt",
+      "start": 305059,
+      "end": 316033,
+      "lang": ""
+    },
+    {
+      "path": ".\\mantles_gradient.txt",
+      "start": 316059,
+      "end": 318133,
+      "lang": ""
+    },
+    {
+      "path": ".\\lexicon.txt",
+      "start": 318159,
+      "end": 324361,
+      "lang": ""
+    },
+    {
+      "path": ".\\Origins.md",
+      "start": 324387,
+      "end": 403573,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\lexicon_2.md",
+      "start": 403599,
+      "end": 409537,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\games\\alice.txt",
+      "start": 409563,
+      "end": 412112,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\baba.txt",
+      "start": 412138,
+      "end": 422580,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\minigrid.txt",
+      "start": 422606,
+      "end": 429280,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\pokemon.txt",
+      "start": 429306,
+      "end": 478876,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\snake.txt",
+      "start": 478902,
+      "end": 497228,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\space.txt",
+      "start": 497254,
+      "end": 527151,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\axioms\\AXIOMS.txt",
+      "start": 527177,
+      "end": 549378,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\axioms\\RULES.txt",
+      "start": 549404,
+      "end": 569655,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\axioms\\chat_results.txt",
+      "start": 569681,
+      "end": 580467,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\crafter\\axioms\\gpt-o1.txt",
+      "start": 580493,
+      "end": 621159,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\farm.html",
+      "start": 621185,
+      "end": 664996,
+      "lang": "html"
+    },
+    {
+      "path": ".\\games\\farm\\Farm.js",
+      "start": 665022,
+      "end": 698207,
+      "lang": "javascript"
+    },
+    {
+      "path": ".\\games\\farm\\farm.py",
+      "start": 698233,
+      "end": 707745,
+      "lang": "python"
+    },
+    {
+      "path": ".\\games\\farm\\farmfresh.py",
+      "start": 707771,
+      "end": 709134,
+      "lang": "python"
+    },
+    {
+      "path": ".\\games\\farm\\farmgpt.py",
+      "start": 709160,
+      "end": 721063,
+      "lang": "python"
+    },
+    {
+      "path": ".\\games\\farm\\game_state.json",
+      "start": 721089,
+      "end": 880377,
+      "lang": "json"
+    },
+    {
+      "path": ".\\games\\farm\\recipes.csv",
+      "start": 880403,
+      "end": 901621,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\recipes.old.csv",
+      "start": 901647,
+      "end": 924927,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\recipes2.csv",
+      "start": 924953,
+      "end": 961025,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\recipes_py.csv",
+      "start": 961051,
+      "end": 982418,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\farm_prompt.txt",
+      "start": 982444,
+      "end": 986899,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\farm_gemini_run.txt",
+      "start": 986925,
+      "end": 986997,
+      "lang": "",
+      "decode_error": true
+    },
+    {
+      "path": ".\\engine\\parser.py",
+      "start": 987023,
+      "end": 1000794,
+      "lang": "python"
+    },
+    {
+      "path": ".\\engine\\analysis_parser.py",
+      "start": 1000820,
+      "end": 1003555,
+      "lang": "python"
+    },
+    {
+      "path": ".\\engine\\interpreter.py",
+      "start": 1003581,
+      "end": 1003644,
+      "lang": "python",
+      "decode_error": true
+    },
+    {
+      "path": ".\\prompts\\analysis_single.md",
+      "start": 1003670,
+      "end": 1005124,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\prompts\\formatting.md",
+      "start": 1005150,
+      "end": 1009212,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\prompts\\valid_operation_by_unit_example.md",
+      "start": 1009238,
+      "end": 1027080,
+      "lang": "markdown"
+    }
+  ]
+}

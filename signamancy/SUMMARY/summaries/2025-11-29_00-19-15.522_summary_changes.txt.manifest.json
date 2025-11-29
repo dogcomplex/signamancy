@@ -1,0 +1,53 @@
+{
+  "output": "G:\\LOKI\\LOCUS\\SIGNUM\\signamancy\\signamancy\\SUMMARY\\summaries\\2025-11-29_00-19-15.522_summary_changes.txt",
+  "files": [
+    {
+      "path": ".\\registry.py",
+      "start": 425,
+      "end": 5518,
+      "lang": "python"
+    },
+    {
+      "path": ".\\parser.py",
+      "start": 5544,
+      "end": 12112,
+      "lang": "python"
+    },
+    {
+      "path": ".\\compiler.py",
+      "start": 12138,
+      "end": 19386,
+      "lang": "python"
+    },
+    {
+      "path": ".\\engine.py",
+      "start": 19412,
+      "end": 36822,
+      "lang": "python"
+    },
+    {
+      "path": ".\\types.py",
+      "start": 36848,
+      "end": 38188,
+      "lang": "python"
+    },
+    {
+      "path": ".\\bridge.py",
+      "start": 38214,
+      "end": 42430,
+      "lang": "python"
+    },
+    {
+      "path": ".\\run_pokemon.py",
+      "start": 42456,
+      "end": 46739,
+      "lang": "python"
+    },
+    {
+      "path": ".\\__init__.py",
+      "start": 46765,
+      "end": 47288,
+      "lang": "python"
+    }
+  ]
+}

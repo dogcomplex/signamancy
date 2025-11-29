@@ -1,0 +1,101 @@
+Here is the file tree and contents of all files in the project:
+target_folder: ./
++-- signamancy/ (24344050 bytes)
+X-- .git/ (4440714 bytes)
++-- .gitignore (706 bytes)
++-- BUILD RECIPES.txt (11052 bytes)
++-- DOCUMENTATION.md (24164 bytes)
++-- NOTES.txt (8942 bytes)
++-- Origins.md (80368 bytes)
++-- PostScarcityCards 5.txt (50158 bytes)
++-- README.md (4139 bytes)
+X-- SUMMARY/ (3990718 bytes)
+X-- archived/ (3420606 bytes)
++-- axiom_types.txt (22580 bytes)
++-- categories.txt (19502 bytes)
++-- chris_format.octet-stream (50156 bytes)
++-- engine/ (16906 bytes)
+    +-- analysis_parser.py (2782 bytes)
+    +-- interpreter.py (0 bytes)
+    +-- parser.py (14124 bytes)
++-- games/ (8612261 bytes)
+    +-- alice.txt (2589 bytes)
+    +-- baba.txt (10832 bytes)
+    +-- crafter/ (1828353 bytes)
+        +-- axioms/ (95854 bytes)
+            +-- AXIOMS.txt (22621 bytes)
+            +-- RULES.txt (20636 bytes)
+            +-- chat_results.txt (11011 bytes)
+            +-- gpt-o1.txt (41586 bytes)
+        +-- sources/ (1732499 bytes)
+            X-- arXiv-2109.06780v2/ (1732499 bytes)
+    +-- farm/ (6663857 bytes)
+        +-- Farm.js (34052 bytes)
+        +-- farm.html (44815 bytes)
+        +-- farm.py (9707 bytes)
+        +-- farm_gemini_run.txt (0 bytes)
+        +-- farm_prompt.txt (4475 bytes)
+        +-- farmfresh.py (1370 bytes)
+        +-- farmgpt.py (11877 bytes)
+        +-- game_state.json (165169 bytes)
+        +-- recipes.csv (21608 bytes)
+        +-- recipes.old.csv (23560 bytes)
+        +-- recipes2.csv (36686 bytes)
+        +-- recipes_py.csv (21756 bytes)
+        X-- screenshots/ (6288782 bytes)
+    +-- minigrid.txt (6859 bytes)
+    +-- pokemon.txt (50341 bytes)
+    +-- snake.txt (18676 bytes)
+    +-- space.txt (30754 bytes)
++-- lexicon.txt (6256 bytes)
++-- lexicon_2.md (5996 bytes)
++-- mantles_gradient.txt (2070 bytes)
+X-- output/ (3425607 bytes)
++-- parser.py (1 bytes)
++-- progress.json (19 bytes)
++-- prompts/ (23593 bytes)
+    +-- analysis_single.md (1441 bytes)
+    +-- formatting.md (4106 bytes)
+    +-- valid_operation_by_unit_example.md (18046 bytes)
++-- recipe_format_wip.md (124360 bytes)
++-- semantic_analyzer.py (3176 bytes)
+Changed files count: 0
+Deleted files:
+- .\.\games\crafter\sources\arXiv-2109.06780v2\Makefile
+- .\.\games\crafter\sources\arXiv-2109.06780v2\algos\loop.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\algos\play.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\commands.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\achievements\figure.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\counts\figure-dreamerv2.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\counts\figure-ppo.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\counts\figure-rainbow.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\counts\figure-random.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\counts\figure-unsup_plan2explore.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\counts\figure-unsup_rnd.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\first\figure.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\maps\figure.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\reward\figure.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\scores\figure.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\spectrum\figure-noreward.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\spectrum\figure-reward.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\figures\textures\figure.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\iclr2022_conference.bst
+- .\.\games\crafter\sources\arXiv-2109.06780v2\iclr2022_conference.sty
+- .\.\games\crafter\sources\arXiv-2109.06780v2\main.bbl
+- .\.\games\crafter\sources\arXiv-2109.06780v2\main.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\natbib.sty
+- .\.\games\crafter\sources\arXiv-2109.06780v2\references.bib
+- .\.\games\crafter\sources\arXiv-2109.06780v2\sections\abstract.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\sections\appendix.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\sections\crafter.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\sections\discussion.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\sections\experiments.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\sections\intro.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\sections\related.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\tables\_reward.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\tables\_score.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\tables\act.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\tables\benchmark.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\tables\success_human.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\tables\success_noreward.tex
+- .\.\games\crafter\sources\arXiv-2109.06780v2\tables\success_reward.tex

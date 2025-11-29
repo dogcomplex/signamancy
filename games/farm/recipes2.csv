@@ -44,6 +44,9 @@ ID,Recipe
 // ID_ALL_MIN, 🟨X 🟨2 => 🟩 // uses ALL resources to produce (valid with 2+)
 // ID_ALL_BUT, 🟨X => 🟨2 🟩 // uses ALL resources to produce (valid with 0+), leaves 2 behind
 // ID_MAX, 🟨X 🟨100 => 🟨100 // eats anything above 100 (relies on being applied tho...)
+// ID_FUNCTION, 🟩: 🟦 => 🟥 // function syntax to shorthand define a function. : just means it should be on both sides of => as a catalyst
+// ID_FUNCTION_INLINE, 🟦 🟩 => 🟩 🟥 // catalyst style inline definition of a function (the function "name" merely acts as a gatekeeper catalyst enabling the transition)
+
 
 // FUCK YEAH WE CRACKED TIME (TIME == MODE, or MEMORY):
 // ID_MODE: 
@@ -222,6 +225,11 @@ Start_Game => World + World_Screen + Debt + Monday + Starting_Tools
 ID_Start, 💫 => ✅1️⃣ ☀1️⃣ ⏹1296 💫⚒
 ID_Starting_Tools, 💫⚒ => 🔰 🪓 ⛏ ♠ 🚿 🎣 🔨
 ID_Grass_Regrow, 🟨 🌞 => 🟩
+// ID_Grass_Regrow <=> (🟨 🌞 => 🟩)  // true.  ID_Grass_Regrow is just an alias of the whole function
+// 🟨 🌞 (🟨 🌞 => 🟩) => (🟨 🌞 => 🟩) 🟩  // true. the bracketed part is the function that enables that here.  then the implications are the function enables the rest to be turned to output.  compiler would need to basically apply this twice to figure out...
+// ID_Grass_Regrow: 🟨 🌞 => 🟩 // true.  equivalent to above, : syntax means include the function on both sides (catalyst)
+// ID_Grass_Regrow_Unlocked => ID_Grass_Regrow  // this is how you unlock a recipe from some other conditions.  then that recipe can be applied to ingredients
+
 ID_Hole_Refill, 🕳 🌞 => 🟨
 ID_Hole_Refill_Wet, 🟧🕳 🌞 => 🟧
 

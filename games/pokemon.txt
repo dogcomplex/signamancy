@@ -54,8 +54,8 @@ Special tokens:
 # generalized:
 🆎 <=> ✌ <=> A_or_B_input => 🅰 | 🅱
 🤙 <=> any_directional_input => 👆 | 👇 | 👈 | 👉
-↕🤙 <=> up_or_down_input => 👆 | 👇
-↔🤙 <=> left_or_right_input => 👈 | 👉
+↕ <=> up_or_down_input => 👆 | 👇
+↔ <=> left_or_right_input => 👈 | 👉
 ⏯ <=> start_or_select_input => ⏸ | ▶️
 🔠 <=> any_button_input => 🆎 | ⏯
 ⏩ <=> any_confirmation_input => 🅰 | ⏸

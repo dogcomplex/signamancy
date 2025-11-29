@@ -1,0 +1,35 @@
+{
+  "output": "G:\\LOKI\\LOCUS\\SIGNUM\\signamancy\\signamancy\\SUMMARY\\summaries\\2025-11-29_00-22-22.895_summary_changes.txt",
+  "files": [
+    {
+      "path": ".\\registry.py",
+      "start": 481,
+      "end": 5574,
+      "lang": "python"
+    },
+    {
+      "path": ".\\parser.py",
+      "start": 5600,
+      "end": 12336,
+      "lang": "python"
+    },
+    {
+      "path": ".\\compiler.py",
+      "start": 12362,
+      "end": 19600,
+      "lang": "python"
+    },
+    {
+      "path": ".\\engine.py",
+      "start": 19626,
+      "end": 34854,
+      "lang": "python"
+    },
+    {
+      "path": ".\\__init__.py",
+      "start": 34880,
+      "end": 35403,
+      "lang": "python"
+    }
+  ]
+}

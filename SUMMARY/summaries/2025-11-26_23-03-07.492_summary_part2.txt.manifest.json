@@ -1,0 +1,85 @@
+{
+  "output": "G:\\LOKI\\LOCUS\\SIGNUM\\signamancy\\SUMMARY\\summaries\\2025-11-26_23-03-07.492_summary_part2.txt",
+  "files": [
+    {
+      "path": ".\\games\\farm\\game_state.json",
+      "start": 26,
+      "end": 159314,
+      "lang": "json"
+    },
+    {
+      "path": ".\\games\\farm\\recipes.csv",
+      "start": 159340,
+      "end": 180558,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\recipes.old.csv",
+      "start": 180584,
+      "end": 203864,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\recipes2.csv",
+      "start": 203890,
+      "end": 239962,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\recipes_py.csv",
+      "start": 239988,
+      "end": 261355,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\farm_prompt.txt",
+      "start": 261381,
+      "end": 265836,
+      "lang": ""
+    },
+    {
+      "path": ".\\games\\farm\\farm_gemini_run.txt",
+      "start": 265862,
+      "end": 265934,
+      "lang": "",
+      "decode_error": true
+    },
+    {
+      "path": ".\\engine\\parser.py",
+      "start": 265960,
+      "end": 279731,
+      "lang": "python"
+    },
+    {
+      "path": ".\\engine\\analysis_parser.py",
+      "start": 279757,
+      "end": 282492,
+      "lang": "python"
+    },
+    {
+      "path": ".\\engine\\interpreter.py",
+      "start": 282518,
+      "end": 282581,
+      "lang": "python",
+      "decode_error": true
+    },
+    {
+      "path": ".\\prompts\\analysis_single.md",
+      "start": 282607,
+      "end": 284061,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\prompts\\formatting.md",
+      "start": 284087,
+      "end": 288149,
+      "lang": "markdown"
+    },
+    {
+      "path": ".\\prompts\\valid_operation_by_unit_example.md",
+      "start": 288175,
+      "end": 306017,
+      "lang": "markdown"
+    }
+  ]
+}

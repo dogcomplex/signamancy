@@ -3,54 +3,57 @@ Conversions to computation and presentation forms:
 
 # Base Unit Normalization (to computational form)
 
-# Note to self: if 👨‍🎤 and 🧮 arent present it can get stuck.
+# Note to self: if 🖼 and 🧮 arent present it can get stuck.
+
+🖼 <=> 🖼Presentation_Suitability
+🧮 <=> 🧮Computational_Suitability
 
 # normalize plural:
 🏷_ton  => 🏷_tons 🧮  # neutral on which is more presentable?
-🏷k_ton 👨‍🎤 <=> 🏷k_tons 🧮
-🏷m_ton 👨‍🎤 <=> 🏷m_tons 🧮
-🏷b_ton 👨‍🎤 <=> 🏷b_tons 🧮
+🏷k_ton 🖼 <=> 🏷k_tons 🧮
+🏷m_ton 🖼 <=> 🏷m_tons 🧮
+🏷b_ton 🖼 <=> 🏷b_tons 🧮
 
 # 🏷_tons => 🧮 # ton being the default unit universally?
-🏷_tons  🙂🗿 👨‍🎤  <=>  🙂🗿  🧮  # could be default for 🗿 at least
+🏷_tons  🙂🗿 🖼  <=>  🙂🗿  🧮  # could be default for 🗿 at least
 
-🏷{prefix}/yr 👨‍🎤 <=> 🏷{prefix}  ⏳year  🧮
+🏷{prefix}/yr 🖼 <=> 🏷{prefix}  ⏳year  🧮
 
 # Unit Prefix Normalization
-🔢N 🏷_tons 👨‍🎤 <=> 🔢{N*1000} 🏷_kg 🧮
-🔢N 🏷k_tons 👨‍🎤 <=> 🔢{N*1000} 🏷_tons 🧮
-🔢N 🏷m_tons 👨‍🎤 <=> 🔢{N*1000} 🏷k_tons 🧮
-🔢N 🏷b_tons 👨‍🎤 <=> 🔢{N*1000} 🏷m_tons 🧮
+🔢N 🏷_tons 🖼 <=> 🔢{N*1000} 🏷_kg 🧮
+🔢N 🏷k_tons 🖼 <=> 🔢{N*1000} 🏷_tons 🧮
+🔢N 🏷m_tons 🖼 <=> 🔢{N*1000} 🏷k_tons 🧮
+🔢N 🏷b_tons 🖼 <=> 🔢{N*1000} 🏷m_tons 🧮
 
 # rounding to 1 or 3 units
 # assumes pessimistic (lower is always worse) rounding:
-# KILLS accuracy, so one-way only:
-🔢{N>300 && N<1000} 🧮X => 🔢300 👨‍🎤
-🔢{N>100 && N<300} 🧮X => 🔢100 👨‍🎤
-🔢{N>30 && N<100} 🧮X => 🔢30 👨‍🎤
-🔢{N>10 && N<30} 🧮X => 🔢10 👨‍🎤
-🔢{N>3 && N<10} 🧮X => 🔢3 👨‍🎤
-🔢{N>1 && N<3} 🧮X => 🔢1 👨‍🎤
+# KILLS computational accuracy, so one-way directional only:
+🔢{N>300 && N<1000} 🧮X => 🔢300 🖼
+🔢{N>100 && N<300} 🧮X => 🔢100 🖼
+🔢{N>30 && N<100} 🧮X => 🔢30 🖼
+🔢{N>10 && N<30} 🧮X => 🔢10 🖼
+🔢{N>3 && N<10} 🧮X => 🔢3 🖼
+🔢{N>1 && N<3} 🧮X => 🔢1 🖼
 
 # plural or singular: (bonus style)
-🔢{N==1} 🏷_tons => 🔢1 🏷_ton 👨‍🎤
-🔢{N==1} 🏷k_tons => 🔢1 🏷k_ton 👨‍🎤
-🔢{N==1} 🏷m_tons => 🔢1 🏷m_ton 👨‍🎤
-🔢{N==1} 🏷b_tons => 🔢1 🏷b_ton 👨‍🎤
+🔢{N==1} 🏷_tons => 🔢1 🏷_ton 🖼
+🔢{N==1} 🏷k_tons => 🔢1 🏷k_ton 🖼
+🔢{N==1} 🏷m_tons => 🔢1 🏷m_ton 🖼
+🔢{N==1} 🏷b_tons => 🔢1 🏷b_ton 🖼
 
 
 # test:
-🗿100k_tons :> 🆔1  🔢100  🙂🗿  🏷k_tons  #️⃣27  👨‍🎤2           # 🗿100k_tons  👨‍🎤2
-🔢100  🙂🗿  🏷k_tons 👨‍🎤2 => 🔢100000  🙂🗿  🏷_tons 🧮  👨‍🎤   # 🗿100000_tons 👨‍🎤 🧮
-    by:  🔢N 🏷k_tons 👨‍🎤 <=> 🔢{N*1000} 🏷_tons 🧮
-🔢100000  🙂🗿  🏷_tons 🧮  👨‍🎤 =>  🔢100000  🙂🗿  🧮2        # 🗿100000 🧮2
-    by: 🏷_tons  🙂🗿 👨‍🎤  <=>  🙂🗿  🧮  
-🔢100000  🙂🗿  🧮2   =>  🔢100000  🙂🗿  🏷_tons 🧮  👨‍🎤      # 🗿100000_tons 👨‍🎤 🧮
-    by reverse: 🏷_tons  🙂🗿 👨‍🎤  <=>  🙂🗿  🧮
-🔢100000  🙂🗿  🏷_tons 🧮  👨‍🎤 =>  🔢100  🙂🗿  🏷k_tons 👨‍🎤2  # 🗿100k_tons 👨‍🎤2
-    by reverse:  🔢N 🏷k_tons 👨‍🎤 <=> 🔢{N*1000} 🏷_tons 🧮
+🗿100k_tons :> 🆔1  🔢100  🙂🗿  🏷k_tons  #️⃣27  🖼2           # 🗿100k_tons  🖼2
+🔢100  🙂🗿  🏷k_tons 🖼2 => 🔢100000  🙂🗿  🏷_tons 🧮  🖼   # 🗿100000_tons 🖼 🧮
+    by:  🔢N 🏷k_tons 🖼 <=> 🔢{N*1000} 🏷_tons 🧮
+🔢100000  🙂🗿  🏷_tons 🧮  🖼 =>  🔢100000  🙂🗿  🧮2        # 🗿100000 🧮2
+    by: 🏷_tons  🙂🗿 🖼  <=>  🙂🗿  🧮  
+🔢100000  🙂🗿  🧮2   =>  🔢100000  🙂🗿  🏷_tons 🧮  🖼      # 🗿100000_tons 🖼 🧮
+    by reverse: 🏷_tons  🙂🗿 🖼  <=>  🙂🗿  🧮
+🔢100000  🙂🗿  🏷_tons 🧮  🖼 =>  🔢100  🙂🗿  🏷k_tons 🖼2  # 🗿100k_tons 🖼2
+    by reverse:  🔢N 🏷k_tons 🖼 <=> 🔢{N*1000} 🏷_tons 🧮
 # explanation:  just run greedy conversions towards 🧮 (computational normal form) on initial data til maxed
-# then during display, run greedy conversions towards max 👨‍🎤 (optimal display simplicity).  Can differentiate further for like, accuracy, visual vs text, etc too 
+# then during display, run greedy conversions towards max 🖼 (optimal display simplicity).  Can differentiate further for like, accuracy, visual vs text, etc too 
 # would even work for e.g. emoji encoding vs just text, or custom picture vs emojis
 # as long as we can do greedy search, this scales...
 
@@ -83,9 +86,20 @@ Conversions to computation and presentation forms:
 🗿1_ton  :>  🆔1347  🔢1  🙂🗿  🏷ton  #️⃣3742
 🗿.1_ton  :>  🆔1349  🔢0.1  🙂🗿  🏷ton  #️⃣3747
 
+# when greedy optimizing on 🧮, we can reduce the above down to a single token and quantity:
+🗿{N} :>  🔢{N}  🙂🗿  🏷ton
 
+🗿Concrete_Mixing_Recipe  :>  🆔405  🙂🗿  🏷Concrete_Mixing_Recipe  #️⃣814
+🗿Concrete_Giga_Recipe  :>  🆔411  🙂🗿  🏷Concrete_Giga_Recipe  #️⃣819
+🗿Nullabor_GigaRecipe  :>  🆔416  🙂🗿  🏷Nullabor_GigaRecipe  #️⃣824
+🗿Concrete_Mixing_Plant  :>  🆔493  🙂🗿  🏷Concrete_Mixing_Plant  #️⃣1017
+🗿Concrete_GigaMixer  :>  🆔495  🙂🗿  🏷Concrete_GigaMixer  #️⃣1024
+🗿Nullabor_GigaMixer  :>  🆔496  🙂🗿  🏷Nullabor_GigaMixer  #️⃣1031
+🗿Concrete  :>  🆔1035  🙂🗿  🏷Concrete  #️⃣2806
 
+# Probably takes LLM semantic analysis to recognize this:
 🗿Concrete  <=> 🗿1
+# This could be set by convention:
 🗿1 <=> 🗿
 
 
@@ -93,21 +107,48 @@ Conversions to computation and presentation forms:
 
 
 
+# NOTE:  on emoji indexing:
+🙂🗿 🏷ton  <=> 🙂1 🏷ton  # could probably be done.  this is like marking this emoji as a high priority computational token (due to low index)
+# however we clearly want to do things like:
+🙂🗿 🏷Concrete_Mixing_Recipe <=> 🙂123456 🏷Concrete_Mixing_Recipe 
+# assigning a much lower priority to tokens which happen to use the same emoji but arent as reusable or important
+# referring to the specific 🙂 quantity as the index seems strange here too because it's too vulnerable.  indexes should be like a hash, not a quantity.
+# definitely fine with having a priority though, which could potentially be 🙂123 etc.  buuuut if so it should follow bigger = better.
+# if we used the above, we definitely couldnt allow:  🙂1 🙂2 => 🙂3 since theyre all hashed positions.  so not a great system, as that violates our quantity intuition everywhere else
+# to be fair though, we break that with 🆔 and #️⃣ already too though!  But those are definitely code smells anyway lol
+# maybe 🙂🆔123 ...
+# 🏷123 is bad too for the same reasons, though tends to become a quantity anyway
+
+# main reason for pondering this stuff is ultimately:  every token is just an int index (of its most canonical token form) * (quantity).
+# (or equivalently, a vector of variables with 0 quantities everywhere except 1 at the index position, which has the numeric quantity)
+# while all initial tokens could have their own index, it's pretty wasteful.  we want to reduce them to just the most commonly used ones. (e.g. a single token index for all 🗿 regardless of unit and quantity)
+# I can already sense that is gonna get interesting as multiple sections of tokens start reducing into each other (e.g. 💰 is gonna reduce a lot of stuff to liquidity lol)
+# 
+# Huffman coding is pretty much what we're after for the indexes though, and all we need to calculate those optimally is the frequency of use
+# so I'm tempted to just give each token a 📊1 score by default and increase it per occurrence, then have those combine when e.g. units can be mapped to each other
+# then huffman off that 📊 to get the indexes, and thereafter set those as unchanging
 
 
-Token pessimism mapping (under or over approximating tracking)
+
+
+
+# NOTES:  Token pessimism mapping (under or over approximating tracking)
 
 📉N  # Pessimistic down
 📈N  # Pessimistic up
 
 # Example conversion that preserves pessimistic direction
-🗿N efficiency% => 🗿(100-N) inefficiency% 
+🗿N_efficiency% => 🗿(100-N)_inefficiency% 
 
-🗿N ±M  # Where M represents the pessimistic margin
+🗿N±M  # Where M represents the pessimistic margin
 
 
 
-other format ideas:
+
+
+
+
+# NOTES:  Other format ideas:
 
 # Scientific Notation Format 🔬
 🗿N 🔬=> 🗿(N×10^-E)e{E}_tons    WHERE E = floor(log10(N))
@@ -129,7 +170,7 @@ other format ideas:
 
 #  Notes on :> (Properties):
 
-# I think this is equivalent:
+# I think this is equivalent, when these are the entire list of properties (not equivalent when subset):
 
 🚢Cargo_Ship  :>  📦10k_tons  🏎️30_m/s
 # same as:

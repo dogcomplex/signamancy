@@ -1,0 +1,51 @@
+Let's play a game of Another Farm Roguelike.
+I will show you various screenshots from the game as we play, and you tell me what actions to take.
+We are trying to develop a comprehensive understanding of the game mechanics, and so we'll be taking notes about the perceived rules of the game.
+Each valid rule note will be kept in long-term memory, and can be recalled through various search functions as well as run through MCTS algorithms to develop optimal logical strategies, so long as the rules are correct.  So determining these rules accurately is key.
+Valid rule hypotheses should be written in the form of a rule axiom, which is a state transition rule of the form:
+<Input1><Quantity1> ... <InputN><QuantityN> => <Output1><Quantity1> ... <OutputM><QuantityM>
+
+Where the <input> tokens are consumed and the <output> tokens are produced.
+Quantity is optional, and if not specified, it is assumed to be 1.
+Any valid string can be used as a token except whitespace, though we prefer snake_case strings, and we even more prefer representing tokens as just 1 or more emojis. e.g.: 🌳 or 🌳🍎
+(these can be aliased between short and long forms easily enough like:  Tree <=> 🌳 or AppleTree <=> 🌳🍎)
+<=> is shorthand for a reversible rule, which is a rule that can be applied losslessly in both directions.
+Note that conditional logic can be expressed as a rule with the same token on both sides (like a catalyst).
+All rules should be considered hypotheses until proven beyond reasonable doubt.
+The => default operator should be considered a general hypothesis, and a rules should be written with ==> if you are confident beyond reasonable doubt, used sparingly.
+
+Ideally all game interactions and state transitions should be represented with these rules (e.g. clicking, moving, menus, inventory, etc), though we will mostly be concerned with mapping the resource economy of it.
+
+To set a standard going forward:
+# ACTIONS:
+🖱️ <=> MoveMouseToAnywhere  
+🖱️🌳 <=> MoveMouseToTree
+🖱️🌳🍎 <=> MoveMouseToAppleTree  # etc
+👆 <=> ClickMouseAnywhere
+👆🌳 <=> ClickTree
+👆🌳🍎 <=> ClickAppleTree  # etc
+⬆ <=> MoveCameraUp
+⬇ <=> MoveCameraDown
+➡ <=> MoveCameraRight
+⬅ <=> MoveCameraLeft
+⏹ <=> ToggleMenu
+
+With each screenshot, try to make as many reasonable rule hypotheses as possible, to add to our computational model's understanding of the game mechanics.  We are building a symbolic logic model of the game, and seeking out ways to make it more robust and accurate.
+
+While we are interested in doing this in as few actions as possible, as well as seeking out the best performance in the game as we can, we are also interested in developing a comprehensive understanding of the game mechanics.  This is thus a few-shot learning problem with a focus on discovering and refining symbolic rule induction strategies.
+
+ACTIONS: 
+you may request any set of actions you like (including multiple actions in a row, sequentially).
+You may also request a SCREENSHOT <=> 📸 to capture the current state of the game for you to analyze.
+You may also request a SEARCH <=> 🔍 to search your long-term memory for information about a given token.  e.g. 🔍🌳🍎 will return you a list of all rules containing the token 🌳🍎.
+You may request a SIMULATION <=> 🧠 to run the MCTS algorithm with a greedy search strategy using the rules we've hypothesized so far in search of maximizing the given token.  e.g. 🧠🌳🍎 will return you the chain of rules it found to maximize the 🌳🍎 token from the starting state.
+
+START TOKEN: 🎬
+FINISH TOKEN: 🏁
+Create rules deriving from these to simulate the starting state of the game and the halting state.  (Note, these are for simulating the entire program, not just New Game / Continue Game, Restarts etc.  You're allowed to restart the program as many times as you like, if it is more beneficial for few-shot learning than continuing the current game, but the new game just adds to your total time spent learning.)
+
+You may request a REVIEW <=> 📝 to review the rules we've hypothesized so far in chronological order.
+You may delete a rule with the DELETE <=> 🗑️ action.
+
+In general, try to be efficient with all these actions, and try to learn as much as you can about the game mechanics in a pragmatic useful way without wasting too many actions or spending too long in analysis.  We are playing a game, after all!
+
