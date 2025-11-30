@@ -26,6 +26,9 @@ class BlockKernels:
     inhibitors: SparseMatrixData  # What must be absent (🚫)
     outputs_std: Optional[SparseMatrixData] = None  # StdDev for chaos ranges
     
+    # New: consume-all inputs (X suffix) — subtract entire current value
+    consume_all: Optional[SparseMatrixData] = None
+    
     # For Byte Block only: Unit conversion lookup
     # Maps Token_Local_ID -> Parent_Token_Local_ID
     unit_map: Optional[torch.Tensor] = None 
@@ -71,7 +74,8 @@ class SignamancyCompiler:
                 "in": [[], []], "in_val": [],
                 "out": [[], []], "out_val": [],
                 "out_std": [[], []], "out_std_val": [],
-                "ban": [[], []], "ban_val": []
+                "ban": [[], []], "ban_val": [],
+                "all": [[], []], "all_val": []
             }
             for bt in BlockType
         }
@@ -118,6 +122,12 @@ class SignamancyCompiler:
             ban_mat = self._build_sparse(
                 raw_data[bt]["ban"], raw_data[bt]["ban_val"], (num_rules, block_sizes[bt])
             )
+            # Consume-All Matrix
+            all_mat = None
+            if raw_data[bt]["all_val"]:
+                all_mat = self._build_sparse(
+                    raw_data[bt]["all"], raw_data[bt]["all_val"], (num_rules, block_sizes[bt])
+                )
             
             # Unit Maps (Only for BYTE block)
             unit_map = None
@@ -128,8 +138,9 @@ class SignamancyCompiler:
             final_blocks[bt] = BlockKernels(
                 inputs=in_mat,
                 outputs=out_mat,
-                outputs_std=out_std_mat,
                 inhibitors=ban_mat,
+                outputs_std=out_std_mat,
+                consume_all=all_mat,
                 unit_map=unit_map,
                 overflow_thresholds=overflows
             )
@@ -158,13 +169,18 @@ class SignamancyCompiler:
             std_val = (b - a) / 3.46410161514
             val = mean
 
-        # Determine which matrix (Input, Output, Inhibitor)
+        # Determine which matrix (Input, Output, Inhibitor, Consume-All)
         if is_input:
-            if token.is_inhibitor:
+            if token.consume_all:
+                # Consume-All Matrix (binary flag)
+                data[b_type]["all"][0].append(rule_idx)
+                data[b_type]["all"][1].append(local_id)
+                data[b_type]["all_val"].append(1.0)
+            elif token.is_inhibitor:
                 # Inhibitor Matrix
                 data[b_type]["ban"][0].append(rule_idx)
                 data[b_type]["ban"][1].append(local_id)
-                data[b_type]["ban_val"].append(1.0) # Flag existence
+                data[b_type]["ban_val"].append(1.0)
             else:
                 # Input (Consumption) Matrix
                 data[b_type]["in"][0].append(rule_idx)

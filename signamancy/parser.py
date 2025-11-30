@@ -11,6 +11,10 @@ class ParsedToken:
     is_inhibitor: bool = False 
     is_probability: bool = False
     probability_val: float = 1.0
+    # New flags
+    is_independent: bool = False  # 🎲% marker: independent dice
+    consume_all: bool = False     # X suffix on input: reduce to zero
+    is_bare_probability: bool = False  # Bare '%' without digits
 
 @dataclass
 class Rule:
@@ -37,8 +41,9 @@ class SignamancyParser:
             if not line or line.startswith(("#", "//")):
                 continue
             
-            # Strip comments
-            clean_line = line.split("#")[0].strip()
+            # Strip comments: inline // then #
+            clean_line = line.split("//")[0]
+            clean_line = clean_line.split("#")[0].strip()
             if not clean_line: continue
 
             # Expand sugar (A <=> B, A :> B)
@@ -93,40 +98,133 @@ class SignamancyParser:
         # Parse Inputs
         inputs = [self._parse_token(t) for t in lhs_str.split()]
         
-        # Branching Logic (Handle |)
-        # "A => B | C" -> Splits into two rules with same Exclusion ID
-        branch_groups = rhs_str.split("|")
-        generated_rules = []
+        # If explicit branch groups exist, keep existing branch behavior
+        if "|" in rhs_str:
+            branch_groups = rhs_str.split("|")
+            generated_rules: List[Rule] = []
+            mutex_id = int(hashlib.sha256(line.encode()).hexdigest()[:8], 16) if len(branch_groups) > 1 else None
+            for branch in branch_groups:
+                outputs = [self._parse_token(t) for t in branch.split()]
+                # Branch probability product (legacy behavior)
+                branch_prob = 1.0
+                for out in outputs:
+                    if out.is_probability:
+                        branch_prob *= float(getattr(out, "probability_val", 1.0))
+                requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + outputs)
+                generated_rules.append(Rule(
+                    inputs=inputs,
+                    outputs=outputs,
+                    priority=priority,
+                    mutual_exclusion_id=mutex_id,
+                    probability=branch_prob,
+                    is_init=is_init,
+                    requires_cpu=requires_cpu,
+                    original_text=original
+                ))
+            return generated_rules
         
-        # Generate a deterministic ID for this branch group
-        mutex_id = None
-        if len(branch_groups) > 1:
-            mutex_id = int(hashlib.sha256(line.encode()).hexdigest()[:8], 16)
-
-        for branch in branch_groups:
-            outputs = [self._parse_token(t) for t in branch.split()]
-            
-            # Calculate Branch Probability
-            # If tokens have probabilities (Apple%50 or Apple_1-3%50), extract to rule level
-            branch_prob = 1.0
-            for out in outputs:
-                if out.is_probability:
-                    branch_prob *= float(getattr(out, "probability_val", 1.0))
-
-            # CPU Check (Simple Heuristic)
-            requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + outputs)
-
+        # No explicit '|': apply recipes.csv semantics
+        raw_outputs = [self._parse_token(t) for t in rhs_str.split()]
+        
+        independent = [o for o in raw_outputs if o.is_probability and getattr(o, "is_independent", False)]
+        linked = [o for o in raw_outputs if o.is_probability and not getattr(o, "is_independent", False)]
+        nonprob = [o for o in raw_outputs if not o.is_probability]
+        generated_rules: List[Rule] = []
+        
+        # 1) Independent tokens => separate rules, each with its own probability
+        for out in independent:
+            # Reset quantity to 1 for production
+            out_i = ParsedToken(token_id=out.token_id, quantity=1.0)
+            requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + [out_i])
             generated_rules.append(Rule(
                 inputs=inputs,
-                outputs=outputs,
+                outputs=[out_i],
                 priority=priority,
-                mutual_exclusion_id=mutex_id,
-                probability=branch_prob,
+                mutual_exclusion_id=None,
+                probability=float(getattr(out, "probability_val", 1.0)),
                 is_init=is_init,
                 requires_cpu=requires_cpu,
                 original_text=original
             ))
-            
+        
+        # 2) Linked % tokens => one-of group (with implicit remainder no-op)
+        if len(linked) >= 2:
+            explicit = [o for o in linked if not getattr(o, "is_bare_probability", False)]
+            bare = [o for o in linked if getattr(o, "is_bare_probability", False)]
+            sum_p = sum(float(getattr(o, "probability_val", 0.0)) for o in explicit)
+            mutex_id = int(hashlib.sha256((line+"__linked").encode()).hexdigest()[:8], 16)
+            # Renormalize if >1.0
+            renorm = 1.0
+            if sum_p > 1.0 and sum_p > 0:
+                renorm = 1.0 / sum_p
+            # Explicit probabilities
+            for out in explicit:
+                p = float(getattr(out, "probability_val", 0.0)) * renorm
+                out_l = ParsedToken(token_id=out.token_id, quantity=1.0)
+                requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + [out_l] + nonprob)
+                generated_rules.append(Rule(
+                    inputs=inputs,
+                    outputs=[out_l] + nonprob,
+                    priority=priority,
+                    mutual_exclusion_id=mutex_id,
+                    probability=p,
+                    is_init=is_init,
+                    requires_cpu=requires_cpu,
+                    original_text=original
+                ))
+            # Bare probabilities share remainder equally
+            remainder = max(0.0, 1.0 - sum_p)
+            share = (remainder / len(bare)) if bare else 0.0
+            for out in bare:
+                if share <= 0:
+                    continue
+                out_l = ParsedToken(token_id=out.token_id, quantity=1.0)
+                requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + [out_l] + nonprob)
+                generated_rules.append(Rule(
+                    inputs=inputs,
+                    outputs=[out_l] + nonprob,
+                    priority=priority,
+                    mutual_exclusion_id=mutex_id,
+                    probability=share,
+                    is_init=is_init,
+                    requires_cpu=requires_cpu,
+                    original_text=original
+                ))
+            if (sum_p < 1.0) and not bare:
+                # Implicit no-op branch
+                requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs)
+                generated_rules.append(Rule(
+                    inputs=inputs,
+                    outputs=[],
+                    priority=priority,
+                    mutual_exclusion_id=mutex_id,
+                    probability=(1.0 - sum_p),
+                    is_init=is_init,
+                    requires_cpu=requires_cpu,
+                    original_text=original
+                ))
+            return generated_rules
+        
+        # 3) Fallback: single rule (possibly with a single % gating all outputs)
+        branch_prob = 1.0
+        outputs = []
+        for out in raw_outputs:
+            if out.is_probability and not getattr(out, "is_independent", False):
+                branch_prob *= float(getattr(out, "probability_val", 1.0))
+                outputs.append(ParsedToken(token_id=out.token_id, quantity=1.0))
+            else:
+                outputs.append(out)
+        requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + outputs)
+        generated_rules.append(Rule(
+            inputs=inputs,
+            outputs=outputs,
+            priority=priority,
+            mutual_exclusion_id=None,
+            probability=branch_prob,
+            is_init=is_init,
+            requires_cpu=requires_cpu,
+            original_text=original
+        ))
         return generated_rules
 
     def _parse_token(self, token_str: str) -> ParsedToken:
@@ -140,32 +238,65 @@ class SignamancyParser:
         symbol = symbol.rstrip("_").strip()
         is_inhibitor = bool(inhibitor_char)
 
+        # Preserve keycap digits as part of symbol: move leading keycap cluster from quantity back to symbol
+        # Matches sequences like '🔟' or '1\uFE0F\u20E3' at the start of quant_str
+        keycap_match = re.match(r'^(?:\U0001F51F|[0-9]\uFE0F\u20E3)+', quant_str)
+        if keycap_match:
+            symbol = (symbol + keycap_match.group(0)).strip()
+            quant_str = quant_str[keycap_match.end():]
+
         # Extract optional probability suffix like "%20" even if combined with ranges
         prob_val = 1.0
         is_prob = False
+        is_bare = False
         if "%" in quant_str:
-            # Find last %number pattern
             m = re.search(r"%(?P<pct>-?\d+(?:\.\d+)?)\s*$", quant_str)
             if m:
                 try:
                     prob_val = float(m.group("pct")) / 100.0
                     is_prob = True
-                    # Remove the matched probability from quant_str before parsing quantity
                     quant_str = quant_str[:m.start()] + quant_str[m.end():]
                 except:
                     pass
+            else:
+                # Bare % (equal-share in linked groups)
+                is_prob = True
+                is_bare = True
+                # strip the trailing % for quantity parsing
+                quant_str = quant_str.replace("%", "").strip()
+        else:
+            is_bare = False
+        
+        # Independent marker: leading 🎲 combined with %
+        is_indep = False
+        if is_prob and symbol.startswith("🎲"):
+            is_indep = True
+            symbol = symbol[1:].strip()
+        
+        # All-of consumption marker: trailing X on symbol (inputs only)
+        consume_all = False
+        if symbol.endswith("X"):
+            consume_all = True
+            symbol = symbol[:-1].strip()
         
         # Quantity Parsing (remaining part may be empty or a range/number)
         quantity = self._parse_quantity(quant_str)
         
         # Type Inference
         is_range = isinstance(quantity, tuple)
-        
         type_hint = BlockType.BYTE
         if is_range or is_prob or (isinstance(quantity, float) and quantity % 1 != 0):
             type_hint = BlockType.FLOAT
-        elif quantity == 1 and not is_inhibitor:
-            type_hint = BlockType.BIT # Optimistic BIT hint
+        else:
+            # Escalate to FLOAT if large integral quantity
+            try:
+                qv = float(quantity)
+                if qv >= 256 and abs(qv - round(qv)) < 1e-9:
+                    type_hint = BlockType.FLOAT
+            except:
+                pass
+            if quantity == 1 and not is_inhibitor:
+                type_hint = BlockType.BIT
             
         token_id = self.registry.register(symbol, type_hint)
         
@@ -178,15 +309,25 @@ class SignamancyParser:
             quantity=quantity,
             is_inhibitor=is_inhibitor,
             is_probability=is_prob,
-            probability_val=prob_val
+            probability_val=prob_val,
+            is_independent=is_indep,
+            consume_all=consume_all,
+            is_bare_probability=is_bare
         )
 
     def _parse_quantity(self, q_str: str) -> Union[float, Tuple[float, float]]:
         if not q_str: return 1.0
         q_str = q_str.replace("_", "")
         
+        # Probability literal only if '%' is followed by digits
         if "%" in q_str:
-            return float(q_str.replace("%", "")) / 100.0
+            m = re.search(r"%(?P<pct>-?\d+(?:\.\d+)?)\s*$", q_str)
+            if m:
+                return float(m.group("pct")) / 100.0
+            # Bare '%' (no digits): ignore probability, treat as no quantity
+            q_str = q_str.replace("%", "").strip()
+            if not q_str:
+                return 1.0
         
         if "-" in q_str:
             try:

@@ -81,6 +81,7 @@ class SignamancyEngine:
                 "ban": upload(block_kernel.inhibitors),
                 "unit_map": block_kernel.unit_map.to(self.device) if block_kernel.unit_map is not None else None,
                 "thresholds": block_kernel.overflow_thresholds.to(self.device) if getattr(block_kernel, "overflow_thresholds", None) is not None else None,
+                "all": upload(getattr(block_kernel, "consume_all", None)),
             }
             
         # Rule Meta: [Priority, Probability, MutexID, CPU_Flag]
@@ -281,6 +282,14 @@ class SignamancyEngine:
                 std_agg = torch.sparse.mm(k["out_std"]["mat"].t(), fired_f.t()).t()
                 noise = torch.randn_like(std_agg)
                 delta += (noise * std_agg * self.cfg.temperature)
+
+            # 2b. Consume-All (reduce to zero) — subtract current value once if any such rule fired
+            if k["all"] is not None:
+                # counts_per_token = (consume_all_map.T @ fired.T).T -> [B, Tokens]
+                counts = torch.sparse.mm(k["all"]["mat"].t(), fired_f.t()).t()
+                mask = (counts > 0).float()
+                current_state = self.state[bt].float()
+                delta -= (current_state * mask)
             
             # 3. Apply
             # Note: BIT/BYTE stored as int, but math is float. Cast back.
@@ -295,7 +304,8 @@ class SignamancyEngine:
                 # Clamp immediately
                 self.state[bt] = torch.clamp(new_val, -1, 1).to(torch.int8)
             else:
-                self.state[bt] = new_val
+                # FLOAT: prevent negative due to noise or updates
+                self.state[bt] = torch.clamp(new_val, min=0)
 
     def _resolve_physics(self):
         """
