@@ -14,6 +14,12 @@ class SimulationConfig:
     # Thermodynamics
     temperature: float = 1.0  # Multiplier for probability/variance
     max_physics_substeps: int = 10
+    
+    # Debug/logging
+    enable_priority_logging: bool = False
+    priority_log_limit: int = 50
+    priority_log_path: str | None = None
+    log_same_base_ties: bool = False
 
 class SignamancyEngine:
     """
@@ -30,9 +36,24 @@ class SignamancyEngine:
         self.device = torch.device(self.cfg.device)
         
         self.state: Dict[BlockType, torch.Tensor] = {}
+        self.rule_biases: torch.Tensor | None = None
+        self.priority_tie_events: int = 0
+        self.priority_tie_samples: list[list[int]] = []
+        self.rule_ids: list[str] | None = None
         self.cpu_callbacks = {}
         self._init_memory()
         self._upload_kernels()
+        # Initialize per-rule biases (default zeros = no effect)
+        self.rule_biases = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
+
+    def set_rule_biases(self, biases: torch.Tensor | None):
+        if biases is None:
+            self.rule_biases = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
+        else:
+            b = biases.to(self.device).float()
+            if b.shape[-1] != self.num_rules:
+                raise ValueError("rule_biases length must equal num_rules")
+            self.rule_biases = b
 
     def register_cpu_callback(self, rule_idx: int, callback):
         self.cpu_callbacks[rule_idx] = callback
@@ -180,12 +201,61 @@ class SignamancyEngine:
     def _resolve_conflicts(self, valid: torch.Tensor) -> torch.Tensor:
         bs = self.cfg.batch_size
         
-        # 1. Base Probability Check (temperature-scaled via logits)
-        base_probs = self.rule_meta[:, 1]
+        # 1. Base Probability Check (with Temperature scaling via logits and optional biases)
+        base_probs = self.rule_meta[:, 1]  # [Rules]
         eps = 1e-9
         logits = torch.log(base_probs + eps) - torch.log(1.0 - base_probs + eps)
-        scaled_logits = logits / max(self.cfg.temperature, eps)
+        bias = self.rule_biases if self.rule_biases is not None else 0.0
+        scaled_logits = (logits + bias) / max(self.cfg.temperature, eps)
         probs = torch.sigmoid(scaled_logits).unsqueeze(0).expand(bs, -1)
+        
+        # 1b. Strict priority enforcement: only rules at the max priority per universe can fire
+        priorities = self.rule_meta[:, 0].to(self.device)  # [Rules]
+        # valid mask is [B, R]
+        # max priority per batch row
+        max_prio = (valid.float() * priorities.unsqueeze(0)).amax(dim=1)  # [B]
+        prio_mask = (priorities.unsqueeze(0) == max_prio.unsqueeze(1))  # [B, R]
+        prior_valid = valid & prio_mask
+        if self.cfg.enable_priority_logging:
+            tie_counts = prior_valid.sum(dim=1)
+            num_ties = int((tie_counts > 1).sum().item())
+            if num_ties > 0:
+                self.priority_tie_events += num_ties
+                # Append to logfile with per-row samples
+                try:
+                    path = self.cfg.priority_log_path if getattr(self.cfg, "priority_log_path", "") else "priority_ties.log"
+                    with open(path, "a", encoding="utf-8") as f:
+                        collapsed = 0
+                        if len(self.priority_tie_samples) < self.cfg.priority_log_limit:
+                            rows = torch.nonzero(tie_counts > 1, as_tuple=False).squeeze(1)[: (self.cfg.priority_log_limit - len(self.priority_tie_samples))]
+                            for r in rows.tolist():
+                                idxs = torch.nonzero(prior_valid[r], as_tuple=False).squeeze(1).tolist()
+                                # Collapse by CSV ID base (split at '#') when available
+                                names = [self.rule_ids[i] for i in idxs] if (self.rule_ids and len(self.rule_ids) == self.num_rules) else None
+                                if names:
+                                    bases = [n.split('#')[0] for n in names]
+                                    unique_bases = sorted(set(bases))
+                                    # Skip if all belong to the same base (these are one-of branches of the same rule)
+                                    if len(unique_bases) <= 1:
+                                        collapsed += 1
+                                        if not self.cfg.log_same_base_ties:
+                                            continue
+                                    # Group indices per base for clarity
+                                    base_to_idxs = {}
+                                    for i, b in zip(idxs, bases):
+                                        base_to_idxs.setdefault(b, []).append(i)
+                                    pr = int(max_prio[r].item())
+                                    f.write(f" row={r} max_prio={pr} bases={unique_bases} groups={base_to_idxs}\n")
+                                else:
+                                    # No IDs available; log raw indices
+                                    pr = int(max_prio[r].item())
+                                    self.priority_tie_samples.append(idxs)
+                                    f.write(f" row={r} max_prio={pr} rules={idxs}\n")
+                        # Write aggregate only if actionable ties exist, or if explicitly logging same-base ties
+                        if self.cfg.log_same_base_ties or (num_ties - collapsed) > 0:
+                            f.write(f"ties={num_ties} max_prio_mean={max_prio.mean().item():.3f} collapsed_rows={collapsed}\n")
+                except Exception:
+                    pass
         
         # 2. Handle Mutual Exclusion (One-Of)
         # MutexID is in Col 2. 0 means "Independent".
@@ -196,7 +266,7 @@ class SignamancyEngine:
         
         # Independent Rules: Just roll dice
         rand = torch.rand_like(probs)
-        independent_fired = valid & (rand < probs) & (~is_mutex.unsqueeze(0))
+        independent_fired = prior_valid & (rand < probs) & (~is_mutex.unsqueeze(0))
         
         # Mutex Rules: Gumbel-Max (on temperature-scaled logits)
         # We need to group by MutexID and pick ArgMax(LogProb + Gumbel)
@@ -222,16 +292,16 @@ class SignamancyEngine:
             
             # Filter valid rules in this group
             # [Batch, Rules]
-            group_valid = valid & group_mask
+            group_valid = prior_valid & group_mask
             
             # If no rules in the group are valid for a universe, none fire.
-            # Calculate Scores: log(weight) + Gumbel
-            # Add -inf to invalid rules to prevent selection
+            # Calculate Scores: Scaled Logits + Gumbel
+            # Add -1e9 to invalid rules to prevent selection
             
-            group_weights = weights_t.unsqueeze(0).expand(bs, -1) * group_mask.float()  # [B, R]
-            gumbel = -torch.log(-torch.log(torch.rand_like(group_weights)))
-            
-            scores = torch.log(group_weights + 1e-9) + gumbel
+            # Use precomputed scaled logits (per rule), broadcast to batch
+            base_group_logits = scaled_logits.unsqueeze(0).expand(bs, -1)
+            gumbel = -torch.log(-torch.log(torch.rand_like(base_group_logits)))
+            scores = base_group_logits + gumbel
             # Mask out invalid
             scores = scores.masked_fill(~group_valid, -float('inf'))
             # Mask out non-group
@@ -250,8 +320,11 @@ class SignamancyEngine:
             real_fire_mask = has_valid
             
             mutex_fired[rows[real_fire_mask], cols[real_fire_mask]] = True
-
+        
         return independent_fired | mutex_fired
+
+    def get_priority_tie_stats(self):
+        return {"events": self.priority_tie_events, "samples": self.priority_tie_samples}
       
     
     def _apply_updates(self, fired: torch.Tensor):
