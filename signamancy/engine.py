@@ -36,7 +36,8 @@ class SignamancyEngine:
         self.device = torch.device(self.cfg.device)
         
         self.state: Dict[BlockType, torch.Tensor] = {}
-        self.rule_biases: torch.Tensor | None = None
+        self.rule_biases_static: torch.Tensor | None = None
+        self.rule_biases_dyn: torch.Tensor | None = None
         self.priority_tie_events: int = 0
         self.priority_tie_samples: list[list[int]] = []
         self.rule_ids: list[str] | None = None
@@ -44,16 +45,40 @@ class SignamancyEngine:
         self._init_memory()
         self._upload_kernels()
         # Initialize per-rule biases (default zeros = no effect)
-        self.rule_biases = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
+        self.rule_biases_static = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
+        self.rule_biases_dyn = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
 
     def set_rule_biases(self, biases: torch.Tensor | None):
+        # Sets static component (e.g., ♥ID_*)
         if biases is None:
-            self.rule_biases = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
+            self.rule_biases_static = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
         else:
             b = biases.to(self.device).float()
             if b.shape[-1] != self.num_rules:
                 raise ValueError("rule_biases length must equal num_rules")
-            self.rule_biases = b
+            self.rule_biases_static = b
+
+    def reset_policy_dyn(self):
+        self.rule_biases_dyn = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
+
+    def apply_token_desires(self, desires_per_block: dict, gain: float = 1.0):
+        # desires_per_block: {BlockType: 1D tensor [tokens_in_block] of log-desires}
+        total = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
+        for bt, k in self.gpu_blocks.items():
+            if k is None:
+                continue
+            logd = desires_per_block.get(bt)
+            if logd is None:
+                continue
+            logd = logd.to(self.device).float()
+            outv = torch.zeros_like(total)
+            inv = torch.zeros_like(total)
+            if k.get("out_mean") and k["out_mean"]["mat"] is not None:
+                outv = torch.sparse.mm(k["out_mean"]["mat"], logd.unsqueeze(1)).squeeze(1)
+            if k.get("in") and k["in"]["mat"] is not None:
+                inv = torch.sparse.mm(k["in"]["mat"], logd.unsqueeze(1)).squeeze(1)
+            total = total + (outv - inv)
+        self.rule_biases_dyn = total * float(gain)
 
     def register_cpu_callback(self, rule_idx: int, callback):
         self.cpu_callbacks[rule_idx] = callback
@@ -205,7 +230,9 @@ class SignamancyEngine:
         base_probs = self.rule_meta[:, 1]  # [Rules]
         eps = 1e-9
         logits = torch.log(base_probs + eps) - torch.log(1.0 - base_probs + eps)
-        bias = self.rule_biases if self.rule_biases is not None else 0.0
+        bias_static = self.rule_biases_static if self.rule_biases_static is not None else 0.0
+        bias_dyn = self.rule_biases_dyn if self.rule_biases_dyn is not None else 0.0
+        bias = bias_static + bias_dyn
         scaled_logits = (logits + bias) / max(self.cfg.temperature, eps)
         probs = torch.sigmoid(scaled_logits).unsqueeze(0).expand(bs, -1)
         
