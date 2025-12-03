@@ -1,5 +1,6 @@
 from typing import Dict, List, Tuple
 import torch
+import hashlib
 
 from signamancy.engine import SignamancyEngine
 from signamancy.registry import TokenRegistry, BlockType
@@ -144,4 +145,20 @@ class ReachabilityAnalyzer:
             rid = idx_to_id.get(i, f"Rule#{i}")
             names.append(rid)
         return names
+
+
+def presence_fingerprint(engine: SignamancyEngine) -> str:
+    """Compute a boolean presence fingerprint across all blocks and return a short hex digest."""
+    h = hashlib.sha1()
+    for bt in BlockType:
+        state = engine.state[bt].float()
+        present = (state.mean(dim=0) > 0.0).to(torch.uint8).cpu().numpy().tobytes()
+        h.update(present)
+    return h.hexdigest()
+
+
+def compute_guide_mask(engine: SignamancyEngine, registry: TokenRegistry, max_iters: int = 8, strict_priority: bool = True) -> torch.Tensor:
+    ra = ReachabilityAnalyzer(engine, registry)
+    dead = ra.compute_dead_rules(max_iters=max_iters, strict_priority=strict_priority)
+    return dead.cpu()
 

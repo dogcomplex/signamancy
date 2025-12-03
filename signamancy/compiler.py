@@ -25,6 +25,8 @@ class BlockKernels:
     outputs: SparseMatrixData     # What is produced
     inhibitors: SparseMatrixData  # What must be absent (🚫)
     outputs_std: Optional[SparseMatrixData] = None  # StdDev for chaos ranges
+    # Net outputs = outputs - inputs (for fused update)
+    outputs_net: Optional[SparseMatrixData] = None
     
     # New: consume-all inputs (X suffix) — subtract entire current value
     consume_all: Optional[SparseMatrixData] = None
@@ -112,6 +114,8 @@ class SignamancyCompiler:
             out_mat = self._build_sparse(
                 raw_data[bt]["out"], raw_data[bt]["out_val"], (num_rules, block_sizes[bt])
             )
+            # Net Output Matrix (out - in) for fused update
+            out_net_mat = self._build_net(out_mat, in_mat)
             # Output StdDev Matrix (optional)
             out_std_mat = None
             if raw_data[bt]["out_std_val"]:
@@ -140,6 +144,7 @@ class SignamancyCompiler:
                 outputs=out_mat,
                 inhibitors=ban_mat,
                 outputs_std=out_std_mat,
+                outputs_net=out_net_mat,
                 consume_all=all_mat,
                 unit_map=unit_map,
                 overflow_thresholds=overflows
@@ -202,6 +207,34 @@ class SignamancyCompiler:
         if not values:
             return SparseMatrixData(shape=shape)
         return SparseMatrixData(indices=indices, values=values, shape=shape)
+
+    def _build_net(self, out_mat: SparseMatrixData, in_mat: SparseMatrixData) -> Optional[SparseMatrixData]:
+        """
+        Build net = outputs - inputs at the same (rule, token) coordinates.
+        """
+        if out_mat.shape == (0, 0) and in_mat.shape == (0, 0):
+            return None
+        shape = out_mat.shape if out_mat.shape != (0, 0) else in_mat.shape
+        # Accumulate values into a dict keyed by (row, col)
+        acc: Dict[Tuple[int, int], float] = {}
+        if out_mat.values:
+            for r, c, v in zip(out_mat.indices[0], out_mat.indices[1], out_mat.values):
+                acc[(int(r), int(c))] = acc.get((int(r), int(c)), 0.0) + float(v)
+        if in_mat.values:
+            for r, c, v in zip(in_mat.indices[0], in_mat.indices[1], in_mat.values):
+                acc[(int(r), int(c))] = acc.get((int(r), int(c)), 0.0) - float(v)
+        # Prune near-zero entries
+        idx0: List[int] = []
+        idx1: List[int] = []
+        vals: List[float] = []
+        for (r, c), v in acc.items():
+            if abs(v) > 1e-12:
+                idx0.append(r)
+                idx1.append(c)
+                vals.append(v)
+        if not vals:
+            return SparseMatrixData(shape=shape)
+        return SparseMatrixData(indices=[idx0, idx1], values=vals, shape=shape)
 
 
     def _build_byte_lookups(self, size: int) -> Tuple[torch.Tensor, torch.Tensor]:

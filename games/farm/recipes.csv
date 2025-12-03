@@ -2,7 +2,7 @@ ID,Recipe
 
 
 // INIT
-ID_Start, 💫 => 🏦1️⃣ ☀ ☀1️⃣ ⏹1296 🔰 🪓 ⛏ ♠ 🚿 🎣 🔨
+ID_Start, 💫 => 🏦1️⃣ ☀ ☀7️⃣ ⏹1296 🔰 🪓 ⛏ ♠ 🚿 🎣 🔨
 
 ID_Grid_Spawn,❗ ⏹ => 🟩%24.5 🟦%5 🌳%10 🌳🍎%10 🌳🍊%10 🍀%5 🍀🍇%5 🍀🍎%5 🍀🍊%5 ⛰️%2 ⛰️⛰️%2 ⛰️🖤%2 ⛰️🥉%2 ⛰️🥈%2 ⛰️🥇%1 🗻%2 🗻🖤%2 🗻🥉%2 🗻🥈%2 🗻🥇%0.5
 ID_Grid_Spawn_10,❗2 ⏹10 => 🟩10%24.5 🟦10%5 🌳10%10 🌳🍎10%10 🌳🍊10%10 🍀10%5 🍀🍇10%5 🍀🍎10%5 🍀🍊10%5 ⛰️10%2 ⛰️⛰️10%2 ⛰️🖤10%2 ⛰️🥉10%2 ⛰️🥈10%2 ⛰️🥇10%1 🗻10%2 🗻🖤10%2 🗻🥉10%2 🗻🥈10%2 🗻🥇10%0.5
@@ -11,24 +11,24 @@ ID_Grid_Spawn_100,❗3 ⏹100 => 🟩100%24.5 🟦100%5 🌳100%10 🌳🍎100%1
 
 // Environment effects
 ID_Grass_Regrow, ❗ 🟨 🌛 => 🟩%10 🟨💤%90
-ID_Grass_Regrow_Day, ❗10 🟨💤 🌞 => 🟨
-ID_Hole_Refill, ❗  🕳 🌛 => 🟨%10 🕳💤%90
-ID_Hole_Refill_Day, ❗11 🕳💤 🌞 => 🕳
+ID_Grass_Regrow_Day, ❗40 🟨💤 🌞 => 🟨
+ID_Hole_Refill, ❗39  🕳 🌛 => 🟨%10 🕳💤%90
+ID_Hole_Refill_Day, ❗43 🕳💤 🌞 => 🕳
 ID_Hole_Refill_Wet, ❗  🟧🕳 🌛 => 🟧%10 🟧🕳💤%90
-ID_Hole_Refill_Wet_Day, ❗12 🟧🕳💤 🌞 => 🟧🕳
+ID_Hole_Refill_Wet_Day, ❗42 🟧🕳💤 🌞 => 🟧🕳
 
 
 ID_Fish_Tick,❗5 🎣🎯 => 🐟%10 🐠%8 🐡%6 🦀%4 🦐%2 🦈%1
 
 // Day/Night.  Ending the day is a user action, but the night cycle is automated.
 ID_Day, 💧X ❎X 💳X 🛒X 🌛X ☀ => 🌙 🌞9999 💧225 🛒
-ID_Monday_Night, ❗2 🌙 🌞X ☀1️⃣ => ☀ ☀2️⃣ 🌛9999
-ID_Tuesday_Night, ❗2 🌙 🌞X ☀2️⃣ => ☀ ☀3️⃣ ⭐🎲 🌛9999
-ID_Wednesday_Night, ❗2 🌙 🌞X ☀3️⃣ => ☀ ☀4️⃣ 🌛9999
-ID_Thursday_Night, ❗2 🌙 🌞X ☀4️⃣ => ☀ ☀5️⃣ ⭐🎲 🌛9999
-ID_Friday_Night, ❗2 🌙 🌞X ☀5️⃣ => ☀ ☀6️⃣ 🌛9999
-ID_Saturday_Night, ❗2 🌙 🌞X ☀6️⃣ 🏦 => ☀ ☀7️⃣ 🌛9999
-ID_Sunday_Night, ❗2 🌙 🌞X ☀7️⃣ => ☀ ☀1️⃣ 📅 🌛9999
+ID_Monday_Night, ❗30 🌙 🌞X ☀1️⃣ => ☀ ☀2️⃣ 🌛9999
+ID_Tuesday_Night, ❗30 🌙 🌞X ☀2️⃣ => ☀ ☀3️⃣ ⭐🎲 🌛9999
+ID_Wednesday_Night, ❗30 🌙 🌞X ☀3️⃣ => ☀ ☀4️⃣ 🌛9999
+ID_Thursday_Night, ❗30 🌙 🌞X ☀4️⃣ => ☀ ☀5️⃣ ⭐🎲 🌛9999
+ID_Friday_Night, ❗30 🌙 🌞X ☀5️⃣ => ☀ ☀6️⃣ 🌛9999
+ID_Saturday_Night, ❗30 🌙 🌞X ☀6️⃣ 🏦 => ☀ ☀7️⃣ 🌛9999
+ID_Sunday_Night, ❗30 🌙 🌞X ☀7️⃣ => ☀ ☀1️⃣ 📅 🌛9999
 
 ID_Rent1, ❗ 🏦1️⃣ 💰1000 => 🏦 🏦2️⃣ 👑
 ID_Rent2, ❗ 🏦2️⃣ 💰2500 => 🏦 🏦3️⃣ 👑
@@ -47,7 +47,16 @@ ID_Rent14, ❗ 🏦🔟4️⃣ 💰10240000 => 🏦 🏦🔟5️⃣ 👑
 ID_Rent15, ❗ 🏦🔟5️⃣ 💰20480000 => 🏦 🏦🔟6️⃣ 👑
 
 
-ID_Shop_Stock, ❗3 🛒 => 💳8-80
+ID_Shop_Stock, ❗20 🛒 => 💳8-80
+
+ID_Stock_Item, ❗8 💳 => 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳%
+ID_Stock_Item_10, ❗11 💳 => 🌱💜💳10% 🌱🥕💳10% 🌱❤💳10% 🌱🥬💳10% 🌱💚💳10% 🌱🤍💳10% 🌱🎃💳10% 🌱🥔💳10% 🌱🍒💳10% 🌱🌻💳10% 🌱🌾💳10% 🤎💳10% 🥌💳10% 🖤💳10% 🥉💳10% 🥈💳10% 🥇💳10% 🐄💳10% 🐔💳10% 🐑💳10% 🐖💳10%
+
+ID_Shop_Reroll,💰100 🌱💜💳X 🌱🥕💳X 🌱❤💳X 🌱🥬💳X 🌱💚💳X 🌱🤍💳X 🌱🎃💳X 🌱🥔💳X 🌱🍒💳X 🌱🌻💳X 🌱🌾💳X 🤎💳X 🥌💳X 🖤💳X 🥉💳X 🥈💳X 🥇💳X 🐄💳X 🐔💳X 🐑💳X 🐖💳X => 🛒
+
+ID_Feat_Roll,❗10 ⭐🎲 ⭐💳💪X ⭐💳🍎X ⭐💳⛏X ⭐💳🐄X ⭐💳🙆‍♂️X ⭐💳X ⭐X => ⭐💳3 ⭐
+ID_Feat_Stock,❗9 ⭐💳 => ⭐💳💪%20 ⭐💳🍎%20 ⭐💳⛏%20 ⭐💳🐄%20 ⭐💳🙆‍♂️%20
+
 
 ID_Chop_Axe,🪓 💧4 => 🪓 🪓🎯
 ID_Chop_Axe_Copper,🪓🥉 💧3 => 🪓🥉 🪓🎯
@@ -369,12 +378,6 @@ ID_Buy_Sheep,🐑💳 💰200 => 🐑
 ID_Buy_Pig,🐖💳 💰200 => 🐖
 
 
-ID_Stock_Item, ❗2 💳 => 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳%
-ID_Shop_Reroll,💰100 🌱💜💳X 🌱🥕💳X 🌱❤💳X 🌱🥬💳X 🌱💚💳X 🌱🤍💳X 🌱🎃💳X 🌱🥔💳X 🌱🍒💳X 🌱🌻💳X 🌱🌾💳X 🤎💳X 🥌💳X 🖤💳X 🥉💳X 🥈💳X 🥇💳X 🐄💳X 🐔💳X 🐑💳X 🐖💳X => 🛒
-
-ID_Feat_Roll,❗ ⭐🎲 ⭐💳💪X ⭐💳🍎X ⭐💳⛏X ⭐💳🐄X ⭐💳🙆‍♂️X ⭐💳X ⭐X => ⭐💳3 ⭐
-ID_Feat_Stock,❗ ⭐💳 => ⭐💳💪%20 ⭐💳🍎%20 ⭐💳⛏%20 ⭐💳🐄%20 ⭐💳🙆‍♂️%20
-
 ID_Buy_Feat_Steroids,⭐💳💪 ⭐💳🍎X ⭐💳⛏X ⭐💳🐄X ⭐💳🙆‍♂️X ⭐X ⭐💳X => ⭐💪
 ID_Buy_Feat_Fruit_Expert,⭐💳🍎 ⭐💳💪X ⭐💳⛏X ⭐💳🐄X ⭐💳🙆‍♂️X ⭐X ⭐💳X => ⭐🍎
 ID_Buy_Feat_Miner,⭐💳⛏ ⭐💳💪X ⭐💳🍎X ⭐💳🐄X ⭐💳🙆‍♂️X ⭐X ⭐💳X => ⭐⛏
@@ -388,9 +391,12 @@ ID_Feat_Fruit_Expert_Sell_Apple,⭐🍎 🍎 => ⭐🍎 💰10-20
 
 ID_Feat_Lazy_Miner, ❗5 ⭐⛏ 🛒 => ⭐⛏ 💳16-160
 ID_Feat_Lazy_Miner_Stock_Item, ❗5 ⭐⛏ 💳 =>⭐⛏ 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳% 🖤💳% 🥉💳% 🥈💳% 🥇💳% 
+ID_Feat_Lazy_Miner_Stock_Item_10, ❗6 ⭐⛏ 💳 =>⭐⛏ 🌱💜💳10% 🌱🥕💳10% 🌱❤💳10% 🌱🥬💳10% 🌱💚💳10% 🌱🤍💳10% 🌱🎃💳10% 🌱🥔💳10% 🌱🍒💳10% 🌱🌻💳10% 🌱🌾💳10% 🤎💳10% 🥌💳10% 🖤💳10% 🥉💳10% 🥈💳10% 🥇💳10% 
 
 ID_Feat_Animal_Lover, ❗6 ⭐🐄 🛒 => ⭐🐄 💳16-160
 ID_Feat_Animal_Lover_Stock_Item, ❗6 ⭐🐄 💳 => ⭐🐄 🌱💜💳% 🌱🥕💳% 🌱❤💳% 🌱🥬💳% 🌱💚💳% 🌱🤍💳% 🌱🎃💳% 🌱🥔💳% 🌱🍒💳% 🌱🌻💳% 🌱🌾💳% 🤎💳% 🥌💳% 🐄💳% 🐔💳% 🐑💳% 🐖💳%
+ID_Feat_Animal_Lover_Stock_Item_10, ❗7 ⭐🐄 💳 => ⭐🐄 🌱💜💳10% 🌱🥕💳10% 🌱❤💳10% 🌱🥬💳10% 🌱💚💳10% 🌱🤍💳10% 🌱🎃💳10% 🌱🥔💳10% 🌱🍒💳10% 🌱🌻💳10% 🌱🌾💳10% 🤎💳10% 🥌💳10% 🐄💳10% 🐔💳10% 🐑💳10% 🐖💳10%
+
 
 ID_Feat_Steroids_Harvest_Parsnip, 🌱💜🎯 ⭐💪 => ♣💜 ⭐💪
 ID_Feat_Steroids_Harvest_Carrot, 🌱🥕🎯2 ⭐💪 => ♣🥕 ⭐💪

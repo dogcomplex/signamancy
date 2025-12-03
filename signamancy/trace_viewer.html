@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Signamancy Trace Viewer</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #fff;
+      --fg: #111;
+      --muted: #666;
+      --card: #f6f7f9;
+      --border: #dcdfe3;
+      --pos: #128a0c;
+      --neg: #b00020;
+      --accent: #3a6ff7;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1115;
+        --fg: #e6e6e6;
+        --muted: #9aa2ad;
+        --card: #171a21;
+        --border: #262b36;
+        --pos: #24c051;
+        --neg: #ff5b6e;
+        --accent: #6da3ff;
+      }
+    }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      padding: 16px;
+      background: var(--bg);
+      color: var(--fg);
+      font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    h1 { font-size: 18px; margin: 0 0 12px; }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .controls { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: 10px; align-items: center; }
+    .controls > * { min-width: 0; }
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin: 12px 0;
+    }
+    .section-title { margin: 0 0 8px; font-size: 15px; }
+    label { color: var(--muted); font-size: 12px; }
+    input[type="file"]{ max-width: 360px; }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--fg);
+    }
+    button {
+      padding: 6px 10px;
+      background: var(--card);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button.primary { background: var(--accent); color: #fff; border-color: transparent; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .delta-pos { color: var(--pos); }
+    .delta-neg { color: var(--neg); }
+    .flex { display: flex; gap: 8px; align-items: center; }
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; }
+    .list { margin: 6px 0 0; padding-left: 16px; }
+    .row-wrap { display:flex; flex-wrap:wrap; gap:8px; }
+    .spacer { flex: 1 1 auto; }
+    .footer { margin-top: 12px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <h1>Signamancy Trace Viewer</h1>
+  <div class="box">
+    <div class="row">
+      <div>
+        <div><label>Aggregated (JSONL)</label></div>
+        <input id="aggFile" type="file" accept=".jsonl">
+      </div>
+      <div>
+        <div><label>Universe (JSONL)</label></div>
+        <input id="uniFile" type="file" accept=".jsonl">
+      </div>
+      <div class="spacer"></div>
+      <div class="flex">
+        <button id="prev10">⟲ -10</button>
+        <button id="prev">← Prev</button>
+        <button id="next">Next →</button>
+        <button id="next10">+10 ⟳</button>
+      </div>
+    </div>
+    <div class="controls" style="margin-top:10px;">
+      <div style="grid-column: span 2;">
+        <label class="small">Step</label>
+        <div class="flex">
+          <input id="stepInput" class="mono" type="number" step="1" value="0">
+          <button id="goto" class="primary">Go</button>
+        </div>
+      </div>
+      <div style="grid-column: span 3;">
+        <label class="small">Token prefixes filter (comma‑separated, optional)</label>
+        <input id="prefixes" type="text" placeholder="e.g. 👑,💰">
+      </div>
+      <div style="grid-column: span 2;">
+        <label class="small">Top‑K token deltas</label>
+        <input id="topKTok" type="number" min="1" max="200" value="25">
+      </div>
+      <div style="grid-column: span 2;">
+        <label class="small">Top‑K rules</label>
+        <input id="topKRules" type="number" min="1" max="200" value="15">
+      </div>
+      <div style="grid-column: span 3;">
+        <label class="small">Keyboard</label>
+        <div class="muted small">←/→ step, PgUp/PgDn ±10, Home/End</div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:8px;">
+      <div class="pill" id="pos">No files loaded</div>
+      <div class="muted small">This viewer runs locally in your browser; it does not upload files.</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="box">
+      <h3 class="section-title">Aggregated step</h3>
+      <div id="aggStep" class="kv small"></div>
+      <div id="aggLists"></div>
+    </div>
+    <div class="box">
+      <h3 class="section-title">Universe step</h3>
+      <div id="uniStep" class="kv small"></div>
+      <div id="uniLists"></div>
+    </div>
+  </div>
+
+  <div class="footer small">
+    Tip: Use the prefixes filter to focus deltas (e.g., 👑,💰). “Aggregated” shows mean-based top deltas and rule counts; “Universe” shows per‑universe fired rules and top token changes.
+  </div>
+
+  <script>
+  // State
+  let aggRows = [];   // [{step, targets, top_deltas, rules_top}]
+  let uniRows = [];   // [{step, uni, top_deltas, fired_rules}]
+  let stepsUnion = []; // sorted unique steps
+  let idxByStep = new Map(); // step -> union index
+  let curIdx = 0;
+
+  // Elements
+  const $ = id => document.getElementById(id);
+  const elAgg = $("aggStep"), elAggLists = $("aggLists");
+  const elUni = $("uniStep"), elUniLists = $("uniLists");
+  const pos = $("pos");
+  const stepInput = $("stepInput");
+  const prefixesInput = $("prefixes");
+  const topKTok = $("topKTok");
+  const topKRules = $("topKRules");
+
+  function parseJSONL(file, cb) {
+    const r = new FileReader();
+    r.onload = () => {
+      const lines = String(r.result).split(/\r?\n/).filter(Boolean);
+      try {
+        const rows = lines.map(l => JSON.parse(l));
+        cb(rows);
+      } catch (e) {
+        alert("Failed to parse JSONL: " + e);
+      }
+    };
+    r.readAsText(file, 'utf-8');
+  }
+
+  function buildUnionSteps() {
+    const s = new Set();
+    aggRows.forEach(r => { if (Number.isFinite(r.step)) s.add(r.step|0); });
+    uniRows.forEach(r => { if (Number.isFinite(r.step)) s.add(r.step|0); });
+    stepsUnion = Array.from(s).sort((a,b)=>a-b);
+    idxByStep = new Map(stepsUnion.map((st,i)=>[st,i]));
+    if (stepsUnion.length === 0) {
+      stepsUnion = [0];
+      idxByStep.set(0,0);
+    }
+  }
+
+  function nearestIndexForStep(step) {
+    if (stepsUnion.length === 0) return 0;
+    const s = step|0;
+    if (idxByStep.has(s)) return idxByStep.get(s);
+    // binary search for nearest
+    let lo = 0, hi = stepsUnion.length - 1;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      const mv = stepsUnion[mid];
+      if (mv === s) return mid;
+      if (mv < s) lo = mid + 1; else hi = mid - 1;
+    }
+    if (lo >= stepsUnion.length) return stepsUnion.length - 1;
+    if (hi < 0) return 0;
+    return (Math.abs(stepsUnion[lo] - s) < Math.abs(stepsUnion[hi] - s)) ? lo : hi;
+  }
+
+  function fmtNum(x) {
+    if (Math.abs(x) >= 1000) return x.toFixed(0);
+    if (Math.abs(x) >= 100) return x.toFixed(1);
+    if (Math.abs(x) >= 10) return x.toFixed(2);
+    return x.toFixed(3);
+  }
+
+  function renderKV(el, obj) {
+    el.innerHTML = "";
+    const add = (k, v) => {
+      const kd = document.createElement("div"); kd.textContent = k;
+      const vd = document.createElement("div"); vd.textContent = v;
+      el.append(kd, vd);
+    };
+    if (!obj) { add("note", "(no data)"); return; }
+    for (const [k,v] of Object.entries(obj)) {
+      if (typeof v === "object") add(k, JSON.stringify(v));
+      else add(k, String(v));
+    }
+  }
+
+  function filterByPrefixes(items, key) {
+    const raw = prefixesInput.value.trim();
+    if (!raw) return items;
+    const prefs = raw.split(",").map(s=>s.trim()).filter(Boolean);
+    if (prefs.length === 0) return items;
+    return items.filter(it => {
+      const name = key(it);
+      return prefs.some(p => name.startsWith(p));
+    });
+  }
+
+  function render() {
+    const step = stepsUnion[curIdx] ?? 0;
+    stepInput.value = step;
+    pos.textContent = `step ${step} (index ${curIdx+1}/${stepsUnion.length})`;
+
+    // Find nearest rows (exact step match preferred)
+    const a = aggRows.find(r => (r.step|0) === step) ?? aggRows[aggRows.length-1];
+    const u = uniRows.find(r => (r.step|0) === step) ?? uniRows[uniRows.length-1];
+
+    // Aggregated
+    if (a) {
+      const targetsStr = a.targets ? Object.entries(a.targets).map(([k,v])=>`${k}:${fmtNum(v)}`).join("  ") : "(none)";
+      const tDeltaStr = a.targets_delta ? Object.entries(a.targets_delta).map(([k,v])=>`${k}:${v>=0?"+":""}${fmtNum(v)}`).join("  ") : "(n/a)";
+      renderKV(elAgg, { step: a.step, targets: targetsStr, targets_delta: tDeltaStr });
+      const list = document.createElement("div");
+      // rules_top
+      const kRules = Math.max(1, parseInt(topKRules.value || "15", 10));
+      const rules = Array.isArray(a.rules_top) ? a.rules_top.slice(0, kRules) : [];
+      const rulesEl = document.createElement("div");
+      rulesEl.innerHTML = `<div class="muted small">rules_top</div>`;
+      if (rules.length === 0) {
+        rulesEl.appendChild(document.createTextNode("(none)"));
+      } else {
+        const ul = document.createElement("ul"); ul.className = "list";
+        rules.forEach(r => {
+          const li = document.createElement("li");
+          li.textContent = `${r.rule}  ×${r.count}`;
+          ul.appendChild(li);
+        });
+        rulesEl.appendChild(ul);
+      }
+      list.appendChild(rulesEl);
+
+      // top_deltas
+      const kTok = Math.max(1, parseInt(topKTok.value || "25", 10));
+      let deltas = Array.isArray(a.top_deltas) ? a.top_deltas : [];
+      deltas = filterByPrefixes(deltas, it => it.token || "");
+      const tokEl = document.createElement("div");
+      tokEl.innerHTML = `<div class="muted small" style="margin-top:6px;">top_deltas</div>`;
+      if (deltas.length === 0) {
+        tokEl.appendChild(document.createTextNode("(none)"));
+      } else {
+        const ul = document.createElement("ul"); ul.className = "list mono";
+        deltas.slice(0, kTok).forEach(d => {
+          const li = document.createElement("li");
+          const dv = Number(d.dv||0);
+          const cls = dv >= 0 ? "delta-pos" : "delta-neg";
+          li.innerHTML = `<span>${d.token}</span> &nbsp; <span class="${cls}">${dv>=0?"+":""}${fmtNum(dv)}</span> &nbsp;→&nbsp; <span>${fmtNum(Number(d.v||0))}</span>`;
+          ul.appendChild(li);
+        });
+        tokEl.appendChild(ul);
+      }
+      elAggLists.innerHTML = "";
+      elAggLists.appendChild(list);
+    } else {
+      renderKV(elAgg, null);
+      elAggLists.innerHTML = "";
+    }
+
+    // Universe
+    if (u) {
+      const choice = u.choice ? String(u.choice) : "(none)";
+      const lineage_id = (u.lineage_id !== undefined) ? String(u.lineage_id) : "(n/a)";
+      const lineage_gen = (u.lineage_gen !== undefined) ? String(u.lineage_gen) : "(n/a)";
+      renderKV(elUni, { step: u.step, uni: u.uni, choice, lineage_id, lineage_gen });
+      const list = document.createElement("div");
+      // fired_rules
+      const fired = Array.isArray(u.fired_rules) ? u.fired_rules : [];
+      const fr = document.createElement("div");
+      fr.innerHTML = `<div class="muted small">fired_rules</div>`;
+      if (fired.length === 0) {
+        fr.appendChild(document.createTextNode("(none)"));
+      } else {
+        const ul = document.createElement("ul"); ul.className = "list";
+        fired.slice(0, Math.max(1, parseInt(topKRules.value || "15", 10))).forEach(r => {
+          const li = document.createElement("li"); li.textContent = r; ul.appendChild(li);
+        });
+        fr.appendChild(ul);
+      }
+      list.appendChild(fr);
+
+      // valid_rules_top (with probs)
+      const vtop = Array.isArray(u.valid_rules_top) ? u.valid_rules_top : [];
+      const vr = document.createElement("div");
+      vr.innerHTML = `<div class="muted small" style="margin-top:6px;">valid_rules_top</div>`;
+      if (vtop.length === 0) {
+        vr.appendChild(document.createTextNode("(none)"));
+      } else {
+        const ul = document.createElement("ul"); ul.className = "list mono";
+        vtop.forEach(r => {
+          const li = document.createElement("li");
+          li.textContent = `${r.rule}  p=${(Number(r.p||0)).toFixed(3)}`;
+          ul.appendChild(li);
+        });
+        vr.appendChild(ul);
+      }
+      list.appendChild(vr);
+
+      // top_deltas
+      const kTok = Math.max(1, parseInt(topKTok.value || "25", 10));
+      let deltas = Array.isArray(u.top_deltas) ? u.top_deltas : [];
+      deltas = filterByPrefixes(deltas, it => it.token || "");
+      const tokEl = document.createElement("div");
+      tokEl.innerHTML = `<div class="muted small" style="margin-top:6px;">top_deltas</div>`;
+      if (deltas.length === 0) {
+        tokEl.appendChild(document.createTextNode("(none)"));
+      } else {
+        const ul = document.createElement("ul"); ul.className = "list mono";
+        deltas.slice(0, kTok).forEach(d => {
+          const li = document.createElement("li");
+          const dv = Number(d.dv||0);
+          const cls = dv >= 0 ? "delta-pos" : "delta-neg";
+          li.innerHTML = `<span>${d.token}</span> &nbsp; <span class="${cls}">${dv>=0?"+":""}${fmtNum(dv)}</span> &nbsp;→&nbsp; <span>${fmtNum(Number(d.v||0))}</span>`;
+          ul.appendChild(li);
+        });
+        tokEl.appendChild(ul);
+      }
+      elUniLists.innerHTML = "";
+      elUniLists.appendChild(list);
+      // state cloud (top values)
+      const state = Array.isArray(u.state_top) ? u.state_top : [];
+      const st = document.createElement("div");
+      st.innerHTML = `<div class="muted small" style="margin-top:6px;">state_top</div>`;
+      if (state.length === 0) {
+        st.appendChild(document.createTextNode("(none)"));
+      } else {
+        const ul = document.createElement("ul"); ul.className = "list mono";
+        filterByPrefixes(state, it => it.token || "").slice(0, kTok).forEach(sv => {
+          const li = document.createElement("li");
+          li.textContent = `${sv.token} = ${fmtNum(Number(sv.v||0))}`;
+          ul.appendChild(li);
+        });
+        st.appendChild(ul);
+      }
+      elUniLists.appendChild(st);
+    } else {
+      renderKV(elUni, null);
+      elUniLists.innerHTML = "";
+    }
+  }
+
+  function move(delta) {
+    curIdx = Math.max(0, Math.min((stepsUnion.length - 1), curIdx + delta));
+    render();
+  }
+
+  // Events
+  $("aggFile").addEventListener("change", e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    parseJSONL(f, rows => {
+      aggRows = rows;
+      buildUnionSteps();
+      pos.textContent = `Loaded aggregated (${rows.length} rows)`;
+      render();
+    });
+  });
+  $("uniFile").addEventListener("change", e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    parseJSONL(f, rows => {
+      uniRows = rows;
+      buildUnionSteps();
+      pos.textContent = `Loaded universe (${rows.length} rows)`;
+      render();
+    });
+  });
+  $("prev").onclick = () => move(-1);
+  $("next").onclick = () => move(+1);
+  $("prev10").onclick = () => move(-10);
+  $("next10").onclick = () => move(+10);
+  $("goto").onclick = () => {
+    const s = parseInt(stepInput.value || "0", 10);
+    curIdx = nearestIndexForStep(s);
+    render();
+  };
+  prefixesInput.addEventListener("change", render);
+  topKTok.addEventListener("change", render);
+  topKRules.addEventListener("change", render);
+
+  window.addEventListener("keydown", e => {
+    if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
+    if (e.key === "ArrowLeft") { move(-1); }
+    else if (e.key === "ArrowRight") { move(+1); }
+    else if (e.key === "PageUp") { move(-10); }
+    else if (e.key === "PageDown") { move(+10); }
+    else if (e.key === "Home") { curIdx = 0; render(); }
+    else if (e.key === "End") { curIdx = stepsUnion.length - 1; render(); }
+  });
+
+  // Initial state
+  render();
+  </script>
+</body>
+</html>
+
+

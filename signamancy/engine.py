@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.nn.functional as F
 from typing import Dict
@@ -20,6 +21,8 @@ class SimulationConfig:
     priority_log_limit: int = 50
     priority_log_path: str | None = None
     log_same_base_ties: bool = False
+    # Trace/selection
+    single_action_mode: bool = True
 
 class SignamancyEngine:
     """
@@ -42,6 +45,11 @@ class SignamancyEngine:
         self.priority_tie_samples: list[list[int]] = []
         self.rule_ids: list[str] | None = None
         self.cpu_callbacks = {}
+        self.reachability_guide_mask: torch.Tensor | None = None  # [Rules] boolean mask
+        self.last_fired_mask: torch.Tensor | None = None  # [Batch, Rules] for tracing
+        self.last_prior_valid: torch.Tensor | None = None  # [Batch, Rules] for tracing
+        self.last_scaled_logits: torch.Tensor | None = None  # [Rules] for tracing
+        self.last_choice: torch.Tensor | None = None  # [Batch] chosen rule index in single-action mode
         self._init_memory()
         self._upload_kernels()
         # Initialize per-rule biases (default zeros = no effect)
@@ -57,6 +65,20 @@ class SignamancyEngine:
             if b.shape[-1] != self.num_rules:
                 raise ValueError("rule_biases length must equal num_rules")
             self.rule_biases_static = b
+
+    def set_reachability_guide_mask(self, mask: torch.Tensor | None):
+        """Set per-rule guidance mask. True means 'unreachable within K' proposal.
+        Safe application occurs in conflict resolution only when the rule is invalid across all universes.
+        """
+        if mask is None:
+            self.reachability_guide_mask = None
+            return
+        m = mask.to(self.device)
+        if m.dtype != torch.bool:
+            m = m.bool()
+        if m.numel() != self.num_rules:
+            raise ValueError("guide mask length must equal num_rules")
+        self.reachability_guide_mask = m
 
     def reset_policy_dyn(self):
         self.rule_biases_dyn = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
@@ -108,26 +130,34 @@ class SignamancyEngine:
         
         for bt, block_kernel in self.kernel.blocks.items():
             # Helper: Upload sparse tensor
-            def upload(data):
+            def upload(data, val_dtype: torch.dtype = torch.float32):
                 if data is None:
                     return None
                 if not data.indices: return None
                 i = torch.tensor(data.indices, dtype=torch.long, device=self.device)
-                v = torch.tensor(data.values, dtype=torch.float32, device=self.device)
+                v = torch.tensor(data.values, dtype=val_dtype, device=self.device)
                 # Note: We keep indices/values separate for custom kernels (Validity)
                 # We also create the coalesced sparse tensor for MM
                 sparse = torch.sparse_coo_tensor(i, v, data.shape, device=self.device)
                 return {"indices": i, "values": v, "mat": sparse}
 
+            # Choose dtype for values (optional mixed precision on FLOAT block)
+            use_mixed = os.environ.get("FLOAT_MIXED", "1") == "1"
+            def val_dtype_for(key: str) -> torch.dtype:
+                if use_mixed and bt == BlockType.FLOAT and key in ("out_mean", "out_std", "out_net"):
+                    return torch.float16
+                return torch.float32
+
             self.gpu_blocks[bt] = {
-                "in": upload(block_kernel.inputs),
-                "out_mean": upload(block_kernel.outputs), # Renamed from 'out'
+                "in": upload(block_kernel.inputs, torch.float32),
+                "out_mean": upload(block_kernel.outputs, val_dtype_for("out_mean")), # Renamed from 'out'
                 # Assuming Compiler now provides out_std for ranges
-                "out_std": upload(getattr(block_kernel, "outputs_std", None)), 
-                "ban": upload(block_kernel.inhibitors),
+                "out_std": upload(getattr(block_kernel, "outputs_std", None), val_dtype_for("out_std")), 
+                "out_net": upload(getattr(block_kernel, "outputs_net", None), val_dtype_for("out_net")),
+                "ban": upload(block_kernel.inhibitors, torch.float32),
                 "unit_map": block_kernel.unit_map.to(self.device) if block_kernel.unit_map is not None else None,
                 "thresholds": block_kernel.overflow_thresholds.to(self.device) if getattr(block_kernel, "overflow_thresholds", None) is not None else None,
-                "all": upload(getattr(block_kernel, "consume_all", None)),
+                "all": upload(getattr(block_kernel, "consume_all", None), torch.float32),
             }
             
         # Rule Meta: [Priority, Probability, MutexID, CPU_Flag]
@@ -146,6 +176,8 @@ class SignamancyEngine:
         
         # 3. Updates: Apply Deltas & Variance
         self._apply_updates(fired_mask)
+        # Keep last fired mask for tracing/diagnostics
+        self.last_fired_mask = fired_mask
         
         # 4. Physics: Carry-Lookahead & Constraints
         self._resolve_physics()
@@ -178,39 +210,14 @@ class SignamancyEngine:
                 # We pick the specific tokens needed by the rules
                 current_vals = state[:, token_idx] 
                 
-                # Simplest Vectorized approach:
-                # Use index_add on the flattened batch? No.
-                # Loop over rules? No.
-                
-                # Solution: Use torch.sparse.mm with a "Binary Input Matrix".
-                # Binary_In = (Indices, Ones).
-                # Deficits = Required - State (ReLU).
-                # Rule_Deficit = Deficits @ Binary_In.T
-                # If Rule_Deficit > 0, Rule Invalid.
-                
-                # Implementation:
-                # Only works if linear sum logic holds. 
-                # "If I need 2 Apples and have 1, deficit is 1." -> Invalid.
-                # "If I need 1 Apple and have 2, deficit is 0." -> Valid.
-                # This works for Fungible inputs (BYTE/FLOAT).
-                
                 # Calculate Deficit [Batch, NNZ]
                 deficit = F.relu(req_vals.unsqueeze(0) - current_vals.float())
                 
                 # Sum Deficits per Rule
-                # We construct a temporary sparse matrix for aggregation
-                # Indices: [rule_idx, token_idx] -> We want to sum over token_idx
-                # We effectively do a sparse MM:
-                # [Batch, Tokens] is implicit. We have [Batch, NNZ_Inputs].
-                # We need to sum these values into [Batch, Rules].
-                
-                # Torch scatter_add is best here:
-                # src = deficit [Batch, NNZ]
-                # index = rule_idx [NNZ] -> broadcast to [Batch, NNZ]
                 index_batch = rule_idx.unsqueeze(0).expand(bs, -1)
                 
                 rule_deficits = torch.zeros((bs, self.num_rules), device=self.device)
-                rule_deficits.scatter_add_(1, index_batch, deficit)
+                rule_deficits.scatter_add_((1), index_batch, deficit)
                 
                 validity &= (rule_deficits == 0)
 
@@ -235,6 +242,8 @@ class SignamancyEngine:
         bias = bias_static + bias_dyn
         scaled_logits = (logits + bias) / max(self.cfg.temperature, eps)
         probs = torch.sigmoid(scaled_logits).unsqueeze(0).expand(bs, -1)
+        # Store for tracing
+        self.last_scaled_logits = scaled_logits.detach()
         
         # 1b. Strict priority enforcement: only rules at the max priority per universe can fire
         priorities = self.rule_meta[:, 0].to(self.device)  # [Rules]
@@ -243,6 +252,17 @@ class SignamancyEngine:
         max_prio = (valid.float() * priorities.unsqueeze(0)).amax(dim=1)  # [B]
         prio_mask = (priorities.unsqueeze(0) == max_prio.unsqueeze(1))  # [B, R]
         prior_valid = valid & prio_mask
+        # Store for tracing
+        self.last_prior_valid = prior_valid.detach()
+
+        # 1c. Apply reachability guide mask (frame-only, safe)
+        # If a rule is invalid in all universes now, and guided unreachable, mask it this frame.
+        if self.reachability_guide_mask is not None:
+            any_valid_per_rule = prior_valid.any(dim=0)  # [R]
+            mask_rules = self.reachability_guide_mask & (~any_valid_per_rule)
+            if mask_rules.any():
+                prior_valid[:, mask_rules] = False
+        
         if self.cfg.enable_priority_logging:
             tie_counts = prior_valid.sum(dim=1)
             num_ties = int((tie_counts > 1).sum().item())
@@ -258,7 +278,7 @@ class SignamancyEngine:
                             for r in rows.tolist():
                                 idxs = torch.nonzero(prior_valid[r], as_tuple=False).squeeze(1).tolist()
                                 # Collapse by CSV ID base (split at '#') when available
-                                names = [self.rule_ids[i] for i in idxs] if (self.rule_ids and len(self.rule_ids) == self.num_rules) else None
+                                names = [self.rule_ids[i] for i in idxs] if (isinstance(self.rule_ids, list) and len(self.rule_ids) == self.num_rules) else None
                                 if names:
                                     bases = [n.split('#')[0] for n in names]
                                     unique_bases = sorted(set(bases))
@@ -284,7 +304,24 @@ class SignamancyEngine:
                 except Exception:
                     pass
         
-        # 2. Handle Mutual Exclusion (One-Of)
+        # If configured, pick a single action (one rule per universe) using global Gumbel-Max
+        if getattr(self.cfg, "single_action_mode", False):
+            # Scores: scaled logits + gumbel
+            base_group_logits = scaled_logits.unsqueeze(0).expand(bs, -1)
+            gumbel = -torch.log(-torch.log(torch.rand_like(base_group_logits)))
+            scores = base_group_logits + gumbel
+            # Mask out invalid/prior-invalid
+            scores = scores.masked_fill(~prior_valid, -float('inf'))
+            # Choose best per universe
+            best_idx = scores.argmax(dim=1)
+            has_any = prior_valid.any(dim=1)
+            fired_mask = torch.zeros_like(valid)
+            rows = torch.arange(bs, device=self.device)
+            fired_mask[rows[has_any], best_idx[has_any]] = True
+            self.last_choice = best_idx.detach()
+            return fired_mask
+
+        # 2. Handle Mutual Exclusion (One-Of) with possible multiple independent rules
         # MutexID is in Col 2. 0 means "Independent".
         mutex_ids = self.rule_meta[:, 2].long()
         
@@ -296,10 +333,6 @@ class SignamancyEngine:
         independent_fired = prior_valid & (rand < probs) & (~is_mutex.unsqueeze(0))
         
         # Mutex Rules: Gumbel-Max (on temperature-scaled logits)
-        # We need to group by MutexID and pick ArgMax(LogProb + Gumbel)
-        # This is hard to vectorize purely in PyTorch without a loop over GroupIDs 
-        # or scatter_reduce (newer PyTorch).
-        
         mutex_fired = torch.zeros_like(valid)
         unique_groups = torch.tensor([], device=self.device, dtype=mutex_ids.dtype)
         if is_mutex.any():
@@ -307,11 +340,7 @@ class SignamancyEngine:
             # Exclude 0 (non-mutex)
             unique_groups = unique_groups[unique_groups != 0]
         
-        # Prepare weight-based scores for mutex: use rule probabilities as weights
-        # Apply temperature by exponentiating weights with 1/T
-        base_weights = self.rule_meta[:, 1].clamp(min=1e-9)  # [Rules]
-        temp = max(self.cfg.temperature, 1e-9)
-        weights_t = base_weights.pow(1.0 / temp)  # [Rules]
+        # Prepare scores for mutex via Gumbel-Max on scaled logits
         
         for gid in unique_groups:
             # Mask for this group
@@ -364,22 +393,27 @@ class SignamancyEngine:
             k = self.gpu_blocks[bt]
             if not k["out_mean"]: continue
             
-            # 1. Calculate Deterministic Delta
-            # Produced
-            produced = torch.sparse.mm(k["out_mean"]["mat"].t(), fired_f.t()).t()
-            
-            # Consumed (from Inputs)
-            consumed = torch.zeros_like(produced)
-            if k["in"]:
-                consumed = torch.sparse.mm(k["in"]["mat"].t(), fired_f.t()).t()
-                
-            delta = produced - consumed
+            # 1. Calculate Deterministic Delta (prefer fused net if available)
+            if k.get("out_net") and k["out_net"] is not None:
+                net = torch.sparse.mm(k["out_net"]["mat"].t(), fired_f.t()).t()
+                # If using mixed precision on FLOAT block, cast to float32 before accumulation
+                if net.dtype != torch.float32:
+                    net = net.float()
+                delta = net
+            else:
+                produced = torch.sparse.mm(k["out_mean"]["mat"].t(), fired_f.t()).t()
+                consumed = torch.zeros_like(produced)
+                if k["in"]:
+                    consumed = torch.sparse.mm(k["in"]["mat"].t(), fired_f.t()).t()
+                delta = produced - consumed
             
             # 2. Calculate Variance (Chaos Injection)
             if k["out_std"]:
                 # Get StdDev sum for fired rules
                 # Note: This sums variances linearly, approximation of uncorrelated noise
                 std_agg = torch.sparse.mm(k["out_std"]["mat"].t(), fired_f.t()).t()
+                if std_agg.dtype != torch.float32:
+                    std_agg = std_agg.float()
                 noise = torch.randn_like(std_agg)
                 delta += (noise * std_agg * self.cfg.temperature)
 
@@ -387,6 +421,8 @@ class SignamancyEngine:
             if k["all"] is not None:
                 # counts_per_token = (consume_all_map.T @ fired.T).T -> [B, Tokens]
                 counts = torch.sparse.mm(k["all"]["mat"].t(), fired_f.t()).t()
+                if counts.dtype != torch.float32:
+                    counts = counts.float()
                 mask = (counts > 0).float()
                 current_state = self.state[bt].float()
                 delta -= (current_state * mask)
@@ -448,42 +484,17 @@ class SignamancyEngine:
             valid_overflow = overflow_amt * has_parent.unsqueeze(0).to(dtype=overflow_amt.dtype)
             
             if valid_overflow.any():
-                # We need to scatter_add these values to their parent indices.
-                # This is tricky because it's a Many-to-One map potentially.
-                # Logic: State.scatter_add_(1, Parent_Indices, Overflow_Values)
-                
                 # Broadcast parent indices to batch
-                # Parent_Indices shape: [Batch, Num_Tokens]
                 parent_indices = unit_map.unsqueeze(0).expand(self.cfg.batch_size, -1)
                 
-                # We only want to add where parent != -1. 
-                # scatter_add requires valid indices. 
-                # Masking strategy: Set invalid parent indices to 0 (dummy), 
-                # zero out the flow, then add.
-                # Or simpler: Iterate? No.
-                
-                # Pytorch scatter_add_ handles duplicate indices by summing!
-                # We just need to ensure we don't write to index -1.
-                # Clamp index to 0, mask value to 0.
-                
+                # Clamp index to 0 for invalid; zero value there
                 safe_indices = parent_indices.clone()
                 safe_indices[~has_parent] = 0
                 
                 # Add to state (accumulate in int16)
                 self.state[BlockType.BYTE].scatter_add_(1, safe_indices, valid_overflow.to(self.state[BlockType.BYTE].dtype))
                 
-                # Note: We might have added to Index 0 incorrectly. 
-                # If Token 0 is a dummy, we don't care. 
-                # If Token 0 is real, we have a bug.
-                # Fix: Ensure Token 0 is always "Void/Null" in Registry.
-        
         # 3. Finalize Remainder
-        # Only apply remainder if we actually overflowed? 
-        # Yes, math holds: 260 -> 1*256 + 4.
-        # We update self (remainder) AND parent (carry).
-        # Wait, if we updated parent in-place, we shouldn't overwrite self yet?
-        # Correct.
-        
         self.state[BlockType.BYTE] = remainder.to(torch.uint8)
 
     def _handle_cpu_callbacks(self, fired_mask):
