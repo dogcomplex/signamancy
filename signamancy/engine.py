@@ -111,12 +111,43 @@ class SignamancyEngine:
         a mutex group with >1 valid branches).
         """
         with torch.no_grad():
+            fast = os.environ.get("ENGINE_DECISION_STATS_FAST", "1") == "1"
             valid = self._check_validity()
             prior_valid, max_prio = self._apply_priority_and_guides(valid)
             # Expose for tracing
             self.last_prior_valid = prior_valid.detach()
             counts = prior_valid.sum(dim=1)  # [B]
             eff_counts = counts.clone()
+            if fast:
+                # Fast path: skip base collapsing; only determine any_decision
+                any_multi = bool((eff_counts > 1).any().item())
+                # Check mutex groups quickly if needed
+                if not any_multi:
+                    mutex_ids = self.rule_meta[:, 2].long()
+                    is_mutex = (mutex_ids != 0)
+                    any_mutex_multi = False
+                    if is_mutex.any():
+                        unique_groups = torch.unique(mutex_ids[is_mutex])
+                        pv = prior_valid  # [B, R]
+                        for gid in unique_groups.tolist():
+                            mask = (mutex_ids == gid).unsqueeze(0)
+                            grp_counts = (pv & mask).sum(dim=1)
+                            if (grp_counts > 1).any():
+                                any_mutex_multi = True
+                                break
+                        any_decision = any_multi or any_mutex_multi
+                    else:
+                        any_decision = any_multi
+                else:
+                    any_decision = True
+                return {
+                    "prior_valid": prior_valid,
+                    "counts": counts,
+                    "effective_counts": eff_counts,
+                    "max_priority": max_prio,
+                    "any_multi": any_multi,
+                    "any_decision": any_decision,
+                }
             # Optionally collapse branches of the same CSV base rule into one choice
             if collapse_same_base and isinstance(self.rule_ids, list) and len(self.rule_ids) == self.num_rules:
                 rows = torch.nonzero(counts > 1, as_tuple=False).squeeze(1).tolist()
@@ -328,6 +359,8 @@ class SignamancyEngine:
                 # Assuming Compiler now provides out_std for ranges
                 "out_std": upload(getattr(block_kernel, "outputs_std", None), val_dtype_for("out_std")), 
                 "out_net": upload(getattr(block_kernel, "outputs_net", None), val_dtype_for("out_net")),
+                "out_range_lo": upload(getattr(block_kernel, "outputs_range_lo", None), torch.float32),
+                "out_range_hi": upload(getattr(block_kernel, "outputs_range_hi", None), torch.float32),
                 "ban": upload(block_kernel.inhibitors, torch.float32),
                 "unit_map": block_kernel.unit_map.to(self.device) if block_kernel.unit_map is not None else None,
                 "thresholds": block_kernel.overflow_thresholds.to(self.device) if getattr(block_kernel, "overflow_thresholds", None) is not None else None,
@@ -335,12 +368,21 @@ class SignamancyEngine:
                 # Row-slice caches for single-action fast path
                 "out_net_rows": build_row_slices(getattr(block_kernel, "outputs_net", None)),
                 "out_std_rows": build_row_slices(getattr(block_kernel, "outputs_std", None)),
+                "out_range_rows_lo": build_row_slices(getattr(block_kernel, "outputs_range_lo", None)),
+                "out_range_rows_hi": build_row_slices(getattr(block_kernel, "outputs_range_hi", None)),
                 "all_rows": build_row_slices(getattr(block_kernel, "consume_all", None)),
             }
             
         # Rule Meta: [Priority, Probability, MutexID, CPU_Flag]
         self.rule_meta = self.kernel.rule_meta.to(self.device)
         self.num_rules = self.kernel.num_rules
+        # Precompute constant logits from base probabilities for fast resolve
+        try:
+            eps = 1e-9
+            base_probs = self.rule_meta[:, 1]
+            self._logits_const = torch.log(base_probs + eps) - torch.log(1.0 - base_probs + eps)
+        except Exception:
+            self._logits_const = torch.zeros((self.num_rules,), dtype=torch.float32, device=self.device)
 
     def step(self):
         """
@@ -501,16 +543,19 @@ class SignamancyEngine:
         bs = self.cfg.batch_size
         
         # 1. Base Probability Check (with Temperature scaling via logits and optional biases)
-        base_probs = self.rule_meta[:, 1]  # [Rules]
         eps = 1e-9
-        logits = torch.log(base_probs + eps) - torch.log(1.0 - base_probs + eps)
+        logits = getattr(self, "_logits_const", None)
+        if logits is None or logits.numel() != self.num_rules:
+            # Fallback if not precomputed
+            base_probs = self.rule_meta[:, 1]  # [Rules]
+            logits = torch.log(base_probs + eps) - torch.log(1.0 - base_probs + eps)
         bias_static = self.rule_biases_static if self.rule_biases_static is not None else 0.0
         bias_dyn = self.rule_biases_dyn if self.rule_biases_dyn is not None else 0.0
         bias = bias_static + bias_dyn
         scaled_logits = (logits + bias) / max(self.cfg.temperature, eps)
-        probs = torch.sigmoid(scaled_logits).unsqueeze(0).expand(bs, -1)
         # Store for tracing
         self.last_scaled_logits = scaled_logits.detach()
+        no_gumbel = os.environ.get("RESOLVE_NO_GUMBEL", "0") == "1"
         
         # 1b. Strict priority + guides + oneshot
         prior_valid, max_prio = self._apply_priority_and_guides(valid)
@@ -566,7 +611,10 @@ class SignamancyEngine:
         if getattr(self.cfg, "single_action_mode", False):
             # Scores: scaled logits + gumbel
             base_group_logits = scaled_logits.unsqueeze(0).expand(bs, -1)
-            gumbel = -torch.log(-torch.log(torch.rand_like(base_group_logits)))
+            if no_gumbel:
+                gumbel = 0.0
+            else:
+                gumbel = -torch.log(-torch.log(torch.rand_like(base_group_logits)))
             scores = base_group_logits + gumbel
             # Mask out invalid/prior-invalid
             scores = scores.masked_fill(~prior_valid, -float('inf'))
@@ -588,7 +636,8 @@ class SignamancyEngine:
         # Mask of rules that are part of a mutex group
         is_mutex = (mutex_ids != 0)
         
-        # Independent Rules: Just roll dice
+        # Independent Rules: Just roll dice (only used in non-single-action mode)
+        probs = torch.sigmoid(scaled_logits).unsqueeze(0).expand(bs, -1)
         rand = torch.rand_like(probs)
         independent_fired = prior_valid & (rand < probs) & (~is_mutex.unsqueeze(0))
         
@@ -600,7 +649,7 @@ class SignamancyEngine:
             # Exclude 0 (non-mutex)
             unique_groups = unique_groups[unique_groups != 0]
         
-        # Prepare scores for mutex via Gumbel-Max on scaled logits
+        # Prepare scores for mutex via Gumbel-Max on log-probabilities
         
         for gid in unique_groups:
             # Mask for this group
@@ -614,10 +663,14 @@ class SignamancyEngine:
             # Calculate Scores: Scaled Logits + Gumbel
             # Add -1e9 to invalid rules to prevent selection
             
-            # Use precomputed scaled logits (per rule), broadcast to batch
-            base_group_logits = scaled_logits.unsqueeze(0).expand(bs, -1)
-            gumbel = -torch.log(-torch.log(torch.rand_like(base_group_logits)))
-            scores = base_group_logits + gumbel
+            # Convert scaled logits (with bias/temperature) to probabilities, then to log-probabilities
+            base_probs = torch.sigmoid(scaled_logits).clamp_min(eps)
+            base_group_logp = torch.log(base_probs).unsqueeze(0).expand(bs, -1)
+            if no_gumbel:
+                gumbel = 0.0
+            else:
+                gumbel = -torch.log(-torch.log(torch.rand_like(base_group_logp)))
+            scores = base_group_logp + gumbel
             # Mask out invalid
             scores = scores.masked_fill(~group_valid, -float('inf'))
             # Mask out non-group
@@ -689,35 +742,82 @@ class SignamancyEngine:
                 if use_rows:
                     # Work on a float view
                     state_block = self.state[bt].float()
-                    # Iterate contiguous buckets per unique rule (reduced overhead vs per-rule scans)
+                    tokens_in_block = int(state_block.shape[1])
+                    # Snapshot pre-update state for consume_all semantics
+                    state_before = state_block
+                    # Accumulate flattened indices and deltas
+                    lin_idx_parts: list[torch.Tensor] = []
+                    delta_parts: list[torch.Tensor] = []
                     start = 0
                     for urule, cnt in zip(unique_rules.tolist(), counts.tolist()):
                         end = start + cnt
                         rows = rows_sorted[start:end]
                         start = end
-                        # Per-rule column/value slices
+                        if rows.numel() == 0:
+                            continue
+                        # Deterministic net deltas
                         cols = k["out_net_rows"]["idx"][urule]
                         vals = k["out_net_rows"]["val"][urule]
-                        if cols.numel() == 0 or rows.numel() == 0:
-                            continue
-                        sub = state_block.index_select(0, rows)
-                        old_sub = sub.clone()
-                        # Deterministic delta
-                        sub[:, cols] = sub[:, cols] + vals.unsqueeze(0).expand(sub.size(0), -1)
-                        # Variance
+                        if cols.numel() > 0:
+                            rr = rows.view(-1, 1).expand(-1, cols.numel()).reshape(-1)
+                            cc = cols.view(1, -1).expand(rows.size(0), -1).reshape(-1)
+                            lin = rr * tokens_in_block + cc
+                            dv = vals.view(1, -1).expand(rows.size(0), -1).reshape(-1).to(torch.float32)
+                            lin_idx_parts.append(lin)
+                            delta_parts.append(dv)
+                        # Discrete range adjust (integer-uniform in [lo, hi], subtract mean)
+                        lo_src = k.get("out_range_rows_lo")
+                        hi_src = k.get("out_range_rows_hi")
+                        if lo_src is not None and hi_src is not None:
+                            rcols_lo = lo_src["idx"][urule]
+                            rvals_lo = lo_src["val"][urule]
+                            rcols_hi = hi_src["idx"][urule]
+                            rvals_hi = hi_src["val"][urule]
+                            if rcols_lo.numel() > 0 and rcols_hi.numel() == rcols_lo.numel():
+                                # Compute inclusive widths per column
+                                lo = rvals_lo.float()
+                                hi = rvals_hi.float()
+                                width = (hi - lo + 1.0).clamp(min=1.0)
+                                # Sample integers: lo + floor(rand * width)
+                                rand = torch.rand((rows.size(0), rcols_lo.numel()), device=self.device, dtype=torch.float32)
+                                samp = lo.unsqueeze(0) + torch.floor(rand * width.unsqueeze(0))
+                                # Mean = (lo + hi)/2
+                                mean = (lo + hi) * 0.5
+                                adj = (samp - mean.unsqueeze(0)).reshape(-1).to(torch.float32)
+                                rr = rows.view(-1, 1).expand(-1, rcols_lo.numel()).reshape(-1)
+                                cc = rcols_lo.view(1, -1).expand(rows.size(0), -1).reshape(-1)
+                                lin = rr * tokens_in_block + cc
+                                lin_idx_parts.append(lin)
+                                delta_parts.append(adj)
+                        # Variance (if enabled)
                         if k.get("out_std_rows") is not None and float(self.cfg.temperature) > 0.0:
                             s_cols = k["out_std_rows"]["idx"][urule]
                             s_vals = k["out_std_rows"]["val"][urule]
-                            if s_cols.numel() > 0:
-                                noise = torch.randn((sub.size(0), s_cols.numel()), device=self.device, dtype=torch.float32)
-                                sub[:, s_cols] = sub[:, s_cols] + noise * (s_vals.unsqueeze(0)) * float(self.cfg.temperature)
-                        # Consume-all
+                            if s_cols is not None and s_cols.numel() > 0:
+                                noise = torch.randn((rows.size(0), s_cols.numel()), device=self.device, dtype=torch.float32)
+                                dv = (noise * s_vals.view(1, -1) * float(self.cfg.temperature)).reshape(-1)
+                                rr = rows.view(-1, 1).expand(-1, s_cols.numel()).reshape(-1)
+                                cc = s_cols.view(1, -1).expand(rows.size(0), -1).reshape(-1)
+                                lin = rr * tokens_in_block + cc
+                                lin_idx_parts.append(lin)
+                                delta_parts.append(dv)
+                        # Consume-all: subtract old values for marked columns
                         if k.get("all_rows") is not None:
                             a_cols = k["all_rows"]["idx"][urule]
-                            if a_cols.numel() > 0:
-                                sub[:, a_cols] = sub[:, a_cols] - old_sub[:, a_cols]
-                        # Write back
-                        state_block.index_copy_(0, rows, sub)
+                            if a_cols is not None and a_cols.numel() > 0:
+                                # Gather old values
+                                old_vals = state_before.index_select(0, rows)[:, a_cols].reshape(-1)
+                                rr = rows.view(-1, 1).expand(-1, a_cols.numel()).reshape(-1)
+                                cc = a_cols.view(1, -1).expand(rows.size(0), -1).reshape(-1)
+                                lin = rr * tokens_in_block + cc
+                                lin_idx_parts.append(lin)
+                                delta_parts.append(-old_vals)
+                    if lin_idx_parts:
+                        lin_all = torch.cat(lin_idx_parts)
+                        dv_all = torch.cat(delta_parts).to(torch.float32)
+                        flat = state_block.view(-1)
+                        flat.index_add_(0, lin_all, dv_all)
+                        state_block = flat.view_as(state_block)
                     # Apply clamps/casts
                     if bt == BlockType.BYTE:
                         state_block = torch.clamp(state_block, min=0)
@@ -741,7 +841,41 @@ class SignamancyEngine:
                         consumed = torch.sparse.mm(k["in"]["mat"].t(), fired_f.t()).t()
                     delta = produced - consumed
                 
-                # 2. Calculate Variance (Chaos Injection)
+                # 2. Discrete range adjust for fired rows (fallback path)
+                lo = k.get("out_range_lo")
+                hi = k.get("out_range_hi")
+                if lo is not None and hi is not None:
+                    # Build flattened index_add adjustments
+                    r_lo = lo["indices"]; v_lo = lo["values"].float()
+                    r_hi = hi["indices"]; v_hi = hi["values"].float()
+                    if len(r_lo) == 2 and len(r_hi) == 2 and len(v_lo) == len(v_hi):
+                        # For each (rule, token) that has a range, find fired rows
+                        rl = r_lo[0]; tl = r_lo[1]
+                        rh = r_hi[0]; th = r_hi[1]
+                        # Safety: ensure matching pairs
+                        # For efficiency, assume compiler aligned entries in same order
+                        widths = (v_hi - v_lo + 1.0).clamp(min=1.0)  # [NNZ]
+                        means = (v_lo + v_hi) * 0.5  # [NNZ]
+                        # For each rule index in rl, find rows where fired[:, rule] == 1
+                        # We'll accumulate per (row, token) adjust into delta
+                        B = fired.shape[0]
+                        for idx_nnz in range(len(v_lo)):
+                            r_id = int(rl[idx_nnz].item())
+                            t_id = int(tl[idx_nnz].item())
+                            rows = torch.nonzero(fired[:, r_id], as_tuple=False).squeeze(1)
+                            if rows.numel() == 0:
+                                continue
+                            w = float(widths[idx_nnz].item())
+                            lo_v = float(v_lo[idx_nnz].item())
+                            mean_v = float(means[idx_nnz].item())
+                            # Sample per row
+                            rands = torch.rand((rows.numel(),), device=self.device, dtype=torch.float32)
+                            samp = lo_v + torch.floor(rands * w)
+                            adj = (samp - mean_v).to(torch.float32)
+                            # Add into delta for token t_id on those rows
+                            delta[rows, t_id] += adj
+
+                # 3. Calculate Variance (Chaos Injection)
                 if k["out_std"] and float(self.cfg.temperature) > 0.0:
                     # Get StdDev sum for fired rules
                     std_agg = torch.sparse.mm(k["out_std"]["mat"].t(), fired_f.t()).t()
@@ -750,7 +884,7 @@ class SignamancyEngine:
                     noise = torch.randn_like(std_agg)
                     delta += (noise * std_agg * self.cfg.temperature)
 
-                # 2b. Consume-All (reduce to zero) — subtract current value once if any such rule fired
+                # 3b. Consume-All (reduce to zero) — subtract current value once if any such rule fired
                 if k["all"] is not None:
                     counts = torch.sparse.mm(k["all"]["mat"].t(), fired_f.t()).t()
                     if counts.dtype != torch.float32:
@@ -759,7 +893,7 @@ class SignamancyEngine:
                     current_state = self.state[bt].float()
                     delta -= (current_state * mask)
                 
-                # 3. Apply
+                # 4. Apply
                 # Note: BIT/BYTE stored as int, but math is float. Cast back.
                 current = self.state[bt].float()
                 new_val = current + delta

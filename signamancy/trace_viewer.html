@@ -250,6 +250,14 @@
     });
   }
 
+  function filterPositive(items, valKey) {
+    try {
+      return items.filter(it => Number(valKey(it) || 0) > 0);
+    } catch {
+      return items;
+    }
+  }
+
   function render() {
     const step = stepsUnion[curIdx] ?? 0;
     stepInput.value = step;
@@ -304,6 +312,24 @@
       }
       elAggLists.innerHTML = "";
       elAggLists.appendChild(list);
+
+      // aggregated state_top (means across universes), only tokens with v>0
+      const aggState = Array.isArray(a.state_top) ? a.state_top : [];
+      const aggStateEl = document.createElement("div");
+      aggStateEl.innerHTML = `<div class="muted small" style="margin-top:6px;">state_top (aggregated)</div>`;
+      const aggStateFiltered = filterByPrefixes(filterPositive(aggState, it => it.v), it => it.token || "");
+      if (aggStateFiltered.length === 0) {
+        aggStateEl.appendChild(document.createTextNode("(none)"));
+      } else {
+        const ul = document.createElement("ul"); ul.className = "list mono";
+        aggStateFiltered.slice(0, kTok).forEach(sv => {
+          const li = document.createElement("li");
+          li.textContent = `${sv.token} = ${fmtNum(Number(sv.v||0))}`;
+          ul.appendChild(li);
+        });
+        aggStateEl.appendChild(ul);
+      }
+      elAggLists.appendChild(aggStateEl);
     } else {
       renderKV(elAgg, null);
       elAggLists.innerHTML = "";
@@ -373,11 +399,12 @@
       const state = Array.isArray(u.state_top) ? u.state_top : [];
       const st = document.createElement("div");
       st.innerHTML = `<div class="muted small" style="margin-top:6px;">state_top</div>`;
-      if (state.length === 0) {
+      const uniStateFiltered = filterByPrefixes(filterPositive(state, it => it.v), it => it.token || "");
+      if (uniStateFiltered.length === 0) {
         st.appendChild(document.createTextNode("(none)"));
       } else {
         const ul = document.createElement("ul"); ul.className = "list mono";
-        filterByPrefixes(state, it => it.token || "").slice(0, kTok).forEach(sv => {
+        uniStateFiltered.slice(0, kTok).forEach(sv => {
           const li = document.createElement("li");
           li.textContent = `${sv.token} = ${fmtNum(Number(sv.v||0))}`;
           ul.appendChild(li);

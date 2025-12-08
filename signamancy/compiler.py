@@ -27,6 +27,9 @@ class BlockKernels:
     outputs_std: Optional[SparseMatrixData] = None  # StdDev for chaos ranges
     # Net outputs = outputs - inputs (for fused update)
     outputs_net: Optional[SparseMatrixData] = None
+    # Discrete range support (inclusive): low/high for ranged outputs
+    outputs_range_lo: Optional[SparseMatrixData] = None
+    outputs_range_hi: Optional[SparseMatrixData] = None
     
     # New: consume-all inputs (X suffix) — subtract entire current value
     consume_all: Optional[SparseMatrixData] = None
@@ -76,6 +79,8 @@ class SignamancyCompiler:
                 "in": [[], []], "in_val": [],
                 "out": [[], []], "out_val": [],
                 "out_std": [[], []], "out_std_val": [],
+                "out_lo": [[], []], "out_lo_val": [],
+                "out_hi": [[], []], "out_hi_val": [],
                 "ban": [[], []], "ban_val": [],
                 "all": [[], []], "all_val": []
             }
@@ -122,6 +127,17 @@ class SignamancyCompiler:
                 out_std_mat = self._build_sparse(
                     raw_data[bt]["out_std"], raw_data[bt]["out_std_val"], (num_rules, block_sizes[bt])
                 )
+            # Range low/high (optional)
+            out_lo_mat = None
+            out_hi_mat = None
+            if raw_data[bt]["out_lo_val"]:
+                out_lo_mat = self._build_sparse(
+                    raw_data[bt]["out_lo"], raw_data[bt]["out_lo_val"], (num_rules, block_sizes[bt])
+                )
+            if raw_data[bt]["out_hi_val"]:
+                out_hi_mat = self._build_sparse(
+                    raw_data[bt]["out_hi"], raw_data[bt]["out_hi_val"], (num_rules, block_sizes[bt])
+                )
             # Inhibitor Matrix
             ban_mat = self._build_sparse(
                 raw_data[bt]["ban"], raw_data[bt]["ban_val"], (num_rules, block_sizes[bt])
@@ -145,6 +161,8 @@ class SignamancyCompiler:
                 inhibitors=ban_mat,
                 outputs_std=out_std_mat,
                 outputs_net=out_net_mat,
+                outputs_range_lo=out_lo_mat,
+                outputs_range_hi=out_hi_mat,
                 consume_all=all_mat,
                 unit_map=unit_map,
                 overflow_thresholds=overflows
@@ -167,12 +185,16 @@ class SignamancyCompiler:
         # Handle Quantity (Tuple range -> mean/std)
         val = token.quantity
         std_val = 0.0
+        lo_val = None
+        hi_val = None
         if isinstance(val, tuple):
             a, b = float(val[0]), float(val[1])
             mean = (a + b) / 2.0
             # Uniform distribution std ≈ (b - a) / sqrt(12)
             std_val = (b - a) / 3.46410161514
             val = mean
+            lo_val = a
+            hi_val = b
 
         # Determine which matrix (Input, Output, Inhibitor, Consume-All)
         if is_input:
@@ -198,7 +220,16 @@ class SignamancyCompiler:
             data[b_type]["out_val"].append(val)
 
             # Variance (only if we had a range)
-            if std_val > 0.0:
+            if lo_val is not None and hi_val is not None:
+                # Store discrete range bounds for integer-uniform sampling at runtime
+                data[b_type]["out_lo"][0].append(rule_idx)
+                data[b_type]["out_lo"][1].append(local_id)
+                data[b_type]["out_lo_val"].append(lo_val)
+                data[b_type]["out_hi"][0].append(rule_idx)
+                data[b_type]["out_hi"][1].append(local_id)
+                data[b_type]["out_hi_val"].append(hi_val)
+            elif std_val > 0.0:
+                # Fallback to std if no explicit bounds
                 data[b_type]["out_std"][0].append(rule_idx)
                 data[b_type]["out_std"][1].append(local_id)
                 data[b_type]["out_std_val"].append(std_val)

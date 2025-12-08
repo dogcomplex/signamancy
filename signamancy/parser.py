@@ -133,8 +133,8 @@ class SignamancyParser:
         
         # 1) Independent tokens => separate rules, each with its own probability
         for out in independent:
-            # Reset quantity to 1 for production
-            out_i = ParsedToken(token_id=out.token_id, quantity=1.0)
+            # Preserve original quantity (including ranges) for production
+            out_i = ParsedToken(token_id=out.token_id, quantity=out.quantity)
             requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + [out_i])
             generated_rules.append(Rule(
                 inputs=inputs,
@@ -160,7 +160,8 @@ class SignamancyParser:
             # Explicit probabilities
             for out in explicit:
                 p = float(getattr(out, "probability_val", 0.0)) * renorm
-                out_l = ParsedToken(token_id=out.token_id, quantity=1.0)
+                # Preserve original quantity (including numeric multipliers and ranges)
+                out_l = ParsedToken(token_id=out.token_id, quantity=out.quantity)
                 requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + [out_l] + nonprob)
                 generated_rules.append(Rule(
                     inputs=inputs,
@@ -178,7 +179,8 @@ class SignamancyParser:
             for out in bare:
                 if share <= 0:
                     continue
-                out_l = ParsedToken(token_id=out.token_id, quantity=1.0)
+                # Preserve original quantity for bare-probability tokens
+                out_l = ParsedToken(token_id=out.token_id, quantity=out.quantity)
                 requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + [out_l] + nonprob)
                 generated_rules.append(Rule(
                     inputs=inputs,
@@ -211,7 +213,8 @@ class SignamancyParser:
         for out in raw_outputs:
             if out.is_probability and not getattr(out, "is_independent", False):
                 branch_prob *= float(getattr(out, "probability_val", 1.0))
-                outputs.append(ParsedToken(token_id=out.token_id, quantity=1.0))
+                # Preserve original quantity (do not collapse to 1)
+                outputs.append(ParsedToken(token_id=out.token_id, quantity=out.quantity))
             else:
                 outputs.append(out)
         requires_cpu = any("🧮" in self.registry.resolve(t.token_id) for t in inputs + outputs)
@@ -285,7 +288,7 @@ class SignamancyParser:
         # Type Inference
         is_range = isinstance(quantity, tuple)
         type_hint = BlockType.BYTE
-        if is_range or is_prob or (isinstance(quantity, float) and quantity % 1 != 0):
+        if is_range or (isinstance(quantity, float) and quantity % 1 != 0):
             type_hint = BlockType.FLOAT
         else:
             # Escalate to FLOAT if large integral quantity

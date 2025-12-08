@@ -663,7 +663,17 @@ def cem_optimize(csv_path: Path, device: str):
                 base_to_c[base] = base_to_c.get(base, 0) + int(counts[ridx].item())
             items = sorted(base_to_c.items(), key=lambda x: x[1], reverse=True)[:trace_topk]
             rules_top = [{"rule": k, "count": v} for k, v in items]
-        rec = {"step": step_idx, "targets": targets, "targets_delta": targets_delta, "top_deltas": top, "rules_top": rules_top}
+        # aggregated top tokens by mean value (like Universe state_top)
+        # reuse snap_now which has token->{"val","std","type"}
+        means_list = []
+        try:
+            all_items = [(k, float(v.get("val", 0.0))) for k, v in snap_now.items()]
+            all_items.sort(key=lambda kv: kv[1], reverse=True)
+            for k, val in all_items[:trace_topk]:
+                means_list.append({"token": k, "v": val})
+        except Exception:
+            pass
+        rec = {"step": step_idx, "targets": targets, "targets_delta": targets_delta, "top_deltas": top, "rules_top": rules_top, "state_top": means_list}
         agg_f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     def write_uni(step_idx: int):
         if not uni_f or trace_uni_idx < 0:
@@ -711,6 +721,8 @@ def cem_optimize(csv_path: Path, device: str):
         choice = None
         valid_rules = []
         weights = []
+        choice_inputs = []
+        choice_deficits = []
         if engine.last_fired_mask is not None:
             mask = engine.last_fired_mask[uni].detach().cpu()
             nz = torch.nonzero(mask, as_tuple=False).squeeze(1).tolist()
@@ -736,6 +748,38 @@ def cem_optimize(csv_path: Path, device: str):
                 if len(vidx) > 0:
                     best = max(vidx, key=lambda r: float(logits[r].item()))
                     choice = idx_to_id.get(int(best), f"Rule#{int(best)}").split("#")[0]
+                # Compute per-universe inputs and deficits for the chosen rule
+                try:
+                    if getattr(engine, "last_choice", None) is not None:
+                        ci = int(engine.last_choice[uni].item())
+                        # For each block, list required tokens and deficits
+                        for bt in BlockType:
+                            kb = engine.gpu_blocks.get(bt, None)
+                            if not kb or not kb.get("in"):
+                                continue
+                            rule_idx_t, token_idx_t = kb["in"]["indices"]
+                            req_vals_t = kb["in"]["values"]
+                            # mask for this rule
+                            m = (rule_idx_t == ci)
+                            if not torch.is_tensor(m) or (not bool(m.any().item())):
+                                continue
+                            toks = token_idx_t[m]
+                            reqs = req_vals_t[m]
+                            if toks.numel() == 0:
+                                continue
+                            # current values at this universe
+                            cur = engine.state[bt][uni, toks.to(engine.state[bt].device)].float().detach().cpu()
+                            req = reqs.float().detach().cpu()
+                            for j in range(min(toks.numel(), 50)):
+                                li = int(toks[j].item())
+                                name = names_by_block[bt][li] if li < len(names_by_block[bt]) else f"{bt.name}:{li}"
+                                rv = float(req[j].item())
+                                cv = float(cur[j].item())
+                                choice_inputs.append({"token": name, "need": rv, "have": cv})
+                                if cv + 1e-6 < rv:
+                                    choice_deficits.append({"token": name, "missing": rv - cv})
+                except Exception:
+                    pass
         # Build state snapshot (top tokens by value, per block)
         state_list = []
         def add_state_block(bt: BlockType, lbl: str):
@@ -755,7 +799,7 @@ def cem_optimize(csv_path: Path, device: str):
         add_state_block(BlockType.BIT, "BIT")
         add_state_block(BlockType.BYTE, "BYTE")
         add_state_block(BlockType.FLOAT, "FLOAT")
-        rec = {"step": step_idx, "uni": uni, "lineage_id": int(lineage_id_final[uni].item()), "lineage_gen": int(lineage_gen_final[uni].item()), "top_deltas": [{"token": n, "dv": float(dv), "v": float(v)} for n, dv, v in cand], "fired_rules": fired, "choice": choice, "valid_rules_top": weights, "state_top": state_list}
+        rec = {"step": step_idx, "uni": uni, "lineage_id": int(lineage_id_final[uni].item()), "lineage_gen": int(lineage_gen_final[uni].item()), "top_deltas": [{"token": n, "dv": float(dv), "v": float(v)} for n, dv, v in cand], "fired_rules": fired, "choice": choice, "valid_rules_top": weights, "choice_inputs": choice_inputs[:50], "choice_deficits": choice_deficits[:50], "state_top": state_list}
         uni_f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     # initial trace rows
     if agg_f:
@@ -787,7 +831,7 @@ def cem_optimize(csv_path: Path, device: str):
         # Build condensed emoji snapshot (means across batch)
         snap_chunks: list[str] = []
         try:
-            topk = max(1, int(os.environ.get("FINAL_HEARTBEAT_TOPK", "20")))
+            topk = max(1, int(os.environ.get("FINAL_HEARTBEAT_TOPK", "10")))
             # Prefix filter precedence: FINAL_HEARTBEAT_PREFIXES > TRACE_PREFIXES > TARGET_RESOURCE_PREFIXES
             raw_pref = os.environ.get("FINAL_HEARTBEAT_PREFIXES", "").strip()
             if raw_pref in ("*", "ALL", "all"):
@@ -824,21 +868,41 @@ def cem_optimize(csv_path: Path, device: str):
         # Optional per-phase GPU profile summary (averages)
         prof_str = ""
         try:
-            if getattr(engine, "get_profile_stats", None) is not None:
-                ps = engine.get_profile_stats()
-                c = max(1, int(ps.get("count", 0)))
-                t_ms = float(ps.get("total_ms", 0.0)) / c
-                v_ms = float(ps.get("valid_ms", 0.0)) / c
-                r_ms = float(ps.get("resolve_ms", 0.0)) / c
-                u_ms = float(ps.get("update_ms", 0.0)) / c
-                p_ms = float(ps.get("physics_ms", 0.0)) / c
-                prof_str = f" | ms/step={t_ms:.2f} (valid={v_ms:.2f} resolve={r_ms:.2f} update={u_ms:.2f} physics={p_ms:.2f})"
+            if int(os.environ.get("FINAL_HEARTBEAT_PROFILE", "0")) == 1:
+                if getattr(engine, "get_profile_stats", None) is not None:
+                    ps = engine.get_profile_stats()
+                    c = max(1, int(ps.get("count", 0)))
+                    t_ms = float(ps.get("total_ms", 0.0)) / c
+                    v_ms = float(ps.get("valid_ms", 0.0)) / c
+                    r_ms = float(ps.get("resolve_ms", 0.0)) / c
+                    u_ms = float(ps.get("update_ms", 0.0)) / c
+                    p_ms = float(ps.get("physics_ms", 0.0)) / c
+                    prof_str = f" | ms/step={t_ms:.2f} (valid={v_ms:.2f} resolve={r_ms:.2f} update={u_ms:.2f} physics={p_ms:.2f})"
+        except Exception:
+            pass
+        # Fired rule bases (this step), top-K by count (disabled by default)
+        fired_str = ""
+        try:
+            if int(os.environ.get("FINAL_HEARTBEAT_SHOW_RULES", "0")) == 1:
+                top_rules = max(1, int(os.environ.get("FINAL_HEARTBEAT_RULETOPK", "10")))
+                fm = getattr(engine, "last_fired_mask", None)
+                if fm is not None and torch.is_tensor(fm):
+                    counts = fm.sum(dim=0).detach().cpu()
+                    nz = torch.nonzero(counts, as_tuple=False).squeeze(1).tolist()
+                    base_to_c: dict[str, int] = {}
+                    for ridx in nz:
+                        rid = idx_to_id.get(int(ridx), f"Rule#{int(ridx)}")
+                        base = rid.split("#")[0]
+                        base_to_c[base] = base_to_c.get(base, 0) + int(counts[ridx].item())
+                    items = sorted(base_to_c.items(), key=lambda x: x[1], reverse=True)[:top_rules]
+                    if items:
+                        fired_str = " | " + " ".join([f"{k}×{v}" for k, v in items])
         except Exception:
             pass
         if int(os.environ.get("DECISION_ONLY", "1")) == 1:
-            print(f"[FINAL] step={step_idx} decisions={decisions}/{horizon} valid={valid_rows}/{engine.cfg.batch_size} score_mean={s_mean:.3f} score_max={s_max:.3f}{prof_str}{snap_str}", flush=True)
+            print(f"[FINAL] step={step_idx} decisions={decisions}/{horizon} valid={valid_rows}/{engine.cfg.batch_size} score_mean={s_mean:.3f} score_max={s_max:.3f}{prof_str}{fired_str}{snap_str}", flush=True)
         else:
-            print(f"[FINAL] step={step_idx}/{horizon} valid={valid_rows}/{engine.cfg.batch_size} score_mean={s_mean:.3f} score_max={s_max:.3f}{prof_str}{snap_str}", flush=True)
+            print(f"[FINAL] step={step_idx}/{horizon} valid={valid_rows}/{engine.cfg.batch_size} score_mean={s_mean:.3f} score_max={s_max:.3f}{prof_str}{fired_str}{snap_str}", flush=True)
         last_hb_t = time.perf_counter()
     if int(os.environ.get("DECISION_ONLY", "1")) == 1:
         while decisions < horizon:
