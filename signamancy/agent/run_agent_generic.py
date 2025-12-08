@@ -198,6 +198,8 @@ def cem_optimize(csv_path: Path, device: str):
     do_autotune = int(os.environ.get("AGENT_AUTOTUNE", "0")) == 1
     profile_iter = int(os.environ.get("AGENT_PROFILE", "0")) == 1
     single_action = int(os.environ.get("AGENT_SINGLE_ACTION", "1")) == 1
+    decision_only = int(os.environ.get("DECISION_ONLY", "1")) == 1
+    physics_burst_max = int(os.environ.get("PHYSICS_BURST_MAX", "128"))
     # Particle resampling (clone best into worst)
     resample_every = int(os.environ.get("RESAMPLE_EVERY", "0"))  # 0 disables
     resample_top_frac = float(os.environ.get("RESAMPLE_TOP_FRAC", "0.1"))
@@ -219,6 +221,9 @@ def cem_optimize(csv_path: Path, device: str):
     bias_in_path = os.environ.get("AGENT_BIAS_IN", "")
     bias_out_path = os.environ.get("AGENT_BIAS_OUT", "")
     only_final = int(os.environ.get("AGENT_ONLY_FINAL", "0")) == 1
+    # Final-run heartbeat (prints progress without needing CEM iterations)
+    final_heartbeat_every = int(os.environ.get("FINAL_HEARTBEAT_EVERY", "0"))
+    final_heartbeat_secs = float(os.environ.get("FINAL_HEARTBEAT_SECS", "0"))
 
     # Compile once
     rules, idx_to_id, registry = load_rules_with_ids(csv_path)
@@ -409,47 +414,97 @@ def cem_optimize(csv_path: Path, device: str):
                 # Lineage (optimization-time): per-row origin and generation
                 lineage_id = torch.arange(engine.cfg.batch_size, dtype=torch.long)
                 lineage_gen = torch.zeros(engine.cfg.batch_size, dtype=torch.long)
-                for t in range(horizon):
-                    engine.step()
-                    if getattr(engine, "last_prior_valid", None) is not None:
-                        has_any = engine.last_prior_valid.any(dim=1)
-                        iter_dead_rows += int((~has_any).sum().item())
-                    # Periodic resampling: clone top universes into worst
-                    if resample_every > 0 and ((t + 1) % resample_every == 0):
-                        with torch.no_grad():
-                            scores_vec = _score_universes(engine, prefix_idx_by_block)
-                            k = max(resample_min_k, int(resample_top_frac * engine.cfg.batch_size))
-                            k = min(k, engine.cfg.batch_size // 2)  # keep some diversity
-                            if k > 0:
-                                top = torch.topk(scores_vec, k=k, largest=True).indices
-                                worst = torch.topk(scores_vec, k=k, largest=False).indices
-                                # Clone state blocks
-                                for bt in BlockType:
-                                    s = engine.state[bt]
-                                    s.index_copy_(0, worst.to(s.device), s.index_select(0, top.to(s.device)))
-                                # Lineage update and optional log
-                                lineage_id[worst.cpu()] = lineage_id[top.cpu()]
-                                lineage_gen[worst.cpu()] = lineage_gen[top.cpu()] + 1
-                                # Optional resample JSONL logging
-                                if resample_log:
-                                    # Open per-candidate on demand (avoid huge open handles)
-                                    with open(resample_log, "a", encoding="utf-8") as rf:
-                                        count = k
-                                        sel = list(range(count))
-                                        if resample_log_sample > 0 and resample_log_sample < count:
-                                            sel = sel[:resample_log_sample]
-                                        for j in sel:
-                                            ti = int(top[j].item()); wi = int(worst[j].item())
-                                            rec = {
-                                                "iter": it + 1, "cand": i + 1, "step": t + 1,
-                                                "top_idx": ti, "worst_idx": wi,
-                                                "lineage_id": int(lineage_id[ti].item()),
-                                                "lineage_gen_src": int((lineage_gen[ti].item())),
-                                                "lineage_gen_dst": int((lineage_gen[wi].item()))
-                                            }
-                                            rf.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                                iter_replacements += int(k)
-                total_engine_steps += horizon
+                steps_run = 0
+                decisions = 0
+                if decision_only:
+                    while decisions < horizon:
+                        # Burst through physics-only frames (≤1 effective choice)
+                        sub = 0
+                        while sub < physics_burst_max:
+                            stats = engine.compute_choice_stats(collapse_same_base=True)
+                            if bool(stats.get("any_decision", False)):
+                                break
+                            engine.step(); steps_run += 1; sub += 1
+                            if getattr(engine, "last_prior_valid", None) is not None:
+                                has_any = engine.last_prior_valid.any(dim=1)
+                                iter_dead_rows += int((~has_any).sum().item())
+                        # If after bursting there is still no multi-choice, we're done
+                        stats = engine.compute_choice_stats(collapse_same_base=True)
+                        if not bool(stats.get("any_decision", False)):
+                            break
+                        # Do exactly one decision step
+                        engine.step(); steps_run += 1; decisions += 1
+                        if getattr(engine, "last_prior_valid", None) is not None:
+                            has_any = engine.last_prior_valid.any(dim=1)
+                            iter_dead_rows += int((~has_any).sum().item())
+                        # Periodic resampling at decision boundaries
+                        if resample_every > 0 and (decisions % resample_every == 0):
+                            with torch.no_grad():
+                                scores_vec = _score_universes(engine, prefix_idx_by_block)
+                                k = max(resample_min_k, int(resample_top_frac * engine.cfg.batch_size))
+                                k = min(k, engine.cfg.batch_size // 2)
+                                if k > 0:
+                                    top = torch.topk(scores_vec, k=k, largest=True).indices
+                                    worst = torch.topk(scores_vec, k=k, largest=False).indices
+                                    for bt in BlockType:
+                                        s = engine.state[bt]
+                                        s.index_copy_(0, worst.to(s.device), s.index_select(0, top.to(s.device)))
+                                    lineage_id[worst.cpu()] = lineage_id[top.cpu()]
+                                    lineage_gen[worst.cpu()] = lineage_gen[top.cpu()] + 1
+                                    if resample_log:
+                                        with open(resample_log, "a", encoding="utf-8") as rf:
+                                            count = k
+                                            sel = list(range(count))
+                                            if resample_log_sample > 0 and resample_log_sample < count:
+                                                sel = sel[:resample_log_sample]
+                                            for j in sel:
+                                                ti = int(top[j].item()); wi = int(worst[j].item())
+                                                rec = {
+                                                    "iter": it + 1, "cand": i + 1, "step": decisions,
+                                                    "top_idx": ti, "worst_idx": wi,
+                                                    "lineage_id": int(lineage_id[ti].item()),
+                                                    "lineage_gen_src": int((lineage_gen[ti].item())),
+                                                    "lineage_gen_dst": int((lineage_gen[wi].item()))
+                                                }
+                                                rf.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                                    iter_replacements += int(k)
+                else:
+                    for t in range(horizon):
+                        engine.step(); steps_run += 1
+                        if getattr(engine, "last_prior_valid", None) is not None:
+                            has_any = engine.last_prior_valid.any(dim=1)
+                            iter_dead_rows += int((~has_any).sum().item())
+                        if resample_every > 0 and ((t + 1) % resample_every == 0):
+                            with torch.no_grad():
+                                scores_vec = _score_universes(engine, prefix_idx_by_block)
+                                k = max(resample_min_k, int(resample_top_frac * engine.cfg.batch_size))
+                                k = min(k, engine.cfg.batch_size // 2)
+                                if k > 0:
+                                    top = torch.topk(scores_vec, k=k, largest=True).indices
+                                    worst = torch.topk(scores_vec, k=k, largest=False).indices
+                                    for bt in BlockType:
+                                        s = engine.state[bt]
+                                        s.index_copy_(0, worst.to(s.device), s.index_select(0, top.to(s.device)))
+                                    lineage_id[worst.cpu()] = lineage_id[top.cpu()]
+                                    lineage_gen[worst.cpu()] = lineage_gen[top.cpu()] + 1
+                                    if resample_log:
+                                        with open(resample_log, "a", encoding="utf-8") as rf:
+                                            count = k
+                                            sel = list(range(count))
+                                            if resample_log_sample > 0 and resample_log_sample < count:
+                                                sel = sel[:resample_log_sample]
+                                            for j in sel:
+                                                ti = int(top[j].item()); wi = int(worst[j].item())
+                                                rec = {
+                                                    "iter": it + 1, "cand": i + 1, "step": t + 1,
+                                                    "top_idx": ti, "worst_idx": wi,
+                                                    "lineage_id": int(lineage_id[ti].item()),
+                                                    "lineage_gen_src": int((lineage_gen[ti].item())),
+                                                    "lineage_gen_dst": int((lineage_gen[wi].item()))
+                                                }
+                                                rf.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                                    iter_replacements += int(k)
+                total_engine_steps += steps_run
                 snap = bridge.get_state_snapshot()
                 score = objective_from_snapshot(snap, prefixes, weights)
                 candidates.append(use_bias)
@@ -497,8 +552,23 @@ def cem_optimize(csv_path: Path, device: str):
         torch.manual_seed(12345)
         if device == "cuda" and torch.cuda.is_available():
             torch.cuda.manual_seed_all(12345)
-    bridge.inject_signal("💫"); engine.step(); engine.step()
+    # Attach rule IDs before any steps (for one-shot bases masking)
     engine.rule_ids = [idx_to_id.get(i, f"Rule#{i}") for i in range(num_rules)]
+    bridge.inject_signal("💫"); engine.step(); engine.step()
+    last_hb_t = time.perf_counter()
+    # Optional debug: check if any rules are valid after seeding
+    if int(os.environ.get("AGENT_DEBUG_VALID", "0")) == 1:
+        try:
+            stats0 = engine.compute_choice_stats(collapse_same_base=True)
+            pv0 = stats0.get("prior_valid")
+            if pv0 is not None and torch.is_tensor(pv0):
+                any_rows = int(pv0.any(dim=1).sum().item())
+                max_cnt = int(stats0.get("counts", torch.zeros(1)).max().item())
+                print(f"[DEBUG] post-seed valid rows={any_rows}/{engine.cfg.batch_size} max_valid_per_row={max_cnt}")
+            else:
+                print("[DEBUG] post-seed: prior_valid not available")
+        except Exception as e:
+            print(f"[DEBUG] post-seed check failed: {e}")
     if pm:
         try:
             pm.apply_to_engine(engine, registry, id_to_indices, policy_gain=policy_gain)
@@ -541,6 +611,8 @@ def cem_optimize(csv_path: Path, device: str):
     # Final-run lineage (no resampling): default IDs/gen
     lineage_id_final = torch.arange(engine.cfg.batch_size, dtype=torch.long)
     lineage_gen_final = torch.zeros(engine.cfg.batch_size, dtype=torch.long)
+    # Heartbeat scoring over target prefixes
+    hb_idx_by_block = _build_prefix_indices(registry, prefixes)
     # Build name lists per block for fast lookup
     names_by_block: dict[BlockType, list[str]] = {BlockType.BIT: [], BlockType.BYTE: [], BlockType.FLOAT: []}
     for _, meta in registry._tokens.items():  # type: ignore[attr-defined]
@@ -690,13 +762,132 @@ def cem_optimize(csv_path: Path, device: str):
         write_agg(0, prev_snap)
     if uni_f:
         write_uni(0)
-    for t in range(horizon):
-        engine.step()
-        if (t + 1) % max(1, trace_every) == 0:
-            snap_now = bridge.get_state_snapshot()
-            write_agg(t + 1, snap_now)
-            write_uni(t + 1)
-            prev_snap = snap_now
+    decisions = 0
+    steps_run_final = 0
+    step_idx = 0
+    # Helper: emit compact heartbeat with validity and score across prefixes
+    def _emit_hb():
+        nonlocal last_hb_t
+        try:
+            stats_hb = engine.compute_choice_stats(collapse_same_base=True)
+            pv = stats_hb.get("prior_valid")
+            if pv is not None and torch.is_tensor(pv):
+                valid_rows = int(pv.any(dim=1).sum().item())
+            else:
+                valid_rows = 0
+        except Exception:
+            valid_rows = 0
+        try:
+            scores_vec = _score_universes(engine, hb_idx_by_block)
+            s_mean = float(scores_vec.mean().item())
+            s_max = float(scores_vec.max().item())
+        except Exception:
+            s_mean = 0.0
+            s_max = 0.0
+        # Build condensed emoji snapshot (means across batch)
+        snap_chunks: list[str] = []
+        try:
+            topk = max(1, int(os.environ.get("FINAL_HEARTBEAT_TOPK", "20")))
+            # Prefix filter precedence: FINAL_HEARTBEAT_PREFIXES > TRACE_PREFIXES > TARGET_RESOURCE_PREFIXES
+            raw_pref = os.environ.get("FINAL_HEARTBEAT_PREFIXES", "").strip()
+            if raw_pref in ("*", "ALL", "all"):
+                prefs: list[str] = []  # no filtering; show all
+            else:
+                base_pref = raw_pref if raw_pref else os.environ.get("TRACE_PREFIXES", "")
+                prefs = [p.strip() for p in base_pref.replace(",", " ").split() if p.strip()]
+                if not prefs:
+                    prefs = prefixes  # fall back to target prefixes
+            cand: list[tuple[str, float]] = []
+            for bt in BlockType:
+                s = engine.state[bt]
+                if s.shape[1] == 0: 
+                    continue
+                means = s.float().clamp_min(0.0).mean(dim=0).detach().cpu().tolist()
+                names = names_by_block[bt]
+                for li, mv in enumerate(means):
+                    if li >= len(names): 
+                        continue
+                    nm = names[li]
+                    if not nm:
+                        continue
+                    if prefs and not any(nm.startswith(p) for p in prefs):
+                        continue
+                    if mv <= 0.0:
+                        continue
+                    cand.append((nm, float(mv)))
+            cand.sort(key=lambda x: x[1], reverse=True)
+            for nm, mv in cand[:topk]:
+                snap_chunks.append(f"{nm}{mv:.1f}")
+        except Exception:
+            pass
+        snap_str = (" | " + " ".join(snap_chunks)) if snap_chunks else ""
+        # Optional per-phase GPU profile summary (averages)
+        prof_str = ""
+        try:
+            if getattr(engine, "get_profile_stats", None) is not None:
+                ps = engine.get_profile_stats()
+                c = max(1, int(ps.get("count", 0)))
+                t_ms = float(ps.get("total_ms", 0.0)) / c
+                v_ms = float(ps.get("valid_ms", 0.0)) / c
+                r_ms = float(ps.get("resolve_ms", 0.0)) / c
+                u_ms = float(ps.get("update_ms", 0.0)) / c
+                p_ms = float(ps.get("physics_ms", 0.0)) / c
+                prof_str = f" | ms/step={t_ms:.2f} (valid={v_ms:.2f} resolve={r_ms:.2f} update={u_ms:.2f} physics={p_ms:.2f})"
+        except Exception:
+            pass
+        if int(os.environ.get("DECISION_ONLY", "1")) == 1:
+            print(f"[FINAL] step={step_idx} decisions={decisions}/{horizon} valid={valid_rows}/{engine.cfg.batch_size} score_mean={s_mean:.3f} score_max={s_max:.3f}{prof_str}{snap_str}", flush=True)
+        else:
+            print(f"[FINAL] step={step_idx}/{horizon} valid={valid_rows}/{engine.cfg.batch_size} score_mean={s_mean:.3f} score_max={s_max:.3f}{prof_str}{snap_str}", flush=True)
+        last_hb_t = time.perf_counter()
+    if int(os.environ.get("DECISION_ONLY", "1")) == 1:
+        while decisions < horizon:
+            # Burst through physics-only steps, logging every engine step
+            sub = 0
+            while sub < physics_burst_max:
+                stats = engine.compute_choice_stats(collapse_same_base=True)
+                if bool(stats.get("any_decision", False)):
+                    break
+                engine.step(); steps_run_final += 1; sub += 1; step_idx += 1
+                now = time.perf_counter()
+                if final_heartbeat_every > 0 and (step_idx % final_heartbeat_every == 0):
+                    _emit_hb()
+                elif final_heartbeat_secs > 0 and (now - last_hb_t) >= final_heartbeat_secs:
+                    _emit_hb()
+                if (step_idx) % max(1, trace_every) == 0:
+                    snap_now = bridge.get_state_snapshot()
+                    write_agg(step_idx, snap_now)
+                    write_uni(step_idx)
+                    prev_snap = snap_now
+            # If still no multi-choice, we're done
+            stats = engine.compute_choice_stats(collapse_same_base=True)
+            if not bool(stats.get("any_decision", False)):
+                break
+            # Execute exactly one decision step (also logged)
+            engine.step(); steps_run_final += 1; decisions += 1; step_idx += 1
+            now = time.perf_counter()
+            if final_heartbeat_every > 0 and (step_idx % final_heartbeat_every == 0):
+                _emit_hb()
+            elif final_heartbeat_secs > 0 and (now - last_hb_t) >= final_heartbeat_secs:
+                _emit_hb()
+            if (step_idx) % max(1, trace_every) == 0:
+                snap_now = bridge.get_state_snapshot()
+                write_agg(step_idx, snap_now)
+                write_uni(step_idx)
+                prev_snap = snap_now
+    else:
+        for t in range(horizon):
+            engine.step(); steps_run_final += 1; step_idx += 1
+            now = time.perf_counter()
+            if final_heartbeat_every > 0 and (step_idx % final_heartbeat_every == 0):
+                _emit_hb()
+            elif final_heartbeat_secs > 0 and (now - last_hb_t) >= final_heartbeat_secs:
+                _emit_hb()
+            if (step_idx) % max(1, trace_every) == 0:
+                snap_now = bridge.get_state_snapshot()
+                write_agg(step_idx, snap_now)
+                write_uni(step_idx)
+                prev_snap = snap_now
     if agg_f:
         agg_f.close()
     if uni_f:

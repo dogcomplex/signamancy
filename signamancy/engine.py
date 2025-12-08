@@ -15,6 +15,8 @@ class SimulationConfig:
     # Thermodynamics
     temperature: float = 1.0  # Multiplier for probability/variance
     max_physics_substeps: int = 10
+    # Row-slice controls
+    row_slice_max_uniques: int | None = None
     
     # Debug/logging
     enable_priority_logging: bool = False
@@ -50,11 +52,46 @@ class SignamancyEngine:
         self.last_prior_valid: torch.Tensor | None = None  # [Batch, Rules] for tracing
         self.last_scaled_logits: torch.Tensor | None = None  # [Rules] for tracing
         self.last_choice: torch.Tensor | None = None  # [Batch] chosen rule index in single-action mode
+        # One-shot rule support (e.g., ID_Start fires at most once per universe)
+        raw_oneshot = os.environ.get("ONESHOT_BASES", "ID_Start")
+        self._oneshot_bases = [s for s in raw_oneshot.replace(",", " ").split() if s.strip()]
+        self._oneshot_ready = False
+        self._oneshot_rule_indices: list[int] = []
+        self._oneshot_fired: dict[int, torch.Tensor] = {}  # rule_idx -> [Batch] bool
         self._init_memory()
         self._upload_kernels()
         # Initialize per-rule biases (default zeros = no effect)
         self.rule_biases_static = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
         self.rule_biases_dyn = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
+        # Profiling accumulators (ms)
+        self._prof_enable = os.environ.get("ENGINE_PROFILE_PHASES", "0") == "1"
+        self._prof_count = 0
+        self._prof_valid_ms = 0.0
+        self._prof_resolve_ms = 0.0
+        self._prof_update_ms = 0.0
+        self._prof_physics_ms = 0.0
+        self._prof_cpu_ms = 0.0
+        self._prof_total_ms = 0.0
+    
+    def reset_profile_stats(self):
+        self._prof_count = 0
+        self._prof_valid_ms = 0.0
+        self._prof_resolve_ms = 0.0
+        self._prof_update_ms = 0.0
+        self._prof_physics_ms = 0.0
+        self._prof_cpu_ms = 0.0
+        self._prof_total_ms = 0.0
+    
+    def get_profile_stats(self):
+        return {
+            "count": int(self._prof_count),
+            "valid_ms": float(self._prof_valid_ms),
+            "resolve_ms": float(self._prof_resolve_ms),
+            "update_ms": float(self._prof_update_ms),
+            "physics_ms": float(self._prof_physics_ms),
+            "cpu_ms": float(self._prof_cpu_ms),
+            "total_ms": float(self._prof_total_ms),
+        }
 
     def set_rule_biases(self, biases: torch.Tensor | None):
         # Sets static component (e.g., ♥ID_*)
@@ -65,6 +102,117 @@ class SignamancyEngine:
             if b.shape[-1] != self.num_rules:
                 raise ValueError("rule_biases length must equal num_rules")
             self.rule_biases_static = b
+    
+    def compute_choice_stats(self, collapse_same_base: bool = True) -> dict:
+        """
+        Peek at current frame's valid choices after strict-priority masking,
+        without applying updates. Returns per-universe choice counts and whether
+        any universe has a decision point (either multiple independent bases or
+        a mutex group with >1 valid branches).
+        """
+        with torch.no_grad():
+            valid = self._check_validity()
+            prior_valid, max_prio = self._apply_priority_and_guides(valid)
+            # Expose for tracing
+            self.last_prior_valid = prior_valid.detach()
+            counts = prior_valid.sum(dim=1)  # [B]
+            eff_counts = counts.clone()
+            # Optionally collapse branches of the same CSV base rule into one choice
+            if collapse_same_base and isinstance(self.rule_ids, list) and len(self.rule_ids) == self.num_rules:
+                rows = torch.nonzero(counts > 1, as_tuple=False).squeeze(1).tolist()
+                # Build base list once
+                rule_ids_list = list(self.rule_ids)
+                bases: list[str] = [ (rid.split("#")[0] if isinstance(rid, str) else "") for rid in rule_ids_list ]
+                for r in rows:
+                    idxs = torch.nonzero(prior_valid[r], as_tuple=False).squeeze(1).tolist()
+                    if not idxs:
+                        continue
+                    seen = set()
+                    for i in idxs:
+                        b = bases[i] if i < len(bases) else ""
+                        seen.add(b)
+                    eff_counts[r] = len(seen)
+            # Detect mutex groups with >1 valid branches (decision even if same base)
+            mutex_ids = self.rule_meta[:, 2].long()
+            is_mutex = (mutex_ids != 0)
+            any_mutex_multi = False
+            if is_mutex.any():
+                unique_groups = torch.unique(mutex_ids[is_mutex])
+                # For each group, count valid options per row
+                pv = prior_valid  # [B, R]
+                for gid in unique_groups.tolist():
+                    mask = (mutex_ids == gid).unsqueeze(0)  # [1, R]
+                    # number of valid rules within this mutex group per row
+                    grp_counts = (pv & mask).sum(dim=1)
+                    if (grp_counts > 1).any():
+                        any_mutex_multi = True
+                        break
+            any_multi = bool((eff_counts > 1).any().item())
+            any_decision = any_multi or bool(any_mutex_multi)
+            return {
+                "prior_valid": prior_valid,
+                "counts": counts,
+                "effective_counts": eff_counts,
+                "max_priority": max_prio,
+                "any_multi": any_multi,
+                "any_decision": any_decision,
+            }
+    
+    def _ensure_oneshot_map(self):
+        if self._oneshot_ready:
+            return
+        if not isinstance(self.rule_ids, list) or len(self.rule_ids) != self.num_rules:
+            return
+        if not self._oneshot_bases:
+            self._oneshot_ready = True
+            return
+        rid_list = list(self.rule_ids) if isinstance(self.rule_ids, list) else []
+        if not rid_list:
+            self._oneshot_ready = True
+            return
+        bases = [rid.split("#")[0] if isinstance(rid, str) else "" for rid in rid_list]
+        for idx, b in enumerate(bases):
+            if b in self._oneshot_bases:
+                self._oneshot_rule_indices.append(idx)
+        # Initialize fired masks per tracked rule
+        for idx in self._oneshot_rule_indices:
+            self._oneshot_fired[idx] = torch.zeros((self.cfg.batch_size,), dtype=torch.bool, device=self.device)
+        self._oneshot_ready = True
+    
+    def _mask_oneshot_prior(self, prior_valid: torch.Tensor):
+        if not self._oneshot_ready or not self._oneshot_rule_indices:
+            return
+        for idx in self._oneshot_rule_indices:
+            fired_rows = self._oneshot_fired.get(idx, None)
+            if fired_rows is None:
+                continue
+            if fired_rows.any():
+                prior_valid[fired_rows, idx] = False
+    
+    def _update_oneshot_fired(self, fired_mask: torch.Tensor):
+        if not self._oneshot_ready or not self._oneshot_rule_indices:
+            return
+        for idx in self._oneshot_rule_indices:
+            fm = fired_mask[:, idx]
+            if fm.any():
+                self._oneshot_fired[idx] |= fm
+    
+    def _apply_priority_and_guides(self, valid: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        # Strict priority masking to per-universe max
+        priorities = self.rule_meta[:, 0].to(self.device)  # [Rules]
+        max_prio = (valid.float() * priorities.unsqueeze(0)).amax(dim=1)  # [B]
+        prio_mask = (priorities.unsqueeze(0) == max_prio.unsqueeze(1))  # [B, R]
+        prior_valid = valid & prio_mask
+        # Reachability guide (safe)
+        if self.reachability_guide_mask is not None:
+            any_valid_per_rule = prior_valid.any(dim=0)  # [R]
+            mask_rules = self.reachability_guide_mask & (~any_valid_per_rule)
+            if mask_rules.any():
+                prior_valid[:, mask_rules] = False
+        # One-shot: disable tracked bases after first fire per universe
+        self._ensure_oneshot_map()
+        self._mask_oneshot_prior(prior_valid)
+        return prior_valid, max_prio
 
     def set_reachability_guide_mask(self, mask: torch.Tensor | None):
         """Set per-rule guidance mask. True means 'unreachable within K' proposal.
@@ -138,15 +286,41 @@ class SignamancyEngine:
                 v = torch.tensor(data.values, dtype=val_dtype, device=self.device)
                 # Note: We keep indices/values separate for custom kernels (Validity)
                 # We also create the coalesced sparse tensor for MM
-                sparse = torch.sparse_coo_tensor(i, v, data.shape, device=self.device)
+                sparse = torch.sparse_coo_tensor(i, v, data.shape, device=self.device).coalesce()
                 return {"indices": i, "values": v, "mat": sparse}
 
             # Choose dtype for values (optional mixed precision on FLOAT block)
             use_mixed = os.environ.get("FLOAT_MIXED", "1") == "1"
             def val_dtype_for(key: str) -> torch.dtype:
-                if use_mixed and bt == BlockType.FLOAT and key in ("out_mean", "out_std", "out_net"):
-                    return torch.float16
+                # IMPORTANT: PyTorch sparse.mm on CUDA does not support Half for sparse tensors.
+                # Keep all sparse matrices in float32 to avoid "addmm_sparse_cuda not implemented for 'Half'".
                 return torch.float32
+
+            # Build per-row slices (rule -> token indices, values) for fast single-action updates
+            def build_row_slices(data):
+                if data is None or not getattr(data, "values", None):
+                    return None
+                num_rows = data.shape[0] if data.shape and len(data.shape) == 2 else int(self.kernel.num_rules)
+                rows_idx = [None] * num_rows
+                rows_val = [None] * num_rows
+                # Build buckets on CPU lists, then move to device
+                buckets = {}
+                for r, c, v in zip(data.indices[0], data.indices[1], data.values):
+                    rr = int(r); cc = int(c)
+                    if rr not in buckets:
+                        buckets[rr] = ([], [])
+                    buckets[rr][0].append(cc)
+                    buckets[rr][1].append(float(v))
+                for r in range(num_rows):
+                    if r in buckets:
+                        cols, vals = buckets[r]
+                        rows_idx[r] = torch.tensor(cols, dtype=torch.long, device=self.device)
+                        # Always keep row values in float32 for accumulation stability
+                        rows_val[r] = torch.tensor(vals, dtype=torch.float32, device=self.device)
+                    else:
+                        rows_idx[r] = torch.empty((0,), dtype=torch.long, device=self.device)
+                        rows_val[r] = torch.empty((0,), dtype=torch.float32, device=self.device)
+                return {"idx": rows_idx, "val": rows_val}
 
             self.gpu_blocks[bt] = {
                 "in": upload(block_kernel.inputs, torch.float32),
@@ -158,6 +332,10 @@ class SignamancyEngine:
                 "unit_map": block_kernel.unit_map.to(self.device) if block_kernel.unit_map is not None else None,
                 "thresholds": block_kernel.overflow_thresholds.to(self.device) if getattr(block_kernel, "overflow_thresholds", None) is not None else None,
                 "all": upload(getattr(block_kernel, "consume_all", None), torch.float32),
+                # Row-slice caches for single-action fast path
+                "out_net_rows": build_row_slices(getattr(block_kernel, "outputs_net", None)),
+                "out_std_rows": build_row_slices(getattr(block_kernel, "outputs_std", None)),
+                "all_rows": build_row_slices(getattr(block_kernel, "consume_all", None)),
             }
             
         # Rule Meta: [Priority, Probability, MutexID, CPU_Flag]
@@ -168,23 +346,80 @@ class SignamancyEngine:
         """
         The Heartbeat.
         """
+        if self._prof_enable:
+            if self.device.type == "cuda":
+                e0 = torch.cuda.Event(enable_timing=True); e1 = torch.cuda.Event(enable_timing=True)
+                e2 = torch.cuda.Event(enable_timing=True); e3 = torch.cuda.Event(enable_timing=True)
+                e4 = torch.cuda.Event(enable_timing=True); e5 = torch.cuda.Event(enable_timing=True)
+                torch.cuda.synchronize()
+                e0.record()
+            else:
+                import time as _t
+                _t0 = _t.perf_counter()
         # 1. Validity: Strict Requirement Checking
         valid_mask = self._check_validity()
-        
+        if self._prof_enable:
+            if self.device.type == "cuda":
+                e1.record(); torch.cuda.synchronize()
+                self._prof_valid_ms += float(e0.elapsed_time(e1))
+            else:
+                import time as _t
+                _t1 = _t.perf_counter(); self._prof_valid_ms += (_t1 - _t0) * 1000.0; _t0 = _t1
         # 2. Conflict Resolution: Priority & Mutex
         fired_mask = self._resolve_conflicts(valid_mask)
-        
+        if self._prof_enable:
+            if self.device.type == "cuda":
+                e2.record(); torch.cuda.synchronize()
+                self._prof_resolve_ms += float(e1.elapsed_time(e2))
+            else:
+                import time as _t
+                _t2 = _t.perf_counter(); self._prof_resolve_ms += (_t2 - _t0) * 1000.0; _t0 = _t2
         # 3. Updates: Apply Deltas & Variance
         self._apply_updates(fired_mask)
         # Keep last fired mask for tracing/diagnostics
         self.last_fired_mask = fired_mask
-        
+        if self._prof_enable:
+            if self.device.type == "cuda":
+                e3.record(); torch.cuda.synchronize()
+                self._prof_update_ms += float(e2.elapsed_time(e3))
+            else:
+                import time as _t
+                _t3 = _t.perf_counter(); self._prof_update_ms += (_t3 - _t0) * 1000.0; _t0 = _t3
         # 4. Physics: Carry-Lookahead & Constraints
         self._resolve_physics()
-        
+        if self._prof_enable:
+            if self.device.type == "cuda":
+                e4.record(); torch.cuda.synchronize()
+                self._prof_physics_ms += float(e3.elapsed_time(e4))
+            else:
+                import time as _t
+                _t4 = _t.perf_counter(); self._prof_physics_ms += (_t4 - _t0) * 1000.0; _t0 = _t4
         # 5. CPU Valve
         if self.cfg.enable_cpu_offload:
-            self._handle_cpu_callbacks(fired_mask)
+            if self._prof_enable:
+                if self.device.type == "cuda":
+                    # CPU callbacks are on host; measure wall time
+                    import time as _t
+                    _h0 = _t.perf_counter()
+                    self._handle_cpu_callbacks(fired_mask)
+                    _h1 = _t.perf_counter()
+                    self._prof_cpu_ms += (_h1 - _h0) * 1000.0
+                else:
+                    import time as _t
+                    _h0 = _t.perf_counter()
+                    self._handle_cpu_callbacks(fired_mask)
+                    _h1 = _t.perf_counter()
+                    self._prof_cpu_ms += (_h1 - _h0) * 1000.0
+            else:
+                self._handle_cpu_callbacks(fired_mask)
+        if self._prof_enable:
+            if self.device.type == "cuda":
+                e5.record(); torch.cuda.synchronize()
+                self._prof_total_ms += float(e0.elapsed_time(e5))
+            else:
+                import time as _t
+                _t5 = _t.perf_counter(); self._prof_total_ms += (_t5 - _t0) * 1000.0
+            self._prof_count += 1
 
     def _check_validity(self) -> torch.Tensor:
         """
@@ -194,6 +429,9 @@ class SignamancyEngine:
         bs = self.cfg.batch_size
         # Start with all True
         validity = torch.ones((bs, self.num_rules), dtype=torch.bool, device=self.device)
+        do_debug = os.environ.get("ENGINE_DUMP_VALID", "0") == "1"
+        debug_base = os.environ.get("ENGINE_DEBUG_RULE_BASE", "ID_Start")
+        debug_info: dict[str, dict] = {} if do_debug else None
         
         for bt in BlockType:
             state = self.state[bt]
@@ -220,6 +458,30 @@ class SignamancyEngine:
                 rule_deficits.scatter_add_((1), index_batch, deficit)
                 
                 validity &= (rule_deficits == 0)
+                if do_debug and isinstance(self.rule_ids, list) and len(self.rule_ids) == self.num_rules:
+                    # Summarize for selected rule base
+                    try:
+                        base_indices = [i for i, rid in enumerate(self.rule_ids) if isinstance(rid, str) and rid.split("#")[0] == debug_base]
+                        if base_indices:
+                            ridx = torch.tensor(base_indices, dtype=torch.long, device=self.device)
+                            # Per-row total deficits across selected rules
+                            sel_def = rule_deficits[:, ridx]
+                            per_row_min = float(sel_def.min().item())
+                            per_row_mean = float(sel_def.mean().item())
+                            rows_ok = int((sel_def == 0).all(dim=1).sum().item())
+                            # Identify input tokens used by selected rules in this block
+                            sel_mask = torch.zeros_like(rule_idx, dtype=torch.bool)
+                            for r in base_indices:
+                                sel_mask |= (rule_idx == r)
+                            used_tokens = token_idx[sel_mask]
+                            uniq_tokens = torch.unique(used_tokens)
+                            # Compute mean presence for these tokens (aggregate)
+                            pres_mean = 0.0
+                            if uniq_tokens.numel() > 0:
+                                pres_mean = float(state[:, uniq_tokens].float().mean().item())
+                            debug_info[bt.name] = {"rows_ok": rows_ok, "per_row_min_def": per_row_min, "per_row_mean_def": per_row_mean, "inputs_present_mean": pres_mean, "num_inputs": int(uniq_tokens.numel())}
+                    except Exception:
+                        pass
 
             # Inhibitors (Must be 0)
             if k["ban"]:
@@ -228,6 +490,11 @@ class SignamancyEngine:
                 presence = torch.sparse.mm(k["ban"]["mat"], state.float().t()).t()
                 validity &= (presence == 0)
                 
+        if do_debug and debug_info:
+            try:
+                print(f"[ENGINE] validity debug for base='{debug_base}': {debug_info}")
+            except Exception:
+                pass
         return validity
 
     def _resolve_conflicts(self, valid: torch.Tensor) -> torch.Tensor:
@@ -245,23 +512,10 @@ class SignamancyEngine:
         # Store for tracing
         self.last_scaled_logits = scaled_logits.detach()
         
-        # 1b. Strict priority enforcement: only rules at the max priority per universe can fire
-        priorities = self.rule_meta[:, 0].to(self.device)  # [Rules]
-        # valid mask is [B, R]
-        # max priority per batch row
-        max_prio = (valid.float() * priorities.unsqueeze(0)).amax(dim=1)  # [B]
-        prio_mask = (priorities.unsqueeze(0) == max_prio.unsqueeze(1))  # [B, R]
-        prior_valid = valid & prio_mask
+        # 1b. Strict priority + guides + oneshot
+        prior_valid, max_prio = self._apply_priority_and_guides(valid)
         # Store for tracing
         self.last_prior_valid = prior_valid.detach()
-
-        # 1c. Apply reachability guide mask (frame-only, safe)
-        # If a rule is invalid in all universes now, and guided unreachable, mask it this frame.
-        if self.reachability_guide_mask is not None:
-            any_valid_per_rule = prior_valid.any(dim=0)  # [R]
-            mask_rules = self.reachability_guide_mask & (~any_valid_per_rule)
-            if mask_rules.any():
-                prior_valid[:, mask_rules] = False
         
         if self.cfg.enable_priority_logging:
             tie_counts = prior_valid.sum(dim=1)
@@ -278,7 +532,11 @@ class SignamancyEngine:
                             for r in rows.tolist():
                                 idxs = torch.nonzero(prior_valid[r], as_tuple=False).squeeze(1).tolist()
                                 # Collapse by CSV ID base (split at '#') when available
-                                names = [self.rule_ids[i] for i in idxs] if (isinstance(self.rule_ids, list) and len(self.rule_ids) == self.num_rules) else None
+                                if isinstance(self.rule_ids, list) and len(self.rule_ids) == self.num_rules:
+                                    _rid_list = list(self.rule_ids)
+                                    names = [_rid_list[i] for i in idxs]
+                                else:
+                                    names = None
                                 if names:
                                     bases = [n.split('#')[0] for n in names]
                                     unique_bases = sorted(set(bases))
@@ -319,6 +577,8 @@ class SignamancyEngine:
             rows = torch.arange(bs, device=self.device)
             fired_mask[rows[has_any], best_idx[has_any]] = True
             self.last_choice = best_idx.detach()
+            # update oneshot state
+            self._update_oneshot_fired(fired_mask)
             return fired_mask
 
         # 2. Handle Mutual Exclusion (One-Of) with possible multiple independent rules
@@ -377,7 +637,10 @@ class SignamancyEngine:
             
             mutex_fired[rows[real_fire_mask], cols[real_fire_mask]] = True
         
-        return independent_fired | mutex_fired
+        fired_out = independent_fired | mutex_fired
+        # update oneshot state
+        self._update_oneshot_fired(fired_out)
+        return fired_out
 
     def get_priority_tie_stats(self):
         return {"events": self.priority_tie_events, "samples": self.priority_tie_samples}
@@ -388,60 +651,129 @@ class SignamancyEngine:
         State += Fired @ Delta
         """
         fired_f = fired.float()
-        
+
         for bt in BlockType:
             k = self.gpu_blocks[bt]
             if not k["out_mean"]: continue
-            
-            # 1. Calculate Deterministic Delta (prefer fused net if available)
-            if k.get("out_net") and k["out_net"] is not None:
-                net = torch.sparse.mm(k["out_net"]["mat"].t(), fired_f.t()).t()
-                # If using mixed precision on FLOAT block, cast to float32 before accumulation
-                if net.dtype != torch.float32:
-                    net = net.float()
-                delta = net
-            else:
-                produced = torch.sparse.mm(k["out_mean"]["mat"].t(), fired_f.t()).t()
-                consumed = torch.zeros_like(produced)
-                if k["in"]:
-                    consumed = torch.sparse.mm(k["in"]["mat"].t(), fired_f.t()).t()
-                delta = produced - consumed
-            
-            # 2. Calculate Variance (Chaos Injection)
-            if k["out_std"]:
-                # Get StdDev sum for fired rules
-                # Note: This sums variances linearly, approximation of uncorrelated noise
-                std_agg = torch.sparse.mm(k["out_std"]["mat"].t(), fired_f.t()).t()
-                if std_agg.dtype != torch.float32:
-                    std_agg = std_agg.float()
-                noise = torch.randn_like(std_agg)
-                delta += (noise * std_agg * self.cfg.temperature)
 
-            # 2b. Consume-All (reduce to zero) — subtract current value once if any such rule fired
-            if k["all"] is not None:
-                # counts_per_token = (consume_all_map.T @ fired.T).T -> [B, Tokens]
-                counts = torch.sparse.mm(k["all"]["mat"].t(), fired_f.t()).t()
-                if counts.dtype != torch.float32:
-                    counts = counts.float()
-                mask = (counts > 0).float()
-                current_state = self.state[bt].float()
-                delta -= (current_state * mask)
-            
-            # 3. Apply
-            # Note: BIT/BYTE stored as int, but math is float. Cast back.
-            current = self.state[bt].float()
-            new_val = current + delta
-            
-            if bt == BlockType.BYTE:
-                # Keep in float/int16 for Physics phase
-                new_val = torch.clamp(new_val, min=0)
-                self.state[BlockType.BYTE] = new_val.to(torch.int16)
-            elif bt == BlockType.BIT:
-                # Clamp immediately
-                self.state[bt] = torch.clamp(new_val, -1, 1).to(torch.int8)
+            # Fast path: single-action row-slice updates if row caches exist
+            use_rows = getattr(self.cfg, "single_action_mode", False) and (k.get("out_net_rows") is not None)
+            if use_rows:
+                # Guard: if too many distinct rules selected this step, fall back to spmm path
+                cfg_limit = getattr(self.cfg, "row_slice_max_uniques", None)
+                if isinstance(cfg_limit, int) and cfg_limit >= 0:
+                    max_uniques = cfg_limit
+                else:
+                    try:
+                        max_uniques = int(os.environ.get("ROW_SLICE_MAX_UNIQUES", "256"))
+                    except Exception:
+                        max_uniques = 256
+                # Build row->rule mapping once (single-action => at most one fired per row)
+                fired_any = fired.any(dim=1)
+                if fired_any.any():
+                    rows_all = torch.nonzero(fired_any, as_tuple=False).squeeze(1)
+                    # For these rows, get the fired rule index
+                    rule_for_row = torch.argmax(fired[rows_all].to(torch.int64), dim=1)
+                    # Sort rows by rule to form contiguous buckets
+                    order = torch.argsort(rule_for_row)
+                    rows_sorted = rows_all[order]
+                    rules_sorted = rule_for_row[order]
+                    # Unique rules and their run-lengths
+                    unique_rules, counts = torch.unique_consecutive(rules_sorted, return_counts=True)
+                else:
+                    unique_rules = torch.empty((0,), dtype=torch.long, device=self.device)
+                    counts = torch.empty((0,), dtype=torch.long, device=self.device)
+                    rows_sorted = torch.empty((0,), dtype=torch.long, device=self.device)
+                if unique_rules.numel() > max_uniques:
+                    use_rows = False
+                if use_rows:
+                    # Work on a float view
+                    state_block = self.state[bt].float()
+                    # Iterate contiguous buckets per unique rule (reduced overhead vs per-rule scans)
+                    start = 0
+                    for urule, cnt in zip(unique_rules.tolist(), counts.tolist()):
+                        end = start + cnt
+                        rows = rows_sorted[start:end]
+                        start = end
+                        # Per-rule column/value slices
+                        cols = k["out_net_rows"]["idx"][urule]
+                        vals = k["out_net_rows"]["val"][urule]
+                        if cols.numel() == 0 or rows.numel() == 0:
+                            continue
+                        sub = state_block.index_select(0, rows)
+                        old_sub = sub.clone()
+                        # Deterministic delta
+                        sub[:, cols] = sub[:, cols] + vals.unsqueeze(0).expand(sub.size(0), -1)
+                        # Variance
+                        if k.get("out_std_rows") is not None and float(self.cfg.temperature) > 0.0:
+                            s_cols = k["out_std_rows"]["idx"][urule]
+                            s_vals = k["out_std_rows"]["val"][urule]
+                            if s_cols.numel() > 0:
+                                noise = torch.randn((sub.size(0), s_cols.numel()), device=self.device, dtype=torch.float32)
+                                sub[:, s_cols] = sub[:, s_cols] + noise * (s_vals.unsqueeze(0)) * float(self.cfg.temperature)
+                        # Consume-all
+                        if k.get("all_rows") is not None:
+                            a_cols = k["all_rows"]["idx"][urule]
+                            if a_cols.numel() > 0:
+                                sub[:, a_cols] = sub[:, a_cols] - old_sub[:, a_cols]
+                        # Write back
+                        state_block.index_copy_(0, rows, sub)
+                    # Apply clamps/casts
+                    if bt == BlockType.BYTE:
+                        state_block = torch.clamp(state_block, min=0)
+                        self.state[BlockType.BYTE] = state_block.to(torch.int16)
+                    elif bt == BlockType.BIT:
+                        self.state[bt] = torch.clamp(state_block, -1, 1).to(torch.int8)
+                    else:
+                        self.state[bt] = torch.clamp(state_block, min=0)
             else:
-                # FLOAT: prevent negative due to noise or updates
-                self.state[bt] = torch.clamp(new_val, min=0)
+                # 1. Calculate Deterministic Delta (prefer fused net if available)
+                if k.get("out_net") and k["out_net"] is not None:
+                    net = torch.sparse.mm(k["out_net"]["mat"].t(), fired_f.t()).t()
+                    # If using mixed precision on FLOAT block, cast to float32 before accumulation
+                    if net.dtype != torch.float32:
+                        net = net.float()
+                    delta = net
+                else:
+                    produced = torch.sparse.mm(k["out_mean"]["mat"].t(), fired_f.t()).t()
+                    consumed = torch.zeros_like(produced)
+                    if k["in"]:
+                        consumed = torch.sparse.mm(k["in"]["mat"].t(), fired_f.t()).t()
+                    delta = produced - consumed
+                
+                # 2. Calculate Variance (Chaos Injection)
+                if k["out_std"] and float(self.cfg.temperature) > 0.0:
+                    # Get StdDev sum for fired rules
+                    std_agg = torch.sparse.mm(k["out_std"]["mat"].t(), fired_f.t()).t()
+                    if std_agg.dtype != torch.float32:
+                        std_agg = std_agg.float()
+                    noise = torch.randn_like(std_agg)
+                    delta += (noise * std_agg * self.cfg.temperature)
+
+                # 2b. Consume-All (reduce to zero) — subtract current value once if any such rule fired
+                if k["all"] is not None:
+                    counts = torch.sparse.mm(k["all"]["mat"].t(), fired_f.t()).t()
+                    if counts.dtype != torch.float32:
+                        counts = counts.float()
+                    mask = (counts > 0).float()
+                    current_state = self.state[bt].float()
+                    delta -= (current_state * mask)
+                
+                # 3. Apply
+                # Note: BIT/BYTE stored as int, but math is float. Cast back.
+                current = self.state[bt].float()
+                new_val = current + delta
+                
+                if bt == BlockType.BYTE:
+                    # Keep in float/int16 for Physics phase
+                    new_val = torch.clamp(new_val, min=0)
+                    self.state[BlockType.BYTE] = new_val.to(torch.int16)
+                elif bt == BlockType.BIT:
+                    # Clamp immediately
+                    self.state[bt] = torch.clamp(new_val, -1, 1).to(torch.int8)
+                else:
+                    # FLOAT: prevent negative due to noise or updates
+                    self.state[bt] = torch.clamp(new_val, min=0)
 
     def _resolve_physics(self):
         """
