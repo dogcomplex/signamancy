@@ -1,0 +1,1529 @@
+
+# RECIPES WAY:
+# https://chatgpt.com/share/0b9945bf-0d67-4af7-a5f9-e61311fa04a0
+start => 🔳1 + 🔳2 + 🔳3 + 🔳4 + 🔳5 + 🔳6 + 🔳7 + 🔳8 + 🔳9 + ❌_turn
+Player Moves
+Moves for X and O (9 cells each):
+🔳n + ❌_turn => ❌n + ⭕_turn (9 axioms for X)
+🔳n + ⭕_turn => ⭕n + ❌_turn (9 axioms for O)
+Total: 18 axioms
+Winning Conditions
+Specific Win Conditions (3 horizontal, 3 vertical, 2 diagonal each for X and O):
+❌1 + ❌2 + ❌3 => ❌_wins and similar for other lines (8 axioms for X)
+⭕1 + ⭕2 + ⭕3 => ⭕_wins and similar for other lines (8 axioms for O)
+Total: 16 axioms
+Line-by-Line Draw Evaluation
+Combinations Without Wins:
+❌, ⭕, ❌
+⭕, ❌, ⭕
+❌, ⭕, ⭕ and ⭕, ⭕, ❌ (and vice versa)
+⭕, ❌, ❌ and ❌, ❌, ⭕ (and vice versa)
+For each line, you need axioms for each of these configurations to confirm it as a draw condition if no wins are possible. Each line potentially needs the following:
+
+3 scenarios for exactly one X or O (each can be arranged in three ways) = 3 combinations
+3 scenarios for two X's or O's alongside one of the other (each can be arranged in three ways) = 3 combinations
+2 unique mixed scenarios (which are symmetrical and could potentially be covered by a single axiom if symmetry is considered) = 1 or 2 combinations
+Aggregate Draw Evaluation
+Aggregate all line evaluations to declare a draw:
+🤝_H1_draw + 🤝_H2_draw + 🤝_H3_draw + 🤝_V1_draw + 🤝_V2_draw + 🤝_V3_draw + 🤝_D1_draw + 🤝_D2_draw => 🎉_draw + end
+Total: 1 axiom
+Ending the Game
+End the game after a win or draw:
+❌_wins => 🎉_X_wins + end
+⭕_wins => 🎉_O_wins + end
+🤝_draw => 🎉_draw + end
+Total: 3 axioms
+Grand Total of Axioms: 95
+
+# Recipes, AXIOMS:
+"a recipe axiom consists of inputs => outputs"
+"inputs can be in any order, separated by + or just spaces"
+"outputs can be in any order, separated by + or just spaces"
+"each input or output is just a symbol with quantity 1" # note: we dont need quantities here, so e.g. 🔳1 is just an id/name with no special meaning to its number
+"when evaluating an axiom, the inputs must all currently be true/valid dependencies (quantity > 0) of the current system state (aka the current inventory), otherwise the axiom can not be executed"
+"if an axiom is true and its inputs are true/valid (quantity > 0), then its outputs are true too (quantity > 0)"
+"as a transition rule, the inputs are removed from the inventory and the outputs are added to the inventory"
+
+
+# RECIPES, formatted:
+# init:
+start => 🔳1 + 🔳2 + 🔳3 + 🔳4 + 🔳5 + 🔳6 + 🔳7 + 🔳8 + 🔳9 + ❌_turn
+# allowable moves:
+# 🔳n + ❌_turn => ❌n + ⭕_turn + 🔄
+🔳1 + ❌_turn => ❌1 + ⭕_turn + 🔄
+🔳2 + ❌_turn => ❌2 + ⭕_turn + 🔄
+🔳3 + ❌_turn => ❌3 + ⭕_turn + 🔄
+🔳4 + ❌_turn => ❌4 + ⭕_turn + 🔄
+🔳5 + ❌_turn => ❌5 + ⭕_turn + 🔄
+🔳6 + ❌_turn => ❌6 + ⭕_turn + 🔄
+🔳7 + ❌_turn => ❌7 + ⭕_turn + 🔄
+🔳8 + ❌_turn => ❌8 + ⭕_turn + 🔄
+🔳9 + ❌_turn => ❌9 + ⭕_turn + 🔄
+# 🔳n + ⭕_turn => ⭕n + ❌_turn + 🔄
+🔳1 + ⭕_turn => ⭕1 + ❌_turn + 🔄
+🔳2 + ⭕_turn => ⭕2 + ❌_turn + 🔄
+🔳3 + ⭕_turn => ⭕3 + ❌_turn + 🔄
+🔳4 + ⭕_turn => ⭕4 + ❌_turn + 🔄
+🔳5 + ⭕_turn => ⭕5 + ❌_turn + 🔄
+🔳6 + ⭕_turn => ⭕6 + ❌_turn + 🔄
+🔳7 + ⭕_turn => ⭕7 + ❌_turn + 🔄
+🔳8 + ⭕_turn => ⭕8 + ❌_turn + 🔄
+🔳9 + ⭕_turn => ⭕9 + ❌_turn + 🔄
+# winning conditions:
+# X rows:
+# ❌n + ❌n+1 + ❌n+2 => ❌_wins for n in {1,4,7}
+❌1 + ❌2 + ❌3 => ❌_wins
+❌4 + ❌5 + ❌6 => ❌_wins
+❌7 + ❌8 + ❌9 => ❌_wins
+# X cols:
+# ❌n + ❌n+3 + ❌n+6 => ❌_wins for n in {1,2,3}
+❌1 + ❌4 + ❌7 => ❌_wins
+❌2 + ❌5 + ❌8 => ❌_wins
+❌3 + ❌6 + ❌9 => ❌_wins
+# X diag:
+❌1 + ❌5 + ❌9 => ❌_wins
+❌3 + ❌5 + ❌7 => ❌_wins
+# O rows:
+# ⭕n + ⭕n+1 + ⭕n+2 => ⭕_wins for n in {1,4,7}
+⭕1 + ⭕2 + ⭕3 => ⭕_wins
+⭕4 + ⭕5 + ⭕6 => ⭕_wins
+⭕7 + ⭕8 + ⭕9 => ⭕_wins
+# O cols:
+# ⭕n + ⭕n+3 + ⭕n+6 => ⭕_wins for n in {1,2,3}
+⭕1 + ⭕4 + ⭕7 => ⭕_wins
+⭕2 + ⭕5 + ⭕8 => ⭕_wins
+⭕3 + ⭕6 + ⭕9 => ⭕_wins
+# O diag:
+⭕1 + ⭕5 + ⭕9 => ⭕_wins
+⭕3 + ⭕5 + ⭕7 => ⭕_wins
+# draw conditions:
+# idea: we could use a counter to determine full board
+🔄9 => 🤝_draw
+# main problem: what if there's a win condition and a draw condition at the same time? need to prioritize wins
+# but this might be sorted out via a greedy poset ordering of axioms
+# tbf we already have the issue where e.g. a win condition exists and the moves keep playing.
+# we probably need to modify these all to be "X can play X1" etc, and then enforce a single move and a win/draw check
+
+# recipe thresholding:
+# if we enforced that we must use the minimum poset ordering of axioms in any state, then something like a win or loss condition would simply be the shortcut chosen
+# currently we dont actually use player choice.  If we did then min poset should be an execution-style way to resolve things
+# other ways:
+# - mode swap: make a move, check for win, loss, tie, then swap to other player
+#    - i.e. dont release ⭕_turn til a check has been made
+❌1 + ❌2 + ❌3 => ❌_wins
+❌1 + ❌2 + ⭕3 => ⭕_turn
+❌1 + ⭕2 + ❌3 => ⭕_turn
+❌1 + ⭕2 + ⭕3 => ⭕_turn
+#
+# would take 8 * 4 = 32 axioms per move (* 9 moves = 288 axioms) to fully define
+
+# idea: take out pairs of mismatched moves to reduce to ties:
+# e.g. checking ❌1, via elimination:
+❌1 + ❌2 + ❌3 => ❌_wins
+❌1 + ⭕3 => ⭕3 + 🤝_R1_tie # X1 is eliminated
+❌1 + ⭕2 => ⭕2 + 🤝_R1_tie
+❌1 + ⭕4 => ⭕4 + 🤝_V1_tie
+❌1 + ⭕7 => ⭕7 + 🤝_V1_tie
+❌1 + ⭕5 => ⭕5 + 🤝_D1_tie
+❌1 + ⭕9 => ⭕9 + 🤝_D2_tie
+# idea: what if the right side is ALWAYS greedy when it has no cost?
+# problem: would create infinites! but maybe that's okay we just set a max depth to right side stuff
+# problem: situation where both players win is still possible (i.e. game keeps going without cashing out)
+# then:
+🔄9 => 🔄9 + 🤝_draw # works
+❌1 + ❌2 + ❌3 => ❌1 + ❌2 + ❌3 + ❌_wins # works soon as it's available
+🔳1 + ❌_turn => ❌1 + ⭕_turn + 🔄 # would still be cautiously explored (non-greedy)
+# this works....  it's an addition to the rules but it makes sense.
+# this would enforce condition checks
+# idea: use negative conditions
+# problem: still possible for game to keep going and run into situation where both win...
+# - unless it's a prereq to use the !win thing for both each round
+# - but then there's still no reason this cashes out
+!🤝_draw + ❌_wins + !⭕_wins => ❌_wins + end 
+!🤝_draw + !❌_wins + ⭕_wins => ⭕_wins + end
+🤝_draw + !❌_wins + !⭕_wins => 🤝_draw + end
+!🤝_draw + !❌_wins + !⭕_wins => ⏭ # next round
+# idea: everything is always explored in every direction with every possibility. 
+# but we enforce player choice
+# problem: I still dont want it possible to get a win and a draw at the same time (or 2 wins)
+# - this should be impossible at the player-choice level (❌1), not the resolutions after the fact.
+# solution: okay, HOW ABOUT THIS - only allow additional moves IF the game is not over
+# LOL FUCK: problem: even if there's a full pass, you now still need ❌_wins check to resolve (unless we make that greedy)
+# idea: use nots for everything... as just manual flags
+start => !❌1 + !❌2 + !❌3 + !❌4 + !❌5 + !❌6 + !❌7 + !❌8 + !❌9 + !⭕1 + !⭕2 + !⭕3 + !⭕4 + !⭕5 + !⭕6 + !⭕7 + !⭕8 + !⭕9 + ❌_turn
+!⭕1 + !❌1 + ❌_turn => ❌1 + !⭕1 + ⭕_turn
+# uglyyyyy and doesn't actually help!
+# idea: designate row checks at same time as move select
+# Nope: doesnt add anything.  still need to do draw checks
+
+# idea: simply record the turn someone won (use 🔄) and have that resolve at finish
+# this would be easy if we had imperative ordering (i.e. could enforce greedy checks before continuing)
+
+# RECIPES ATTEMPT 2: (no special rules, no possibility of multiple wins/ties)
+# init:
+start => 🔳1 + 🔳2 + 🔳3 + 🔳4 + 🔳5 + 🔳6 + 🔳7 + 🔳8 + 🔳9 + ❌_turn + ⏭
+# 🔳n + ❌_turn + ⏭ => ❌n + ⭕_turn + 🔄
+❌1 + ❌2 + ❌3 => ❌_wins # main problem is this isn't forced to trigger if it works
+# should really be:
+❌1 + ❌2 + 🔳3 + ❌_turn => ❌_wins  # AND the usual 🔳n + ❌_turn => ❌n + ⭕_turn + 🔄 should be disabled
+# which would then mean every move needs to check the whole state to see if its a win
+
+
+
+# RECIPES ATTEMPT 3: 
+# I'm dumb.  there are only 16 tie states, so just enumerate them.
+# it would be a lot harder if not though
+# writing in a way that works regardless of inventory or just binary dependencies mode:
+start => 🔳1 + 🔳2 + 🔳3 + 🔳4 + 🔳5 + 🔳6 + 🔳7 + 🔳8 + 🔳9 + ❌_turn
+❌_turn + 🔳1 => ❌1 + ⭕_turn
+# ... x 18
+❌1 + ❌2 + ❌3 => ❌_wins
+# ... x 16
+# draw conditions:
+# print out all 16. lol it's actually tough to calculate
+
+# RECIPES ATTEMPT 4: (with reflection)
+# https://codegolf.stackexchange.com/questions/123058/tic-tac-toe-print-all-possible-positions-without-duplicates
+# Hint: There are 765 positions, with 91 wins for X, 44 wins for O, and 3 draws.
+# would need to figure out all the reflection rules... probably longer than just writing them all out
+# skipping, probably too many axioms to do reflection stuff but would work if it's an external axiom section
+
+# RECIPES ATTEMPT 5: invalid tests
+start => 🔳1 + 🔳2 + 🔳3 + 🔳4 + 🔳5 + 🔳6 + 🔳7 + 🔳8 + 🔳9 + ❌_turn
+❌_turn + 🔳1 => ❌1 + ⭕_turn
+⭕_turn + 🔳1 => ⭕1 + ❌_turn
+# ... x 18
+❌_wins + ❌_turn => ❌_wins + ⚠ # should be O turn if X was last move
+⭕_wins + ⭕_turn => ⭕_wins + ⚠ # should be X turn if O was last move 
+❌_wins + ⭕_wins => ⚠ # cant both win
+# 
+
+
+# ALL OF THESE HAVE ONE MAIN PROBLEM:  we need some way to enforce a greedy outcome. i.e. if a win is possible, it should be taken
+# we cannot shortcut right now.  even error tests cant do anything.
+# gate illustrating problem:
+pending_test + is_win => win + pass # unless this is prioritized, it might be skipped
+pending_test => pass
+# perhaps a special token which enforces that an option be chosen if it's available? (priority)
+# ❗ could signify priority.  it would mean all branches need to be evaluated to check for it before continuing
+❌1 + ❌2 + ❌3 + ❗ => ❌_wins # priority.  if all inputs are possible, use this.  means its checked always.  tiebreaker on number of ❗s
+# we could also use !❌_wins to explicitly check for a win condition, which flags ❌_wins as a greedy priority (only a notational difference)
+# we could also use lazy evaluation, where everything is in reverse order and only evaluated if needed
+# if we're doing prioritization already though, perhaps we simply order results (and thus computation) by shortest distance from start to finish
+# there should be a natural poset formed this way, and we can simply evaluate in that order - growing outward indefinitely if needed (even to error states)
+# if we're doing that and we mark error states as a end path too, it'll just evaluate those checks first
+
+
+
+# one last idea... (which failed)
+# mark which turn a win was (using ⌛ to show remaining turns too so no cheating), allow ALL possibilities to evaluate anyway, but only allow end states that are valid (i.e. must have won on appropriate turn)
+# by reverse-evaluating, it would then be impossible to reach the invalid states as they never reached the end
+❌_wins + 🔄5 + ⌛4 => ❌_wins + end # impossible to get 🔄5 + ⌛4 after this round
+⭕_wins + 🔄6 + ⌛3 => ⭕_wins + end
+❌_wins + 🔄7 + ⌛2 => ❌_wins + end
+⭕_wins + 🔄8 + ⌛1 => ⭕_wins + end
+❌_wins + 🔄9 => ❌_wins + end
+# if we do this, it would be impossible to reach an end state with a win otherwise
+# but still possible to reach a tie state... hmmm....
+🔄9 + 🤝_draw => 🤝_draw + end # we would need to fully-specify 🤝_draw, it cant just be absence of wins...
+# this works fine (16 draw conditions) but it would be great if we could short circuit still. 
+# oh.  we can, we just need to use !❌_wins and !⭕_wins to check for false before awarding a tie:
+# - no, wait, that wont work either.  cuz it could still skip the win check and go to draw first
+# remember: we are only concerned with states that reach the end.
+# I dont see a way around needing to specify each draw condition explicitly.  oh well.
+# FUCK: ugh.  still impossible to enforce this timing.  win turn 5, skip eval, and you can STILL eval on subsequent turns (or turn 9) even after another win condition
+# alternative: still fails cuz it would still be vulnerable to lazy evaluation only at end
+❌_wins_5 => ❌_wins + end
+⭕_wins_6 => ⭕_wins + end
+❌_wins_7 => ❌_wins + end
+⭕_wins_8 => ⭕_wins + end
+❌_wins_9 => ❌_wins + end
+# lol needs ever combination of the two to resolve to highest priority.  not ideal. 
+# AND would need separate win condition rules for each turn.  5*2 = 10 axioms
+🤝_draw => 🤝_draw + end
+
+
+# RECIPES ATTEMPT 6: (with win turn tracking.  BEST I HAVE SO FAR)
+# init:
+start => 🔳1 + 🔳2 + 🔳3 + 🔳4 + 🔳5 + 🔳6 + 🔳7 + 🔳8 + 🔳9 + ❌_turn + ⌛_9
+# allowable moves:
+❌_turn + 🔳1 + ⌛ => ❌1 + ⭕_turn + 🔄
+❌_turn + 🔳2 + ⌛ => ❌2 + ⭕_turn + 🔄
+❌_turn + 🔳3 + ⌛ => ❌3 + ⭕_turn + 🔄
+❌_turn + 🔳4 + ⌛ => ❌4 + ⭕_turn + 🔄
+❌_turn + 🔳5 + ⌛ => ❌5 + ⭕_turn + 🔄
+❌_turn + 🔳6 + ⌛ => ❌6 + ⭕_turn + 🔄
+❌_turn + 🔳7 + ⌛ => ❌7 + ⭕_turn + 🔄
+❌_turn + 🔳8 + ⌛ => ❌8 + ⭕_turn + 🔄
+❌_turn + 🔳9 + ⌛ => ❌9 + ⭕_turn + 🔄
+⭕_turn + 🔳1 + ⌛ => ⭕1 + ❌_turn + 🔄
+⭕_turn + 🔳2 + ⌛ => ⭕2 + ❌_turn + 🔄
+⭕_turn + 🔳3 + ⌛ => ⭕3 + ❌_turn + 🔄
+⭕_turn + 🔳4 + ⌛ => ⭕4 + ❌_turn + 🔄
+⭕_turn + 🔳5 + ⌛ => ⭕5 + ❌_turn + 🔄
+⭕_turn + 🔳6 + ⌛ => ⭕6 + ❌_turn + 🔄
+⭕_turn + 🔳7 + ⌛ => ⭕7 + ❌_turn + 🔄
+⭕_turn + 🔳8 + ⌛ => ⭕8 + ❌_turn + 🔄
+⭕_turn + 🔳9 + ⌛ => ⭕9 + ❌_turn + 🔄
+# winning conditions:
+# X rows:
+❌1 + ❌2 + ❌3 => ❌_wins
+❌4 + ❌5 + ❌6 => ❌_wins
+❌7 + ❌8 + ❌9 => ❌_wins
+# X cols:
+❌1 + ❌4 + ❌7 => ❌_wins
+❌2 + ❌5 + ❌8 => ❌_wins
+❌3 + ❌6 + ❌9 => ❌_wins
+# X diag:
+❌1 + ❌5 + ❌9 => ❌_wins
+❌3 + ❌5 + ❌7 => ❌_wins
+# O rows:
+⭕1 + ⭕2 + ⭕3 => ⭕_wins
+⭕4 + ⭕5 + ⭕6 => ⭕_wins
+⭕7 + ⭕8 + ⭕9 => ⭕_wins
+# O cols:
+⭕1 + ⭕4 + ⭕7 => ⭕_wins
+⭕2 + ⭕5 + ⭕8 => ⭕_wins
+⭕3 + ⭕6 + ⭕9 => ⭕_wins
+# O diag:
+⭕1 + ⭕5 + ⭕9 => ⭕_wins
+⭕3 + ⭕5 + ⭕7 => ⭕_wins
+# draw conditions:
+❌1 + ⭕2 + ❌3 + ⭕4 + ❌5 + ⭕6 + ❌7 + ⭕8 + ❌9 => 🤝_draw + end
+# ... x 16
+# win conditions:
+❌_wins + 🔄5 + ⌛4 => ❌_wins_5 + end # win turn 5
+⭕_wins + 🔄6 + ⌛3 => ⭕_wins_6 + end
+❌_wins + 🔄7 + ⌛2 => ❌_wins_7 + end
+⭕_wins + 🔄8 + ⌛1 => ⭕_wins_8 + end
+❌_wins + 🔄9 => ❌_wins_9 + end
+# CRUD CRUD CRUD.  still possible to get multiple wins at the same time.  and it would still just delay to turn 9
+
+
+
+# NOPE.  CONCLUSION:  there needs to be a special evaluation priority token ❗ that forces a greedy evaluation
+# AND/OR a way to enforce greedy evaluation (e.g. reaching end first, or bfs)
+# AND/OR enforce testing 
+# IF we have greedy eval...
+# - first player to win gets evaluated as a winner
+# - every branch for that win gets evaluated first (i.e. no other moves are allowed)
+# - we now *know* !win on that turn (IF we used priority deeply enough to get to the move itself)
+# - any branch that skipped the win check (cuz every possibility) will quickly run a valid check (with ❗) and fail => end
+# - anything not passing a valid (or invalid) check can be safely pruned
+
+# TODO any alternatives?  we need a syntax upgrade regardless.  Multiplication?  OR/ELSE syntax?
+
+# RECIPES ATTEMPT 7: (with priorities flag ❗ which enforces computed priority as an if statement)
+# init:
+start => 🔳1 + 🔳2 + 🔳3 + 🔳4 + 🔳5 + 🔳6 + 🔳7 + 🔳8 + 🔳9 + ❌_turn
+# allowable moves:
+❌_turn + 🔳1 => ❌1 + ⭕_turn + ⌛ # (I like ⌛ better than 🔄 for representing a turn)
+❌_turn + 🔳2 => ❌2 + ⭕_turn + ⌛
+❌_turn + 🔳3 => ❌3 + ⭕_turn + ⌛
+❌_turn + 🔳4 => ❌4 + ⭕_turn + ⌛
+❌_turn + 🔳5 => ❌5 + ⭕_turn + ⌛
+❌_turn + 🔳6 => ❌6 + ⭕_turn + ⌛
+❌_turn + 🔳7 => ❌7 + ⭕_turn + ⌛
+❌_turn + 🔳8 => ❌8 + ⭕_turn + ⌛
+❌_turn + 🔳9 => ❌9 + ⭕_turn + ⌛
+⭕_turn + 🔳1 => ⭕1 + ❌_turn + ⌛
+⭕_turn + 🔳2 => ⭕2 + ❌_turn + ⌛
+⭕_turn + 🔳3 => ⭕3 + ❌_turn + ⌛
+⭕_turn + 🔳4 => ⭕4 + ❌_turn + ⌛
+⭕_turn + 🔳5 => ⭕5 + ❌_turn + ⌛
+⭕_turn + 🔳6 => ⭕6 + ❌_turn + ⌛
+⭕_turn + 🔳7 => ⭕7 + ❌_turn + ⌛
+⭕_turn + 🔳8 => ⭕8 + ❌_turn + ⌛
+⭕_turn + 🔳9 => ⭕9 + ❌_turn + ⌛
+= 18 axioms
+# winning conditions:
+# X rows:
+❌1 + ❌2 + ❌3 + ❗ => ❌_wins
+❌4 + ❌5 + ❌6 + ❗ => ❌_wins
+❌7 + ❌8 + ❌9 + ❗ => ❌_wins
+# X cols:
+❌1 + ❌4 + ❌7 + ❗ => ❌_wins
+❌2 + ❌5 + ❌8 + ❗ => ❌_wins
+❌3 + ❌6 + ❌9 + ❗ => ❌_wins
+# X diag:
+❌1 + ❌5 + ❌9 + ❗ => ❌_wins
+❌3 + ❌5 + ❌7 + ❗ => ❌_wins
+# O rows:
+⭕1 + ⭕2 + ⭕3 + ❗ => ⭕_wins
+⭕4 + ⭕5 + ⭕6 + ❗ => ⭕_wins
+⭕7 + ⭕8 + ⭕9 + ❗ => ⭕_wins
+# O cols:
+⭕1 + ⭕4 + ⭕7 + ❗ => ⭕_wins
+⭕2 + ⭕5 + ⭕8 + ❗ => ⭕_wins
+⭕3 + ⭕6 + ⭕9 + ❗ => ⭕_wins
+# O diag:
+⭕1 + ⭕5 + ⭕9 + ❗ => ⭕_wins
+⭕3 + ⭕5 + ⭕7 + ❗ => ⭕_wins
+= 16 axioms
+# draw conditions:
+⌛9 => 🤝_draw + end
+# win conditions:
+❌_wins + ❗ => ❌_wins + end
+⭕_wins + ❗ => ⭕_wins + end
+= GRAND TOTAL AXIOMS: 38
+# ❗ here means that if all input conditions are met the program HAS to use this branch (and forego others).  
+# ❗2 here means it takes higher precedent than ❗1 (win > draw). (Actually: refactor, we dont need it, draw doesnt need elevation)
+# (other syntax candidate: ==> arrow vs =>)
+# (other candidate: could be an output hmmm... as trying to maximize priority paths.  Basically a reward)
+# The overhead is that basically all these get tested every step, first, and it requires reliance on execution policy
+# but I think this is the only way to enforce that a win (or draw) is taken if it's available, instead of resulting in an error state...
+# OR - you can probably fully define the !win and !draw conditions on each check, but that will require full board simulation in the axioms
+# which defeats the whole purpose of convenient axioms
+# The good news is it means ❗ can be refactored out as paths are explored definitively 
+
+
+# RECIPES ATTEMPT 8: (same as above but refactored syntax)
+# init:
+🎬 ➡ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ ❌  # we should use indexes like these instead, so we can reserve 1,2,3 numbers as quantities
+# allowable moves:
+# generator: ❌ #️⃣ ➡ ❌#️⃣ ⭕ ⌛ (remember recipe-axiom syntax is for the cached simplified axiom dependencies representation. you can use normal functions to generate)
+❌ 1️⃣ ➡ ❌1️⃣ ⭕ ⌛
+❌ 2️⃣ ➡ ❌2️⃣ ⭕ ⌛
+❌ 3️⃣ ➡ ❌3️⃣ ⭕ ⌛
+❌ 4️⃣ ➡ ❌4️⃣ ⭕ ⌛
+❌ 5️⃣ ➡ ❌5️⃣ ⭕ ⌛
+❌ 6️⃣ ➡ ❌6️⃣ ⭕ ⌛
+❌ 7️⃣ ➡ ❌7️⃣ ⭕ ⌛
+❌ 8️⃣ ➡ ❌8️⃣ ⭕ ⌛
+❌ 9️⃣ ➡ ❌9️⃣ ⭕ ⌛
+# generator: ⭕ #️⃣ ➡ ⭕#️⃣ ❌ ⌛ 
+⭕ 1️⃣ ➡ ⭕1️⃣ ❌ ⌛
+⭕ 2️⃣ ➡ ⭕2️⃣ ❌ ⌛
+⭕ 3️⃣ ➡ ⭕3️⃣ ❌ ⌛
+⭕ 4️⃣ ➡ ⭕4️⃣ ❌ ⌛
+⭕ 5️⃣ ➡ ⭕5️⃣ ❌ ⌛
+⭕ 6️⃣ ➡ ⭕6️⃣ ❌ ⌛
+⭕ 7️⃣ ➡ ⭕7️⃣ ❌ ⌛
+⭕ 8️⃣ ➡ ⭕8️⃣ ❌ ⌛
+⭕ 9️⃣ ➡ ⭕9️⃣ ❌ ⌛
+# = 18 axioms
+# winning conditions:
+# X rows:
+❌1️⃣ ❌2️⃣ ❌3️⃣ ❗ ➡ ❌👑 🏁
+❌4️⃣ ❌5️⃣ ❌6️⃣ ❗ ➡ ❌👑 🏁
+❌7️⃣ ❌8️⃣ ❌9️⃣ ❗ ➡ ❌👑 🏁
+# X cols:
+❌1️⃣ ❌4️⃣ ❌7️⃣ ❗ ➡ ❌👑 🏁
+❌2️⃣ ❌5️⃣ ❌8️⃣ ❗ ➡ ❌👑 🏁
+❌3️⃣ ❌6️⃣ ❌9️⃣ ❗ ➡ ❌👑 🏁
+# X diag:
+❌1️⃣ ❌5️⃣ ❌9️⃣ ❗ ➡ ❌👑 🏁
+❌3️⃣ ❌5️⃣ ❌7️⃣ ❗ ➡ ❌👑 🏁
+# O rows:
+⭕1️⃣ ⭕2️⃣ ⭕3️⃣ ❗ ➡ ⭕👑 🏁
+⭕4️⃣ ⭕5️⃣ ⭕6️⃣ ❗ ➡ ⭕👑 🏁
+⭕7️⃣ ⭕8️⃣ ⭕9️⃣ ❗ ➡ ⭕👑 🏁
+# O cols:
+⭕1️⃣ ⭕4️⃣ ⭕7️⃣ ❗ ➡ ⭕👑 🏁
+⭕2️⃣ ⭕5️⃣ ⭕8️⃣ ❗ ➡ ⭕👑 🏁
+⭕3️⃣ ⭕6️⃣ ⭕9️⃣ ❗ ➡ ⭕👑 🏁
+# O diag:
+⭕1️⃣ ⭕5️⃣ ⭕9️⃣ ❗ ➡ ⭕👑 🏁
+⭕3️⃣ ⭕5️⃣ ⭕7️⃣ ❗ ➡ ⭕👑 🏁
+# = 16 axioms 
+# draw conditions:
+⌛9 ➡ 🤝 🏁   # NOTE: this is the only place quantity > 1 is used. All others are indexes not quantities
+# ==== GRAND TOTAL AXIOMS: 36 
+# (could be 38 if we collect all the win conditions into one two axioms, making the individual win lines simpler)
+# ❗ is the only thing I dont like much here....
+# ➡ is nice but only in this text formatting.  blue box right arrow would be uglier than "=>"
+
+
+# EVERYTHING'S-A-FUNCTION: (❌ <=> (❌ => ❌) )
+# brainstorm: 
+# TODO rules modifying rules syntax (rules have quantities too)
+🎬 ➡ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ ❌
+
+☑️1️⃣ => (❌ 1️⃣ ➡ ❌1️⃣ ⭕ ⌛) | (⭕ 1️⃣ ➡ ⭕1️⃣ ❌ ⌛) # defining ☑️1️⃣ function
+
+☑️1️⃣❌ => (❌ 1️⃣ => ❌1️⃣ ⭕ ⌛) # defining ☑️1️⃣❌ function
+☑️1️⃣❌ ❌ 1️⃣ => ❌1️⃣ ⭕ ⌛ # if we have ☑️1️⃣❌ and ❌ 1️⃣, we can definitely reach ❌1️⃣ ⭕ ⌛
+
+☑️1️⃣ ❌ 1️⃣ => ❌1️⃣ ⭕ ⌛ # if we have ☑️1️⃣ and ❌ 1️⃣, we can definitely reach ❌1️⃣ ⭕ ⌛
+☑️1️⃣ ⭕ 1️⃣ => ⭕1️⃣ ❌ ⌛ # if we have ☑️1️⃣ and ⭕ 1️⃣, we can definitely reach ⭕1️⃣ ❌ ⌛
+
+☑️#️⃣ => (❌ 1️⃣ ➡ ❌1️⃣ ⭕ ⌛) | (⭕ 1️⃣ ➡ ⭕1️⃣ ❌ ⌛) | ... # for each number...
+☑️#️⃣ ❌ 1️⃣ => ❌1️⃣ ⭕ ⌛ # if we have ☑️#️⃣ and ❌ 1️⃣, we can definitely reach ❌1️⃣ ⭕ ⌛
+# i.e. we can be general!
+
+🔄 <=> ☑️#️⃣ # "turn function"
+# but does any of this actually save on complexity?  can we represent stuff with less?
+☑️#️⃣ => (❌ 1️⃣ => ❌1️⃣ ⭕ ⌛) | (⭕ 1️⃣ => ⭕1️⃣ ❌ ⌛) | ...
+  # is there a way to define this function using fewer axioms now?
+☑️#️⃣ => ☑️1️⃣ | ☑️2️⃣ | ...
+❗9 ☑️#️⃣9 => ☑️9️⃣  
+# what if we assume a new rule:  if a function can happen, it WILL happen (no choice)
+#then ☑️#️⃣9 could be ☑️#️⃣ applied 9 times. 1️⃣ <=> 🟦1
+☑️#️⃣ => (❌ #️⃣ ➡ ❌#️⃣ ⭕ ⌛) | (⭕ #️⃣ ➡ ⭕#️⃣ ❌ ⌛)
+☑️#️⃣ ❌ #️⃣ => ❌#️⃣ ⭕ ⌛
+# more thinking on this:  all that functions-as-objects seems to do is it allows us to turn on/off functions
+❗ 🔄 => (❗ 🔄❌ => 🔄⭕) | (❗ 🔄⭕ => 🔄❌) # "switch turn" function is either a swap from X_turn to O_turn or O_turn to X_turn
+🔄❌ => 🔄❌ (#️⃣ => ❌#️⃣ ⌛ 🔄) # X turn takes any empty # and marks with X, then applies the turn function (swapping to O turn, 🔄❌ => 🔄⭕)
+  # this runs like: if 🔄❌ present then we can run (#️⃣ => ❌#️⃣ ⌛), which, when run, marks # with X and swaps turns (🔄), 
+  # which means this function cant be run twice in a row (switches to O turn) 
+  # weakness: requires priority flags to ensure the swap happens ❗ 🔄
+  # 🔄 could also just resolve into the dumb one
+  # conclusion: screw it, remove 🔄
+🔄❌ => (#️⃣ => ❌#️⃣ ⌛ 🔄⭕)
+🔄⭕ => (#️⃣ => ⭕#️⃣ ⌛ 🔄❌) # this should oscillate fine
+# now, bigger problem lol: how to actually use #️⃣
+🔄❌ => (1️⃣ => ❌1️⃣ ⌛ 🔄⭕) | (2️⃣ => ❌2️⃣ ⌛ 🔄⭕) | ... # cant actually do this or it might pick an invalid path? (or wait - does that matter? we're only searching for valid paths)
+  # and besides, doesn't actually use #️⃣ lol. no savings here
+❗ #️⃣10 => #️⃣
+ => #️⃣ # these two rules make #️⃣ Z9 group (I think?) as it can cycle to any number 1-9 but no higher (priority cuttoff at 10) (tbd 0 might be a problem)
+# but we still need to make rules for e.g. #️⃣5 => ❌5️⃣ ⌛ 🔄⭕ which defeats the point
+# cant just use ❌#️⃣5 as that would get added to later
+# lol maybe could be ❌#️⃣10000 gross binary logic
+#️ so all in all: not really many ways to make this simpler with fewer rules yet. and no general production rule trick yet unless I introduce syntax tricks
+# we COULD do e.g.:
+❎ => "newvar❎" where ❎ quantity is used so e.g. "newvar5" would be result
+# then
+#️⃣ => "❌#️⃣" # is ❌5 if #️⃣ is 5.  But frankly this is dumb syntax. I would rather write each one than rely on this
+# if we did anything like this (and enabled variable swap-outs)
+(#️⃣ => ❌#️⃣ ⌛ 🔄⭕) 1️⃣ => (1️⃣ => ❌1️⃣ ⌛ 🔄⭕) # this is valid but again - doesnt save shit, as it needs to still define this for 1-9
+
+
+
+
+
+
+
+# RECIPES ATTEMPT 9: (no emoji version)
+# SPECIAL CHARACTERS: 
+# => (input => output separator)
+# # (comment)
+# whitespace (separates tokens)
+# postfixed *numbers (quantities. only one example of this here: "turn*9" = 9 turns)
+# ! (priority indicator.  used to force preferential greedy evaluation of any branching path with this token)
+# start / finish (start execution, end execution)
+# NOT SPECIAL CHARACTERS:
+# [1] (these are just to distinguish an index from a quantity. could be a hash or any name ("UL"?))
+# init:
+start => [1] [2] [3] [4] [5] [6] [7] [8] [9] X
+# allowable moves:
+##### generator: X # => X# O turn  # (remember recipe-axiom syntax is for the cached simplified axiom dependencies representation. you can use normal functions to generate)
+X [1] => X[1] O turn
+X [2] => X[2] O turn
+X [3] => X[3] O turn
+X [4] => X[4] O turn
+X [5] => X[5] O turn
+X [6] => X[6] O turn
+X [7] => X[7] O turn
+X [8] => X[8] O turn
+X [9] => X[9] O turn
+####### generator: O # => O# X turn
+O [1] => O[1] X turn
+O [2] => O[2] X turn
+O [3] => O[3] X turn
+O [4] => O[4] X turn
+O [5] => O[5] X turn
+O [6] => O[6] X turn
+O [7] => O[7] X turn
+O [8] => O[8] X turn
+O [9] => O[9] X turn
+# = 18 axioms
+# winning conditions:
+# X rows:
+X[1] X[2] X[3] ! => X_wins finish
+X[4] X[5] X[6] ! => X_wins finish
+X[7] X[8] X[9] ! => X_wins finish
+# X cols:
+X[1] X[4] X[7] ! => X_wins finish
+X[2] X[5] X[8] ! => X_wins finish
+X[3] X[6] X[9] ! => X_wins finish
+# X diag:
+X[1] X[5] X[9] ! => X_wins finish
+X[3] X[5] X[7] ! => X_wins finish
+# O rows:
+O[1] O[2] O[3] ! => O_wins finish
+O[4] O[5] O[6] ! => O_wins finish
+O[7] O[8] O[9] ! => O_wins finish
+# O cols:
+O[1] O[4] O[7] ! => O_wins finish
+O[2] O[5] O[8] ! => O_wins finish
+O[3] O[6] O[9] ! => O_wins finish
+# O diag:
+O[1] O[5] O[9] ! => O_wins finish
+O[3] O[5] O[7] ! => O_wins finish
+# draw conditions:
+turn*9 ! => draw finish
+# ===== TOTAL 36 axioms
+# so BLAH though! 
+
+
+
+# PIXEL-BASED ASYNC ATTEMPT: (each grid cell only knows itself and its neighbors. just defining the state machine for itself)
+# init:
+# imagine this as an internalized state machine of resources being churned on, with inputs and outputs in each cardinal and diagonal direction
+# use ⬅( ⬅❌ ) to denote listening to left for signals (neurotransmitters?), which trigger self-signals => ...signals
+🎬 => 🔳 ❌_turn ⬅ ➡ ⬆ ⬇ ↖ ↗ ↘ ↙ # neighbor listeners
+🔳 ❌_turn => ❌ ⭕_turn # remember these are choices.  either could be explored and flipped at any time
+🔳 ⭕_turn => ⭕ ❌_turn
+# note: listeners are transitions this cell can't control.  it can choose when to listen but not what it will hear
+# depending on what it sees, these are the acceptable transitions it can react with
+⬅( 🚫 ) => ⬅🚫 # empty, left signaled stop/timeout (wall)
+⬅( ⬅❌ ) ❌ => ⬅ ❌ ⬅❌ # left signaled X_left & self is X, so keep propagating X_left
+⬅( ⬅❌ ) ⭕ => ⬅ ⭕ ⬅🤝 # left signaled X_left, self is O, and propagate tie_left (since conflict)
+⬅( ⬅⭕ ) ⭕ => ⬅ ⭕ ⬅⭕ # left signaled O_left, self is O, and keep propagating O_left
+⬅( ⬅⭕ ) ❌ => ⬅ ❌ ⬅🤝 # left signaled O_left, self is X, and rebroadcast tie_left
+⬅( ⬅🤝 ) => ⬅  ⬅🤝 # left signaled tie_left, rebroadcast tie_left and tie_right (self-status cant change this)
+❗ ⬅( ❌👑 ) => ❌👑 🏁 # left signaled X_win, and broadcast X_win, finish
+⬅( 🤝✅ ) => ⬅🤝✅ # left signaled it sees a tie in every direction, so done listening to it
+❗ ⬅( ❌_turn ) => ⬅ ❌_turn # left signaled X_turn, keep listening and propagate X_turn
+❗ ⬅( ⭕_turn ) => ⬅ ⭕_turn # left signaled O_turn, keep listening and propagate O_turn
+# ⬅() => ⬅ # else keep listening
+⬅🚫 ❌ => ❌ ⬅❌ # if nothing left, then X_left is true trivially
+⬅🚫 ⭕ => ⭕ ⬅⭕
+# === repeat this for every direction 8 * 12 = 96 rules
+# ====== tie checks:
+⬅🚫 ⬆🚫 ➡🤝 ⬇🤝 ↖🚫 ↗🚫 ↘🤝 ↙🚫 => 🤝✅ # top-left cell tie check
+# ... 9 of these.  all can be passed to each cell, they will only qualify if they're the right type
+# ====== tie check checks lol: (needs to search for confirmations that the other cells are all resolved)
+⬅🚫 ⬆🚫 ➡🤝✅ ⬇🤝✅ ↖🚫 ↗🚫 ↘🤝✅ ↙🚫 => 🤝 🏁 # we see a tie in every direction AND see every other cell thinks the same, so stop processing this cell and conclude tie
+# ... 9 of these. all can be passed to each cell, they will only qualify if they're the right type
+# ====== win checks:
+❗ ⬅❌ ❌ ➡❌ => ❌👑 🏁
+❗ ⬅❌ ❌ ➡🚫 => ❌👑 🏁
+❗ ⬅⭕ ⭕ ➡⭕ => ⭕👑 🏁
+❗ ⬅⭕ ⭕ ➡🚫 => ⭕👑 🏁
+# ...8*4 of these
+# ====== GRAND TOTAL = 3 + 96 + 9 + 9 + 8*4 = 149 rules
+# note that listeners could be implemented fairly trivially lol:
+# - literally just prepend everything inside ⬅( ⬅❌ ) with the leading symbol (so ⬅⬅❌) and that's a cacheable rule
+# - so you can just combine all inventories of each cell, just prepending contents and copying them to each other
+# - or: just do that copying when they actually listen and interact.  it's just a heavy-duty cudgel way of doing it
+# note: system needs to have pings and timeouts to detect if neighbor or not (🚫 signal)
+# note the use of ❗ still to force greedy listening for win and turn signals.  tie signals should resolve naturally
+# lol if we wanted a timeout clock:
+=> ⏰ # increment clock every set time period (system-provided, or clock listener)
+⬅ ⏰100 => ⬅🚫 ⏰100 # at 100t, close listener (clock keeps incrementing)
+# could add ⏰100 => ⏰1 to every successful listen, resetting clock too 
+# CONCLUSION: should work!
+
+
+# TODO redo pixel based async with "neurotransmitter" style where listeners always take an input from the area they're listening to
+
+
+
+
+# ABSTRACTED CATEGORY THEORY ATTEMPT:
+# ... all 3^9 combinations of boards
+🟦 <=> ⏹ + #️⃣ # square => square_type + square_index 
+# aka: Z9_3 => Z3 + Z9 monoids commutative, non-cyclic (9 and 3 are coprime)
+❌ => ⏹ # set of square_types
+⭕ => ⏹
+🔳 => ⏹ # empty
+❌ => ☑️ # set of filled squares (Z2 monoid)
+⭕ => ☑️ 
+Z3 => ⏹ # 0-2 ints monoid
+# but NOT the other way back (lossy abstraction)
+# TODO should this be flipped?
+#️⃣ <=> Z9 # 1-9 positive ints monoid
+# aka:
+1️⃣ => #️⃣ # set of square indexes
+2️⃣ => #️⃣
+3️⃣ => #️⃣
+4️⃣ => #️⃣
+5️⃣ => #️⃣
+6️⃣ => #️⃣
+7️⃣ => #️⃣
+8️⃣ => #️⃣
+9️⃣ => #️⃣
+# but we can get more specific:
+# the board is a square, equivalent to the dihedral group D4
+
+# 🟦9 => 🏁 # this kinda works but what if an invalid combo of 9 1️⃣s maps up to this?
+1️⃣ + 2️⃣ + 3️⃣ + 4️⃣ + 5️⃣ + 6️⃣ + 7️⃣ + 8️⃣ + 9️⃣ + 9⏹ => 🏁 # this one is more valid, but could still be tricked by improper ⏹ mapping
+🟦9 => 🏁 #conclusion:  this is just a size 9 board, but not necessarily a valid board
+
+# board squares (concrete):
+🔳1️⃣ => 🔳#️⃣ # set of empty squares
+🔳2️⃣ => 🔳#️⃣
+🔳3️⃣ => 🔳#️⃣
+🔳4️⃣ => 🔳#️⃣
+🔳5️⃣ => 🔳#️⃣
+🔳6️⃣ => 🔳#️⃣
+🔳7️⃣ => 🔳#️⃣
+🔳8️⃣ => 🔳#️⃣
+🔳9️⃣ => 🔳#️⃣
+
+
+# trying to make a valid turn move rule:
+
+# the set of all completed board states is the set of 
+🏁 # complete board.  ☑️*#️⃣ <=> Z2*D4 (Z2 monad * Dihedral group 4 (square symmetry))
+# according to Burnside's Lemma https://chatgpt.com/share/c2c7d9ba-3abd-4540-b6b7-ef9a3193355a
+# = 85(??) unique configurations under symmetry.
+# NOTE: if we used naive Z9, it would be 57(??) unique configurations, and we'd lose information about the board's state
+
+# any filled row, column, or diagonal can be represented in 6(??) ways under symmetry
+# therefore: 8*6 = 48 unique configurations for a win,loss, or draw_check conclusion (with 8 draw_check => draw)
+# non-filled row, column can be represented in 11(??) ways under symmetry
+# therefore: 8*11 = 88 unique configurations for a win,loss, draw_check or inconclusive conclusion (with 8 draw_check => draw)
+
+
+
+# CATEGORY THEORY ATTEMPT 2:
+( | is just shorthand for multiples of the same formula)
+( > is "contains", as in set theory)
+⏹ == Z3 
+  => ❌ | ⭕ | 🔳
+  == (1,*) | (2,*) | (0,*)
+  # square_type Z3 contains 3 elements
+☑️ == Z2 
+  => ❌ | ⭕
+  == (1,*) | (2,*)
+  # square_filled Z2 contains 2 elements (X or O)
+#️⃣ == Z9
+  == (*,1) | (*,2) | ... # square_index Z9 contains 9 elements 
+  => 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+🟦 == ⏹*#️⃣ == Z3 * Z9 == (*,*)
+  => ❌1️⃣ | ⭕1️⃣ | 🔳1️⃣ | ❌2️⃣ ... 
+  == (1,1) | (2,1) | (0,1) | (1,2) ... 
+  == 11 | 22 | 01 | 12 ...
+  # total: 27 possible square states 
+  # All possible square cell states. product combination contains every possible combo of square type and index, not accounting for symmetry
+♊ (D4) 
+  => ♊e | ♊r | ♊r^2 | ♊r^3 | ♊s | ♊sr | ♊sr^2 | ♊sr^3   
+  # 8 cell symmetries, D4 category of possible 2D grid permutations under symmetry
+♊e == (1 => 1) | (2 => 2) | (3 => 3) | (4 => 4) | (5 => 5) | (6 => 6) | (7 => 7) | (8 => 8) | (9 => 9) # identity
+♊r == (1 => 3) | (2 => 6) | (3 => 9) | (4 => 2) | (5 => 5) | (6 => 8) | (7 => 1) | (8 => 4) | (9 => 7) # rotation 90 degrees
+♊r^2 == (1 => 9) | (2 => 8) | (3 => 7) | (4 => 6) | (5 => 5) | (6 => 4) | (7 => 3) | (8 => 2) | (9 => 1) # rotation 180 degrees
+♊r^3 == (1 => 7) | (2 => 4) | (3 => 1) | (4 => 8) | (5 => 5) | (6 => 2) | (7 => 9) | (8 => 6) | (9 => 3) # rotation 270 degrees
+♊s == (1 => 3) | (2 => 2) | (3 => 1) | (4 => 6) | (5 => 5) | (6 => 4) | (7 => 9) | (8 => 8) | (9 => 7) # reflection over vertical axis
+♊sr == (1 => 7) | (2 => 8) | (3 => 9) | (4 => 4) | (5 => 5) | (6 => 6) | (7 => 1) | (8 => 2) | (9 => 3) # reflection over horizontal axis
+♊sr^2 == (1 => 9) | (2 => 6) | (3 => 3) | (4 => 8) | (5 => 5) | (6 => 2) | (7 => 7) | (8 => 4) | (9 => 1) # reflection over diagonal axis
+♊sr^3 == (1 => 1) | (2 => 4) | (3 => 7) | (4 => 2) | (5 => 5) | (6 => 8) | (7 => 3) | (8 => 6) | (9 => 9) # reflection over antidiagonal axis
+# (all above are written as applied to Z9 alone.  replace with (X,1) => (X,1) etc for function to apply to 🛹)
+🛹 == all possible board states (naive, including invalid)
+  => 🔳1️⃣ 🔳2️⃣ 🔳3️⃣ ... 🔳9️⃣
+    | 🔳1️⃣ 🔳2️⃣ 🔳3️⃣ ... ❌9️⃣
+    | 🔳1️⃣ 🔳2️⃣ 🔳3️⃣ ... ⭕9️⃣
+    | ...
+  == 3^9 combinations of board states
+♊🛹 == all board states canonical under symmetry
+  => 
+
+# applying symmetry: burnside's lemma: 
+# unique boards under reflection (|X/G|) = 1/|G| * sum_g_in_G(|X^g|)
+# == sum of ways to apply each symmetry uniquely, divided by total symmetries
+|♊🛹| = ( |🛹*e| + |🛹*r| + |🛹*r^2| + |🛹*r^3| + |🛹*s| + |🛹*sr^2| + |🛹*sr^3|) / |♊|
+= (3^9 + 3^3 + 3^5 + 3^3 + 3^5 + 3^5 + 3^5 + 3^5) / 8 = 2619
+
+
+
+☑️✔ (Z9) =  there are only 9 valid general morphisms possible for filling a square (with X or O) from a given board state (the turn X or O is determined by the board count of X/O, and so only the square choice is possible)
+❌✔ = morphisms for filling a square with X specifically (Z9)  
+⭕✔ = morphisms for filling a square with O specifically (Z9)
+⌛ > 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 = total general turn numbers (Z9)
+❌⌛ > 1 | 3 | 5 | 7 | 9 = X's turn numbers (Z5)
+⭕⌛ > 2 | 4 | 6 | 8 = O's turn numbers (Z4)
+👑🛹 = winning boards = boards with at least 1 win of X or O from a previous non-winning board
+🤝🛹 = draw boards = boards with no winning moves and no empty squares
+🏁🛹 = terminal boards = boards with a win or draw condition
+⚠️🛹 = invalid boards = boards with more than 1 player winning or turns past a player win
+✅🛹 = valid boards = tic tac toe boards that are valid
+ = boards that are reachable from the empty board state + a series of valid turn moves
+
+
+# valid boards:
+✅🛹 = 🛹 - ⚠️🛹
+
+
+# graph of categories looks like:
+# nodes: valid board states
+# edges: valid turn moves
+# identity morphisms: non-moves (staying in the same state)
+# winning boards have a single edge to win state
+# draw boards have a single edge to draw state
+
+
+# FINITE STATE MACHINE:
+# we can probably make a finite state machine for this with transition rules basically:
+x1, x2, x3, x4, x5, x6, x7, x8, x9, o1, o2, o3, o4, o5, o6, o7, o8, o9
+states are game boards * player turn, as well as X_win, O_win, and Draw.
+non valid moves are the identity (state unchanged), and valid moves are the transition to the new board state
+winning moves are transitions to the X_win or O_win states
+full boards automatically transition to the Draw state (where wins are already fully mapped out)
+# this is a 2*3^9 state machine, which is a bit large, but not infeasible to compute
+rules:
+# this can definitely be computed using an FSM, but constructing the FSM to begin with is tricky...
+
+# start => 🏁X:---------  equivalent:
+start => 🔳1 + 🔳2 + 🔳3 + 🔳4 + 🔳5 + 🔳6 + 🔳7 + 🔳8 + 🔳9 + ❌_turn
+#🏁X:--------- => 🏁O:x--------- | 🏁O:-x-------- | ... equivalent:
+🔳1 => ❌1 + ⭕_turn
+🔳2 => ❌2 + ⭕_turn
+# ...
+# need to then greedily catch win conditions:
+❌1 + ❌2 + ❌3 => ❌_wins
+⭕1 + ⭕2 + ⭕3 => ⭕_wins
+#... for each row/col/diag
+# then catch draw conditions whenever board is full:
+# which needs rules for every square lol
+# .... yikes.  doable just ugly and thousands of rules (via recipes)
+# but easy if we can greedily enforce a win condition check first given any state and default to tie
+
+
+# could be wasteful on state representation.  i.e. store every row, col, diag win condition separately 
+# as either -,x,x2,x3,o,o2,o3,or t (tied), which change as soon as x and o are both in a row/col/diag
+#then it's just: R:---C:---D:-- as state
+# 8^8 = 16777216 states lol
+
+
+# SPL Programming Language 1:
+# lol asked chatgpt if it knew SPL the grid language, it knew SPL the Shakespeare Programming Language
+
+The Tragedy of Tic Tac Toe, a three part play.
+
+Dramatis Personae:
+Hamlet, a fine prince full of resolve and quick decisions.
+Ophelia, a fair lady given to sudden shifts and indecision.
+Fortinbras, a good-hearted friend, the umpire of this contest.
+
+Act I: The Introduction.
+Scene I: Wherein the board is drawn.
+[Enter Hamlet and Ophelia]
+Hamlet:
+    You are as lovely as the sum of an elegant rose and a sunrise.
+Ophelia:
+    You are as trustworthy as the combination of a saint and a dove.
+
+Scene II: The rules are explained.
+Fortinbras:
+    Attend, my lords, and listen well,
+    For now, I tell the rules to quell
+    All quarrels that may henceforth dwell.
+
+    A board of spaces, three by three,
+    Will host your marks; your goal is to be
+    The first to line three tokens straight,
+    Across, or down, or diagonal gait.
+
+    Take turns, my lords, with hearts alight,
+    From empty space to claiming right.
+    Hamlet marks X, Ophelia O,
+    In spaces where no marks yet show.
+
+Act II: The Game.
+Scene I: Hamlet's move.
+Hamlet:
+    Is this a dagger which I see before me?
+    I place my X in the center, for a start, I foresee.
+
+Scene II: Ophelia's move.
+Ophelia:
+    Alas, I am but a shadow of your light,
+    But in this shadow, I claim the top right.
+
+[Continue scenes for subsequent moves]
+
+Act III: The Conclusion.
+Scene I: The Victory.
+Fortinbras:
+    Now halt the hands that play this game,
+    For we have a victor to proclaim.
+
+    [Examine the board. Declare the winner or a tie.]
+
+    Thus ends our noble game of wits,
+    With joy or sorrow as befits.
+
+[Exeunt]
+
+
+
+
+
+
+
+
+# SUMMARY:
+# cleanest, simplest way so far:
+# RECIPES ATTEMPT 8: (same as above but refactored syntax)
+
+ init:
+🎬 ➡ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ ❌  # we should use indexes like these instead, so we can reserve 1,2,3 numbers as quantities
+# allowable moves:
+# generator: ❌ #️⃣ ➡ ❌#️⃣ ⭕ ⌛ (remember recipe-axiom syntax is for the cached simplified axiom dependencies representation. you can use normal functions to generate)
+❌ 1️⃣ ➡ ❌1️⃣ ⭕ ⌛
+❌ 2️⃣ ➡ ❌2️⃣ ⭕ ⌛
+❌ 3️⃣ ➡ ❌3️⃣ ⭕ ⌛
+❌ 4️⃣ ➡ ❌4️⃣ ⭕ ⌛
+❌ 5️⃣ ➡ ❌5️⃣ ⭕ ⌛
+❌ 6️⃣ ➡ ❌6️⃣ ⭕ ⌛
+❌ 7️⃣ ➡ ❌7️⃣ ⭕ ⌛
+❌ 8️⃣ ➡ ❌8️⃣ ⭕ ⌛
+❌ 9️⃣ ➡ ❌9️⃣ ⭕ ⌛
+# generator: ⭕ #️⃣ ➡ ⭕#️⃣ ❌ ⌛ 
+⭕ 1️⃣ ➡ ⭕1️⃣ ❌ ⌛
+⭕ 2️⃣ ➡ ⭕2️⃣ ❌ ⌛
+⭕ 3️⃣ ➡ ⭕3️⃣ ❌ ⌛
+⭕ 4️⃣ ➡ ⭕4️⃣ ❌ ⌛
+⭕ 5️⃣ ➡ ⭕5️⃣ ❌ ⌛
+⭕ 6️⃣ ➡ ⭕6️⃣ ❌ ⌛
+⭕ 7️⃣ ➡ ⭕7️⃣ ❌ ⌛
+⭕ 8️⃣ ➡ ⭕8️⃣ ❌ ⌛
+⭕ 9️⃣ ➡ ⭕9️⃣ ❌ ⌛
+# = 18 axioms
+# winning conditions:
+# X rows:
+❌1️⃣ ❌2️⃣ ❌3️⃣ ❗ ➡ ❌👑 🏁
+❌4️⃣ ❌5️⃣ ❌6️⃣ ❗ ➡ ❌👑 🏁
+❌7️⃣ ❌8️⃣ ❌9️⃣ ❗ ➡ ❌👑 🏁
+# X cols:
+❌1️⃣ ❌4️⃣ ❌7️⃣ ❗ ➡ ❌👑 🏁
+❌2️⃣ ❌5️⃣ ❌8️⃣ ❗ ➡ ❌👑 🏁
+❌3️⃣ ❌6️⃣ ❌9️⃣ ❗ ➡ ❌👑 🏁
+# X diag:
+❌1️⃣ ❌5️⃣ ❌9️⃣ ❗ ➡ ❌👑 🏁
+❌3️⃣ ❌5️⃣ ❌7️⃣ ❗ ➡ ❌👑 🏁
+# O rows:
+⭕1️⃣ ⭕2️⃣ ⭕3️⃣ ❗ ➡ ⭕👑 🏁
+⭕4️⃣ ⭕5️⃣ ⭕6️⃣ ❗ ➡ ⭕👑 🏁
+⭕7️⃣ ⭕8️⃣ ⭕9️⃣ ❗ ➡ ⭕👑 🏁
+# O cols:
+⭕1️⃣ ⭕4️⃣ ⭕7️⃣ ❗ ➡ ⭕👑 🏁
+⭕2️⃣ ⭕5️⃣ ⭕8️⃣ ❗ ➡ ⭕👑 🏁
+⭕3️⃣ ⭕6️⃣ ⭕9️⃣ ❗ ➡ ⭕👑 🏁
+# O diag:
+⭕1️⃣ ⭕5️⃣ ⭕9️⃣ ❗ ➡ ⭕👑 🏁
+⭕3️⃣ ⭕5️⃣ ⭕7️⃣ ❗ ➡ ⭕👑 🏁
+# = 16 axioms 
+# draw conditions:
+⌛9 ➡ 🤝 🏁 #  # NOTE: this is the only place quantity > 1 is used. All others are indexes not quantities
+# ==== GRAND TOTAL AXIOMS: 36 
+# (could be 38 if we collect all the win conditions into one two axioms, making the individual win lines simpler)
+# ❗ is the only thing I dont like much here....
+# ➡ is nice but only in this text formatting.  blue box right arrow would be uglier than "=>"
+
+# AXIOM TYPE abilities required to make this:
+"production rule" axiom type, but it needs these abilities:
+ - basic token representation (sub-axioms of the global state, represented by emoji tokens)
+ - sums of tokens (i.e. ⌛9 is ⌛i0 ⌛i1 ... ⌛i9)
+    - equivalent simplified tokens without: 9 tokens for ⌛ and probably 9x as many sub-rules for each rule containing a ⌛
+ - addition/subtraction of tokens per step (i.e. ❌ ➡ ⭕)
+    - equivalent: double the token count for positive and negative sums, which can be compared for equality to see current computed state
+    - PLUS whatever cost the above sums add for conditional checks
+    - likely ends up being just easier to fully print each possible global state (full board) and explain transitions between them
+        - = 3^9 states, plus 3^9 * 2 transitions, plus 2^9 win/lose/draw transitions
+ - priority: some way to gate so one rule is preferred over another else system is invalid.
+    - equivalent: can be simulated by marking every other rule with a conditional token that it must not be before the priority rule
+    - but this multiplies the system complexity again
+
+# can we get more abstracted and brief? sure.
+🎬 ➡ (#️⃣i: i=1-9) ❌
+❌ #️⃣i ➡ ❌#️⃣i ⭕ ⌛ for i=1-9
+⭕ #️⃣i ➡ ⭕#️⃣i ❌ ⌛ for i=1-9 
+❗ ☑️#️⃣i ☑️#️⃣(i+j) ☑️#️⃣(i+2j) ➡ ☑️👑 🏁 for i=1,4,7  for j=1,3,4  for ☑️=⭕,❌  # ROWS,COLS,DIAGS
+⌛9 ➡ 🤝 🏁
+  # component rules:
+  # ❗ ☑️#️⃣i ☑️#️⃣(i+1) ☑️#️⃣(i+2) ➡ ☑️👑 🏁 for i=1,4,7  for ☑️=⭕,❌   # ROWS
+  # ❗ ☑️#️⃣i ☑️#️⃣(i+3) ☑️#️⃣(i+6) ➡ ☑️👑 🏁 for i=1-3  for ☑️=⭕,❌     # COLS
+  # ❗ ☑️#️⃣i ☑️#️⃣(i+4) ☑️#️⃣(i+8) ➡ ☑️👑 🏁 for i=1,3  for ☑️=⭕,❌     # DIAGS
+
+# but now we obviously need a more powerful axiom type that can do for/lists/sets and arithmetic
+# it's kinda complicated to do that, especially if we need to build it out of the simpler axioms...
+
+
+
+
+
+
+
+
+
+# PLAIN ENGLISH AXIOM WAY:
+"a board consists of 3x3 squares, each of which can be empty, contain an X, or contain an O"
+"the game starts with an empty board"
+"each turn, a player can place their piece in an empty square"
+"if a player gets 3 of their pieces in a row, column, or diagonal, they win"
+"if all squares are filled and no player has won, it's a draw"
+"the game ends when a player wins or it's a draw"
+# ... more implicit axioms too, but they can overlap
+# tricky part here is still evaluating "and no player has won" in a way that doesn't require checking every possible win condition
+# axioms basically need to be evaluated with every change to the game (repo) state:
+"the board is valid" # pretty tricky to determine from scratch.  might actually have to track history of the board for this (best guess: check if number of X and Os is within 1 of each other and in appropriate turn)
+"the board is not valid" # same
+"the board is full"
+"the board is not full"
+"it is X's turn" # could be determined by board (X > O)
+"it is O's turn"
+"X has won"
+"X has not won" # somewhat costly, but tbf only has to check 8 conditions
+"O has won"
+"O has not won"
+"it is a draw" # quite costly but could depend on X has not won and O has not won
+"it is not a draw" # if X has won or O has won or the board is not full it is not a draw (yet)
+# and more: (e.g. valid board check:)
+"a Tic Tac Toe board has 9 cells"
+"a Tic Tac Toe cell can be empty, contain an X, or contain an O"
+"a Tic Tac Toe board has 9 cells arranged in 3 rows by 3 columns"
+"a Tic Tac Toe board has 3 rows"
+"a Tic Tac Toe board has 3 columns"
+"a Tic Tac Toe board has 2 diagonals"
+"a Tic Tac Toe board has 8 possible ways to win"
+# and then loose ones:
+"a cell is identified by its row and column"
+"a cell is identified by its index"
+# common useful optimizations:
+"the tic tac toe board is a python list of 3 rows, each containing 3 cells" # dependency on many others
+"'board' is a valid tic tac toe board"
+# strategy stuff:
+"we would rather win than lose"
+"we should prefer moves that win over moves that lose" 
+"we should prefer moves that win over moves that tie"
+"we should prefer moves that tie over moves that lose"
+"player X has 2 in a row"
+"player O has 2 in a row"
+"if a player has two in a row, they should place their third to get three in a row"
+"if the other player has two in a row, they should block the other player from getting three in a row"
+"if the board is empty, the first player should place their piece in the center"
+"if the center is taken and it's turn 2, the first player should place their piece in a corner"
+"if a win is still possible, the player should take it" # might result in losing all the time though! greedy strategy
+# prediction:
+"if we place two pieces in a row, our opponent will place their piece to block us or they will lose"
+"if an opponent places two pieces in a row, we will place our piece to block them or we will lose"
+"turn 5: opponent will place piece in position 6 or lose"
+
+
+🎬 ➡ (#️⃣i: i=1-9) ❌
+❌ #️⃣i ➡ ❌#️⃣i ⭕ ⌛ for i=1-9
+⭕ #️⃣i ➡ ⭕#️⃣i ❌ ⌛ for i=1-9 
+❗ ☑️#️⃣i ☑️#️⃣(i+j) ☑️#️⃣(i+2j) ➡ ☑️👑 🏁 for i=1,4,7  for j=1,3,4  for ☑️=⭕,❌  # ROWS,COLS,DIAGS
+⌛9 ➡ 🤝 🏁
+"start with an empty board of 3x3 squares"
+"if it's X's turn, place an X in a square then switch to O's turn and increase the turn count"
+"if it's O's turn, place an O in a square then switch to X's turn and increase the turn count"
+"if a player gets 3 of their pieces in a row, column, or diagonal they win and the game ends"
+  # what's a row, column, or diagonal?  not really defined here.
+"after 9 turns, if no player has won, it's a draw and the game ends" 
+
+# Longer form:
+🎬 ➡ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ ❌  "start with empty grid squares 1 2 3 4 5 6 7 8 9 and X's turn"
+❌ 1️⃣ ➡ ❌1️⃣ ⭕ ⌛  "on X's turn and grid square 1 is empty, you can fill grid square 1 with an X, then switch to O's turn and increase the turn count"
+...
+❌ 9️⃣ ➡ ❌9️⃣ ⭕ ⌛
+⭕ 1️⃣ ➡ ⭕1️⃣ ❌ ⌛
+...
+⭕ 9️⃣ ➡ ⭕9️⃣ ❌ ⌛
+❌1️⃣ ❌2️⃣ ❌3️⃣ ❗ ➡ ❌👑 🏁   "check if the first, second and third grid squares are filled with Xs.  If so, then X wins and the game ends"
+❌4️⃣ ❌5️⃣ ❌6️⃣ ❗ ➡ ❌👑 🏁  ...
+⌛9 ➡ 🤝 🏁  "after 9 turns with no win, the game ends in a tie"
+
+
+
+Converting english to tokenized rules...:
+"a board consists of 3x3 squares, each of which can be empty, contain an X, or contain an O"
+  🛹 <=> board
+  ⏹ <=> square
+  (🛹 => ⏹(3*3)) <=> board consists of 3x3 squares
+  (⏹ => ❌ | ⭕ | 🔳) <=> square can be X or O or empty
+"the game starts with an empty board"
+  🎬 <=> game start
+  🔳🛹 <=> empty board
+  (🎬 => 🔳🛹 ... ) <=> game starts with an empty board  (# note, could contain instead of equal)
+"each turn, a player can place their piece in an empty square"
+  🔳#️⃣ <=> empty square
+  🔳#️⃣(☑️) <=> piece in an empty square
+  (⌛ ☑️ => 🔳#️⃣(☑️) ... ) <=> each turn, a player can place their piece in an empty square
+"if a player gets 3 of their pieces in a row, column, or diagonal, they win"
+  ↔(☑️3) <=> 3 pieces in a row
+  ↕(☑️3) <=> 3 pieces in a column
+  ↗(☑️3) <=> 3 pieces in a diagonal
+  ↔(☑️3) | ↕(☑️3) | ↗(☑️3) => ☑️👑
+"if all squares are filled and no player has won, it's a draw"
+  ∀#️⃣☑️ <=> all squares filled
+  🚫☑️👑 <=> no player has won
+  🤝 <=> draw
+  ∀#️⃣☑️ 🚫☑️👑 => 🤝
+"the game ends when a player wins or it's a draw"
+  ☑️👑 | 🤝 => 🏁
+"the board is valid" # pretty tricky to determine from scratch.  might actually have to track history of the board for this (best guess: check if number of X and Os is within 1 of each other and in appropriate turn)
+  🛹✅ <=> the board is valid
+"the board is not valid" # same
+  🛹❎ <=> the board is not valid
+"the board is full"
+  🛹🔒 <=> the board is full
+"the board is not full"
+  🛹🔓 <=> the board is not full
+"it is X's turn" # could be determined by board (X > O)
+  🛹❌
+"it is O's turn"
+  🛹⭕
+"X has won"
+  ❌👑
+"X has not won" # somewhat costly, but tbf only has to check 8 conditions
+  🚫❌👑
+"O has won"
+  ⭕👑
+"O has not won"
+  🚫⭕👑
+"it is a draw" # quite costly but could depend on X has not won and O has not won
+  🤝
+"it is not a draw" # if X has won or O has won or the board is not full it is not a draw (yet)
+  🚫🤝
+# and more: (e.g. valid board check:)
+"a Tic Tac Toe board has 9 cells"
+  🛹 => ⏹9 ...
+"a Tic Tac Toe cell can be empty, contain an X, or contain an O"
+  ⏹ => ❌ | ⭕ | 🔳
+"a Tic Tac Toe board has 9 cells arranged in 3 rows by 3 columns"
+  "⏹9x↔3↕3" => 9 cells arranged in 3 rows by 3 columns  # i.e. ?????
+  (🛹 => ↔3 ↕3 ...) <=> board has 3 rows 3 cols
+  ↔3 ↕3 => ⏹9 ... # 3 rows and 3 cols have 9 cells
+"a Tic Tac Toe board has 3 rows"
+  🛹 => ↔3 ...
+"a Tic Tac Toe board has 3 columns"
+  🛹 => ↕3 ...
+"a Tic Tac Toe board has 2 diagonals"
+  🛹 => ↗2 ...
+"a Tic Tac Toe board has 8 possible ways to win"
+  👑❔ <=> possible way to win
+  🛹 => 👑❔8 ...
+# and then loose ones:
+"a cell is identified by its row and column"
+  ⏹ => ↔ ↕ ... # cell has a row and column
+"a cell is identified by its index"
+  ⏹ => #️⃣ ... # cell has an index  
+# common useful optimizations:
+"the tic tac toe board is a python list of 3 rows, each containing 3 cells" # dependency on many others
+  🛹 => 🐍📜 # board is a python list 
+  🐍📜 => 🐍📜(↔3)  # python list contains 3 rows
+  ↔ => ↔(⏹3) # row contains 3 cells
+"'board' is a valid tic tac toe board"
+  🛹 => 🛹✅
+# strategy stuff:
+"we would rather win than lose"
+  ❗ ... => 👑 ... # prioritize winning
+  ... => 😢 ... # over losing
+"we should prefer moves that win over moves that lose" 
+  ❗ ... => 👑 ...
+  ... => 😢 ... 
+"we should prefer moves that win over moves that tie"
+  ❗ ... => 👑 ...
+  ... => 🤝 ...
+"we should prefer moves that tie over moves that lose"
+  ❗ ... => 🤝 ...
+  ... => 😢 ...
+"player X has 2 in a row"
+  ↔(❌2)
+"player O has 2 in a row"
+  ↔(⭕2)
+"if a player has two in a row, they should place their third to get three in a row"
+  ❗ ↔(☑️2) ... => ↔(☑️3) ...
+"if the other player has two in a row, they should block the other player from getting three in a row"
+  ❗🚫 ⭕ ↔(❌2) ... => ↔(❌3) ...  # lol this one's hard
+"if the board is empty, the player should place their piece in the center"
+  ☑️🎯 <=> piece in the center
+  ❗ 🔳🛹 ... => ☑️🎯 ...
+"if the center is taken and it's turn 2, the player should place their piece in a corner"
+  ☑️📐 <=> piece in the corner (idk)
+  ❗ ☑️🎯 ⌛2 ... => ☑️📐 ...
+"if a win is still possible, the player should take it" # might result in losing all the time though! greedy strategy
+  ❗ ... => ☑️👑 ...
+# prediction:
+"if we place two pieces in a row, our opponent will place their piece to block us or they will lose"
+  ↔(⭕2) ... => ↔(⭕2 ❌) ... # if O has 2 in a row, X will block OR 
+  ↔(⭕2) ... => ⭕👑 ...  # O will win
+"turn 5: opponent will place piece in position 6 or lose"
+  ⌛5 ... => 6️⃣(⭕) ... # if it's turn 5, O will place in 6
+  ⌛5 ... => ⭕😢 ... # or lose
+
+
+
+
+
+
+
+
+# ======================== GENERAL TINKERING: implementing priority gating (❗)
+⌛3❔ ⭕1️⃣ ⭕2️⃣ ⭕3️⃣ ➡ ⭕1️⃣ ⭕2️⃣ ⭕3️⃣ ⌛3❎
+⌛3❔ ⭕1️⃣ ⭕2️⃣ ⭕3️⃣ ➡ ⭕👑 🏁
+⌛3❎ ⭕ 1️⃣ ➡ ⭕1️⃣ ❌ ⌛
+# would need to add a check for every turn, for every move rule:
+ = 9* each win check = 9*16 = 144 rules
+ + 9* each move rule = 9*18 = 162 rules
+ + and identity rule (failed check) for each win check = 9*16 = 144 rules
+ = 450 rules
+# CAN be done, but it becomes a bit unwieldy.
+
+
+
+
+# BLIND LOGIC ATTEMPT, ONLY SEEING OBSERVATIONS:
+# format:  new observation, then implications added (tabbed under), with explanation of how to programmatically derive each one
+# note: all symbols are arbitrary and cant be used for their semantic meaning (i.e. we can replace any symbol with a random hash name)  These are just for human readability
+# actual input states are 000000000 format, outputs from oracle are C/W/L/D/E (continue/win/lose/draw/error).  No error-producing observation is actually used though in this version.  Oracle is always right 
+0_in_index_1 => 1️⃣
+1_in_index_1 => ❌1️⃣
+2_in_index_1 => ⭕1️⃣ # for human readability/symbols/fun.
+C <=> continue <=> ok <=> valid <=> 🔁
+W <=> win <=> win1 <=> X_wins <=> ❌👑
+L <=> lose <=> win2 <=> O_wins <=> ⭕👑
+D <=> draw <=> tie <=> 🤝
+E <=> error <=> invalid <=> ⚠️
+# goal is to correctly map inputs to outputs!  Only can use oracle input as a guide
+
+# for this run, assume the system knows nothing about the problem, but we filter any thinking using symbols outside of the above defined ones
+# ROUND 1: 000000000 => C
+1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ => 🔁 # aka
+  # doesnt really tell us anything useful yet. but many possible (bad) hypotheses possible:
+  
+  => 🔁 # any input => continue (i.e. always continue)    
+  
+  1️⃣ => 🔁 # if square1 is empty, continue
+  
+  1️⃣ 2️⃣ => 🔁 # if square1 and square2 are empty, continue (repeat for every combination of 2-8 combinations. 9! = 362880 rules lol.  Or is this 2^9 = 512?  It is!  Order doesnt matter! PHEW )
+  
+  1️⃣ | ... | 9️⃣ => 🔁 # if any are empty, continue (actually possibly useful hypothesis)
+    # note this compiles down to just 1️⃣ => 🔁 style rules for all, but with an OR catch-all which is default behavior
+  
+  # if we allowed it, it could introduce new symbols or use known ones
+    1️⃣ => 👻 # but we're auto-filtering these (easy to do programmatically, and to chide LLMs into doing)
+  
+  # we maybe shouldn't auto-filter using tokens from outside this observation for new hypotheses, but we could.  e.g.
+  1️⃣ => ❌👑 # hypothesis: sometimes an empty 1️⃣ could lead to a win too 
+    # this is an out-of-left-field hypothesis to make now, but it's not invalid, and probably useful later.
+    # but ongoing: rule of thumb is we filter these for now, make sure to limit dreaming to only the latest observation implications
+
+  # esoteric edge cases: (2^9, anytime 🔁 is ignored)
+  1️⃣ => # empty square1 implies nothing (i.e. no hypothesis)
+  1️⃣ 2️⃣ => # etc.  any combination implies nothing (i.e. no hypothesis)
+  => # nothing implies nothing (NIHILISM) (always true)
+
+  # general rule of thumb here then: existence/nonexistence of 1️⃣ - 9️⃣ symbols + 🔁 = 2^10 possible hypotheses based on this observation alone.
+  # = 1024 possible hypotheses derivable from this observation.  
+  # 512 non-nihilistic ones (but they are arguably possible too). 
+  # 1 overly-optimistic (also kinda nihilistic) one when all inputs dont matter (which also might be true)
+  # so therefore probably gotta consider all combinations as potentially valid.
+  
+  # autochecker: could run these all.  All currently valid against this observation.  No hypotheses eliminated (round 1)
+
+  # getting more abstract:
+
+  # what about counting?  e.g. the meta class of all inputs where there are 2 empty ones:
+  1️⃣ 2️⃣ | 1️⃣ 3️⃣ | ... | 8️⃣ 9️⃣ => 🔁 # aka count 2 empty => continue
+    # This is valid, but it's a second-order derivation off hypotheses. meta-grouping.  is that (2^10)^2 possibilities of every combination of combinations? = 1048576?
+    # since it's painful, maybe we dont do that meta stuff yet...
+    # note: counting is like NOTs, if you're allowing set size to be a rule grouping
+
+  # what about NOT 🚫?  We could technically make rules that certain combinations explicitly do NOT lead to 🔁. blank is indifferent, but NOT is a statement
+    # this is pretty fair. Except it implies the other symbols we haven't observed yet 
+    # (i.e. 🚫🔁 => ❌👑 | ⭕👑 | 🤝 | ⚠️) 
+    # so it goes against our rule-of-thumb of observation-based complexity...
+    # but let's game it out:
+    => 🚫🔁 # aka "never continue". we havent seen not-continue yet (we've only seen 🔁) so this again violates the rule of thumb
+    🔁 => 🔁 🚫🤝 # "continue implies not-tie" # this is more fair, as seeing continue does indeed imply not-tie.  It does violate rule of thumb, but it's more fair and a useful rule.  Dont know when this would ever be created otherwise)
+    1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ => 🚫🤝 # "all 9 squares empty implies not-tie" is another valid and useful hypothesis (which happens to be correct).  We don't know it yet (unless the system knows full observations are non-probabilistic and only get one output) but it's true nonetheless
+    # my gut says we want to avoid not-rules entirely for complexity issues.  But maybe they're needed/useful?
+    # gaming it out: 
+      # we have 🚫🔁 | 🚫❌👑 | 🚫⭕👑 | 🚫🤝 | 🚫⚠️ = 5 new NOT symbols on output side, and:
+      # we have 🚫1️⃣ 🚫❌1️⃣ 🚫⭕1️⃣ * 9 = 27 new symbols on the input side
+      # if we can only use currently-observed possible states, we eliminate 🚫🔁 and 🚫1️⃣ - 🚫9️⃣ (their positives are currently all observed)
+      # so that's still now 4 and 18 symbols which we could possibly play with
+      1️⃣ 🚫❌2️⃣ => 🚫❌👑 🚫⭕👑 # a perfectly valid NOT-based hypothesis "if square1 is empty and square2 is not an X, then X has NOT won, nor has O"
+      # we can probably auto-filter certain rules e.g. anything like: 
+      1️⃣ 🚫❌1️⃣ => ... # "if square1 is empty and square1 is NOT X then ..." (they imply each other already.  But we don't necessarily know that in all problems.  It's part of the problem statement.)
+      # but we probably still want:
+      🚫❌1️⃣ 🚫1️⃣ => ... # "if square1 is NOT X and square1 is NOT empty then ..." (even if we know it's O now, that's only by process of elimination.  other games we want this kind of hypothesis)
+      # considering just input => output direction (no reverse implications yet):
+        # filtered to be input => output only, only one possible state/token per square: 3^9 = 19683 possible input states/symbols combinations (present, NOT, or ignored) => 3^5 = 243 possible output states/symbols = 19683 * 243 = 4782969 yikes
+        # worse, allowing multiple NOT statements for the same square (e.g. square1 is NOT X and NOT empty, which we probably want:): 2^(3*9*2) = 2^54 = 18,014,398,509,481,984 lolol (presence/non-presence of empty/X/O (3) * for each square (9) * ALSO the NOT version ).  output side: 2^(5*2) = 2^10 = 1024
+        # we can slightly improve lol, by eliminating contradictions (cant be 1️⃣ and 🚫1️⃣ at once): 
+      square1: 
+        # layer 0: (setsize=0, no statement about square1 at all): 
+            <=>
+        # layer 1 (setsize=1, grounded observation states): 
+            1️⃣, ❌1️⃣, ⭕1️⃣, ... # imagine we observe only 3 but there might be more
+        # layer 2.1 (setsize=2, 1 token <=> 1 token, NOT abstractions): 
+            🚫1️⃣ => ❌1️⃣ | ⭕1️⃣, # if we observe either other state, we can imply NOT (ONLY because we know a token can exist in only one possible state, not 2+)
+            🚫❌1️⃣ => 1️⃣ | ⭕1️⃣, 
+            🚫⭕1️⃣ => ❌1️⃣ | 1️⃣
+            # note: these are abstractions which can usefully collapse two possible states into a single NOT token.
+        # ELIMINATED by knowing max: layer 2.2 (setsize=1, 2 tokens <=> 1 token, NOT abstractions):
+            🚫1️⃣ 🚫❌1️⃣ <=> ⭕1️⃣, # if we know it's NOT either other state, process of elimination is possible (but not always, if e.g. we dont know all possible states)
+            🚫1️⃣ 🚫⭕1️⃣ <=> ❌1️⃣
+            🚫❌1️⃣ 🚫⭕1️⃣ <=> 1️⃣
+            # note: these collapse into layer 1 IF we know all possible observable states (max identities).  Otherwise we need to distinguish between 🚫1️⃣ 🚫❌1️⃣ and 1️⃣ observations
+        # ELIMINATED by knowing singular identity: layer 2.* (any combination of tokens with NOT tokens)
+            1️⃣ 🚫❌1️⃣ 🚫⭕1️⃣ <=> 1️⃣
+            🚫1️⃣ ❌1️⃣ 🚫⭕1️⃣ <=> ❌1️⃣
+            # any mix like this can be eliminated due to knowing a token can only be in one state (singular identity).  If we dont know that though, these still matter
+        # Layer 0: contradictions: # we may actually want these too, as it's possible to observe both tokens in some problems:
+            1️⃣ 🚫1️⃣ <=> ⚠️
+            ❌1️⃣ 🚫❌1️⃣ <=> ⚠️
+            ⭕1️⃣ 🚫⭕1️⃣ <=> ⚠️
+            🚫1️⃣ 🚫❌1️⃣ 🚫⭕1️⃣ <=> ⚠️ (IFF we know all possible states, i.e. if 🚫1️⃣ 🚫❌1️⃣ <=> ⭕1️⃣ or similar)  
+ 
+        # ... Layer 2-(N-1) # repeat these all as number of possible states of a token increases
+        
+        # layer N (setsize=N, ANY abstractions): 
+            #️⃣1️⃣ <=> 1️⃣ | ❌1️⃣ | ⭕1️⃣
+            # only one in this instance, but imagine more possible states.  
+        🚫1️⃣ 🚫❌1️⃣ <=> 1️⃣ # but we don't necessarily know this always
+        # total: 3 + 3 + 1 + 1 = 8 possible meaningful rules (in full abstraction), capturing 3 possible states
+        
+        # result: (specific to tictactoe):
+        # Absorbing states: (left side is simplest form.  Anything on the right can be mapped back down to it)
+        <=> # null.  no statement about square1 at all
+        1️⃣ <=> 🚫❌1️⃣ 🚫⭕1️⃣ #i.e. equivalent statements to say "square1 is empty" and "square1 is not X and square1 is not O" 
+        ❌1️⃣ <=> 🚫1️⃣ 🚫⭕1️⃣
+        ⭕1️⃣ <=> 🚫1️⃣ 🚫❌1️⃣
+        🚫1️⃣ => ❌1️⃣ | ⭕1️⃣  #i.e. one-directional branching, if "square 1 is not empty" then either "square1 is X" or "square1 is O"
+        🚫❌1️⃣ => 1️⃣ | ⭕1️⃣    
+        🚫⭕1️⃣ => 1️⃣ | ❌1️⃣  # note: other derivations like 🚫⭕1️⃣ => 1️⃣ 🚫❌1️⃣ | 🚫1️⃣ ❌1️⃣ already covered by prev rules
+        blank <=> #️⃣1️⃣ => 1️⃣ | ❌1️⃣ | ⭕1️⃣ # ANY abstraction
+        # note: #️⃣1️⃣ <=> 🚫#️⃣1️⃣ => 🚫1️⃣ | 🚫❌1️⃣ | 🚫⭕1️⃣ => ... => 1️⃣ | ❌1️⃣ | ⭕1️⃣ # ANY NOT abstraction still maps to every possible state
+
+        # so, useful tokens: the 3 observations, the 3 NOT abstractions, the 1 ANY abstraction and the 1 NULL (non-statement).
+        # = 3 obs, 5 abstractions.
+        (note: if obs space was larger it would be every combination of NOTs.  I'm thinking equation is 2^(N)?  But possibly balloons since you cant eliminate/absorb as easy. might be 3^N-1
+    
+        # if we allowed all this mess then it's (2^3)^9 = 8^9 = 134217728 unique ways to reason about the board alone.  then 2^5 = 32 unique ways to reason about outputs
+        # total = 134217728 * 32 = 4294967296 possible unique hypotheses, if we allow abstraction.
+          # this assumes: the system knows a board square has 3 possible states and only 1 at a time, and 5 possible outputs (1 at a time)
+          # no abstract rules allowed: 3^9 * 3^5 = 19683 * 243 = 4782969 possible states. ~900x more if we allow abstraction
+            # buuuut. if we didnt allow abstraction and still had to make second-order rules off the basic ones, then: 2^(4782969) rule combinations lol.  Nope!
+            # still, I'm inclined to have things just verbosely spelled out with more hypotheses that are never abstract.
+
+    # THIS IS WHY WE HATE NOTS AND ABSTRACTIONS.  LOOK AT THIS MESS.  THAT'S IT- NO MORE ABSTRACT RULES!!!
+
+  # Reverse-implications: (ignoring NOTs)
+    # we could assume we can auto-filter input and output-side symbols for now, but we can't do that with all problems
+  # i.e.: 
+  🔁 => 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ # is also a valid hypothesis.  "whenever the output is continue, all inputs are empty"
+  # what's worse:
+  🔁 1️⃣ => 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ # "when the output is continue and the first square is empty, the other squares are empty" is also totally valid
+  # and this is even kinda valid (though redundant, depending on the way we interpret the rules):
+  🔁 1️⃣ => 🔁 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ # "when the output is continue and the first square is empty, the output is continue and the first square is empty AND the other squares are empty"
+  # fully-generalized:
+  9 squares + continue = 10 tokens.  2^10 token combos on input side (present or not) => 2^10 token combos on output side = (2^10) * (2^10)  right? = 1048576
+  # if we eliminate the "same symbol can be on both sides" thing, i.e. make it redundant by assuming "if it's true before it's true after" and vice-versa:
+  10 symbols, each can be on either side or missing = 3^10 = 59049 (more reasonable)
+  # this is probably the actual number.
+  # .... after the headache that was NOTs, I'm ignoring reversed rules for now, even if they're entirely valid.
+
+  # ============ SUMMARY OF ROUND 1 TRIVIAL OBSERVATION:
+  # i.e. Where were we before all this abstraction mess?
+  # 2^9 board states * 2 possible output states = 1024 possible non-abstract hypotheses
+  # based JUST off the current observations (empty squares and "continue").
+  # if abstract rules are allowed:
+  # (none, 1️⃣, 🚫❌1️⃣, 🚫⭕1️⃣)^9 observed, (none, 🔁, 🚫❌👑, 🚫⭕👑, 🚫🤝, 🚫⚠️) observed.
+  # I *think* this is 4^9 * 6 = 262144 * 6 = 1572864 possible unique hypotheses which cant be absorbed into a simpler form
+  # 1536x worse with NOT abstraction 😛 but those might be absorbing and useful later
+  # ignore reverse rules!  except it's probably....
+    # no abstract NOTs:
+    # (left side, right side, or missing)^(9 squares + continue token) = 3^10 = 59049 possible unique hypotheses
+    # and with NOTs:
+    # (left side, right side, or missing)^(all possible tokens: (1️⃣, 🚫❌1️⃣, 🚫⭕1️⃣)*9 + (🔁, 🚫❌👑, 🚫⭕👑, 🚫🤝, 🚫⚠️))
+    # == 3^(3*9 + 5) = 3^32 = 1853020188851841 possible unique hypotheses lololol no.
+  # hopefully this makes the case solidly against NOT abstractions.  *MAYBE* we allow reverse rules though
+
+# ROUND 2: 020020110 => C
+1️⃣ ⭕2️⃣ 3️⃣ 4️⃣ ⭕5️⃣ 6️⃣ ❌7️⃣ ❌8️⃣ 9️⃣ => 🔁 # aka
+    # WHEW.
+    # alright, same as before but now we've observed some squares can be filled.
+    
+    # ANY abstraction might be allowable... at least there's only one of these per square!
+    #️⃣2️⃣ => ⭕2️⃣ | 2️⃣ 
+    #️⃣5️⃣ => ⭕5️⃣ | 5️⃣
+    #️⃣7️⃣ => ❌7️⃣ | 7️⃣
+    #️⃣8️⃣ => ❌8️⃣ | 8️⃣
+    #️⃣1️⃣ => 1️⃣ # only observed so far
+    # ...
+    # == 9 ANY hypotheses (could have been derived in first round, or could have been given by the system de-facto by it saying "a square is either empty, X, or O")
+    # otherwise we just added 4 new ones (the #️⃣2️⃣ => ⭕2️⃣ etc mappings)
+
+    there are 3^4 ways now for each of these to be represented (not present, empty, or the X/O we observed) = 81 combos
+    then subtract those where none of the new mappings are present (i.e. there needs to be at least 1 X/O) = 2^4 = 16 combos (these were already present in round 1)
+    then multiply by the other possible board states: 2^5 inclusions
+    and the output continue: 2 states (included or not)
+    = (3^4-2^4)*2^5 = (81 - 16) * 2^5 = 65 * 32  = 2080 board states,
+    * 2 outputs = 4160 possible additional hypotheses (not including any NOT abstraction or reverse rules)
+    = 1024 + 4160 = 5184 total possible hypotheses from both rounds (not including any NOT abstraction or reverse rules)
+
+    totals are now:
+    # any position could be present, non-present.  but some have an additional X or O state observed, so it's:
+    2 * 3 * 2 * 2 * 3 * 2 * 3 * 3 * 2   =*>   2
+    2592 =*> 2
+    5184 total hypotheses....  WOOT IT ADDS UP!
+
+    NOW:  INVALIDATING HYPOTHESES:
+    # ...any?
+    - we dont actually see any conflicting hypotheses, just additional examples of possible inputs   
+    - NO BROKEN HYPOTHESES
+    
+    VALIDATING HYPOTHESES:
+    - the ones which have received the most evidence now (2 rounds of validation) are those which are more general. e.g.:
+    1️⃣ | ... | 9️⃣ => 🔁
+    1️⃣ 3️⃣ 4️⃣ 6️⃣ 9️⃣ => 🔁 # this is the most elaborate one which is still valid for both
+    => # the null one is valid for both tho too obvs
+    => 🔁 # as is "always continue"
+
+# ROUND 3: 110212221 => W  #(NOTE: this is classic tictactoe, not no-diags TTT)
+❌1️⃣ ❌2️⃣ 3️⃣ ⭕4️⃣ ❌5️⃣ ⭕6️⃣ ⭕7️⃣ ⭕8️⃣ ❌9️⃣ => ❌👑  
+    # so, new stuff:
+
+    #️⃣1️⃣ => ❌1️⃣ | 1️⃣
+    #️⃣2️⃣ => ❌2️⃣ | ⭕2️⃣ | 2️⃣
+    #️⃣3️⃣ => 3️⃣
+    #️⃣4️⃣ => ⭕4️⃣ | 4️⃣ 
+    #️⃣5️⃣ => ❌5️⃣ | ⭕5️⃣ | 5️⃣
+    #️⃣6️⃣ => ⭕6️⃣ | 6️⃣
+    #️⃣7️⃣ => ❌7️⃣ | ⭕7️⃣ | 7️⃣
+    #️⃣8️⃣ => ❌8️⃣ | ⭕8️⃣ | 8️⃣
+    #️⃣9️⃣ => ❌9️⃣ | 9️⃣
+
+    📤 => 🔁 | ❌👑  # new output state!
+
+    # possible state counts now (including not-present):
+    3 * 4 * 2 * 3 * 4 * 3 * 4 * 4 * 3 = 41472 possible hypotheses
+
+    # eventual total:  4^9 * 6 = 262144 * 6 = 1572864 possible unique hypotheses
+
+    3^9 * 5 = 19683 * 5 = 98415 possible observations
+
+    # INVALIDATING HYPOTHESES:
+    # ...any?!  not really!  hmmm
+    # let's take the interpretation that a missing square is saying:  blank <=> #️⃣8️⃣ => ❌8️⃣ | ⭕8️⃣ | 8️⃣
+    # i.e. a claim that's like:
+    1️⃣ ⭕2️⃣ 3️⃣ 4️⃣ ⭕5️⃣ 6️⃣ ❌7️⃣ ❌8️⃣ => 🔁 # aka (# i.e. 9️⃣ is any)
+       # would actually be provably false now because:
+    1️⃣ ⭕2️⃣ 3️⃣ 4️⃣ ⭕5️⃣ 6️⃣ ❌7️⃣ ❌8️⃣ ❌9️⃣ => ❌👑 # X wins
+       # EXCEPT: we haven't seen this actual state yet, so no - it cant be proven
+      1️⃣  ⭕2️⃣ 3️⃣   4️⃣ ⭕5️⃣   6️⃣ ❌7️⃣  ❌8️⃣   9️⃣ => 🔁 # X wins
+    ❌1️⃣ ❌2️⃣ 3️⃣ ⭕4️⃣ ❌5️⃣ ⭕6️⃣ ⭕7️⃣ ⭕8️⃣ ❌9️⃣ => ❌👑
+                3️⃣                                     => 🔁  # lol the only direct overlap
+                3️⃣                                     => ❌👑 # but this can be invalidated!  (at least the idea that it ALWAYS produces that)
+    # same for e.g. => 🔁 ("always continue")
+    # this is all too complex to go through them all.  but this is easily checkable via brute force algorithm
+    # at least we can invalidate a *little* now.  And that starts to put others at risk for similarity
+
+    # Hypotheses of other invalidations (even if they havent been observed directly yet):
+    1️⃣ => ❌👑 # other square grid nums
+    1️⃣ => # and any claiming they work for all
+
+    # VALIDATING HYPOTHESES:
+    # the most general ones are still the most valid.  e.g.:
+    3️⃣ => # lol trivial rule, has the most hits
+
+    # PATTERN RECOGNITION:
+    # i.e. guessing at what these all mean.
+    ❌7️⃣ ❌8️⃣ ❌9️⃣ => ❌👑  # this is guessable now.  all are observable states
+    1️⃣ 3️⃣ 5️⃣ 7️⃣ 9️⃣ => 🔁 # this too!  unexpected but this should hold up lol
+    # right now though in an automated way we can merely see scores 0-3, so these are only as useful as the trivial cases
+    # but an LLM might be able to recognize them already as guesses here. (vibes)
+
+# OTHER ROUNDS:
+... this keeps going obviously, and now - what gets invalidated?
+    # the rules which 
+
+
+# GENERAL EXISTENTIAL LIMITS:
+0/1/2 * 9 positions * 5 outputs = 3^9 * 5 = 98415 possible observations
+2^(98415) possible sets of observations = ungodly number
+meaning, therefore, must be semantic
+
+### ERROR:  I think this was too optimistic and it's actually worse than all of this.
+3^9 possible inputs, right?
+5 possible outputs.
+5^(3^9) = 5^19683 possible pairs of inputs to outputs.  i.e. ways to make functions which map all possible inputs to possible outputs. OVERFLOW
+- tictactoe is ONE of those possible functions
+- my 7^9 * 5 is the list of all primitive functional rules (i.e. recipe rules) INCLUDING ABSTRACTIONS like not and any
+- 3^9 * 5 is the observation space of observable facts
+- 4^9 * 6 is the set of formulas when you allow ANY rules (i.e. leaving certain tokens blank=ANY as they should always apply) - which is most of our rules here
+- 2 * 4^9 * 6 if we allow the "priority" flag heh... but that's just an execution trick
+- 2^(9*3+5) = 2^32 as just existence tokens (bitwise observation form)
+- 4^32 if we allow tokens to be on either side of the aisle (ungodly)
+
+
+# The case for NOT rules, again:
+We need at least 1️⃣, ❌1️⃣, ⭕1️⃣ base observation states 
+We also need a 1️⃣ | ❌1️⃣ | ⭕1️⃣ aka "any" aka "blank" placeholder where a rule can accept any of them
+The missing set of rules then is 1️⃣ | ❌1️⃣,  1️⃣ | ⭕1️⃣,   ❌1️⃣ | ⭕1️⃣, which are just easier to express as the negative:
+  🚫⭕1️⃣, 🚫❌1️⃣, 🚫1️⃣ respectively^  
+The "not any of them" case is trivially excluded due to the rules of the game
+so total = 7 possible rules per position.   and then that becomes 7^9 total inputs
+Applying the same reasoning to outputs, 5 possible outputs becomes:
+ 5C1 + 5C2 + 5C3 + 5C4 + 5C5 = 5 + 10 + 10 + 5 + 1 = 31 possible states
+ e.g. "if all positions are empty, but the middle column spots are X or O (nonempty) then it's either a Continue, Win (X wins), or Lose (O wins)"
+we *might* be able to narrow this down to just the original 5 outputs, and only make concrete rules, but it loses expressive power of the rules themselves
+
+SO:  7^9 * 31 = 1250961817  (1.2B) with full expressivity
+OR:  7^9 * 5 = 201768035 (200M) limited to concrete conclusions
+
+Rewriting my clean solutions using NOTs:
+
+
+ init:
+🎬 ➡ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ ❌  # we should use indexes like these instead, so we can reserve 1,2,3 numbers as quantities
+
+# X turn logic:
+1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ => 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ ❌
+❌1️⃣ ⭕2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ => ❌1️⃣ ⭕2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ ❌
+...
+❌1️⃣ ⭕2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ => ❌1️⃣ ⭕2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ ❌
+
+# allowable moves:
+# generator: ❌ #️⃣ ➡ ❌#️⃣ ⭕ (remember recipe-axiom syntax is for the cached simplified axiom dependencies representation. you can use normal functions to generate)
+❌ 1️⃣ ➡ ❌1️⃣ ⭕
+❌ 2️⃣ ➡ ❌2️⃣ ⭕
+❌ 3️⃣ ➡ ❌3️⃣ ⭕
+❌ 4️⃣ ➡ ❌4️⃣ ⭕
+❌ 5️⃣ ➡ ❌5️⃣ ⭕
+❌ 6️⃣ ➡ ❌6️⃣ ⭕
+❌ 7️⃣ ➡ ❌7️⃣ ⭕
+❌ 8️⃣ ➡ ❌8️⃣ ⭕
+❌ 9️⃣ ➡ ❌9️⃣ ⭕
+# generator: ⭕ #️⃣ ➡ ⭕#️⃣ ❌
+⭕ 1️⃣ ➡ ⭕1️⃣ ❌
+⭕ 2️⃣ ➡ ⭕2️⃣ ❌
+⭕ 3️⃣ ➡ ⭕3️⃣ ❌
+⭕ 4️⃣ ➡ ⭕4️⃣ ❌
+⭕ 5️⃣ ➡ ⭕5️⃣ ❌
+⭕ 6️⃣ ➡ ⭕6️⃣ ❌
+⭕ 7️⃣ ➡ ⭕7️⃣ ❌
+⭕ 8️⃣ ➡ ⭕8️⃣ ❌
+⭕ 9️⃣ ➡ ⭕9️⃣ ❌
+# = 18 axioms
+# winning conditions:
+# X rows:
+❌1️⃣ ❌2️⃣ ❌3️⃣ ❗ ➡ ❌👑 🏁
+❌1️⃣ ❌2️⃣ ❌3️⃣ 🚫⭕4️⃣ 🚫⭕7️⃣ ➡ ❌👑 🏁
+...
+❌1️⃣ ❌2️⃣ ❌3️⃣ 🚫⭕6️⃣ 🚫⭕9️⃣ ➡ ❌👑 🏁
+❌4️⃣ ❌5️⃣ ❌6️⃣ ❗ ➡ ❌👑 🏁
+❌7️⃣ ❌8️⃣ ❌9️⃣ ❗ ➡ ❌👑 🏁
+# X cols:
+❌1️⃣ ❌4️⃣ ❌7️⃣ ❗ ➡ ❌👑 🏁
+❌2️⃣ ❌5️⃣ ❌8️⃣ ❗ ➡ ❌👑 🏁
+❌3️⃣ ❌6️⃣ ❌9️⃣ ❗ ➡ ❌👑 🏁
+# X diag:
+❌1️⃣ ❌5️⃣ ❌9️⃣ ❗ ➡ ❌👑 🏁
+❌3️⃣ ❌5️⃣ ❌7️⃣ ❗ ➡ ❌👑 🏁
+# O rows:
+⭕1️⃣ ⭕2️⃣ ⭕3️⃣ ❗ ➡ ⭕👑 🏁
+⭕4️⃣ ⭕5️⃣ ⭕6️⃣ ❗ ➡ ⭕👑 🏁
+⭕7️⃣ ⭕8️⃣ ⭕9️⃣ ❗ ➡ ⭕👑 🏁
+# O cols:
+⭕1️⃣ ⭕4️⃣ ⭕7️⃣ ❗ ➡ ⭕👑 🏁
+⭕2️⃣ ⭕5️⃣ ⭕8️⃣ ❗ ➡ ⭕👑 🏁
+⭕3️⃣ ⭕6️⃣ ⭕9️⃣ ❗ ➡ ⭕👑 🏁
+# O diag:
+⭕1️⃣ ⭕5️⃣ ⭕9️⃣ ❗ ➡ ⭕👑 🏁
+⭕3️⃣ ⭕5️⃣ ⭕7️⃣ ❗ ➡ ⭕👑 🏁
+# = 16 axioms 
+# draw conditions:
+🚫1️⃣ 🚫2️⃣ 🚫3️⃣ 🚫4️⃣ 🚫5️⃣ 🚫6️⃣ 🚫7️⃣ 🚫8️⃣ 🚫9️⃣ ➡ 🤝 🏁 #  # NOTE: this is the only place quantity > 1 is used. All others are indexes not quantities
+# ==== GRAND TOTAL AXIOMS: 36 
+# (could be 38 if we collect all the win conditions into one two axioms, making the individual win lines simpler)
+# ❗ is the only thing I dont like much here....
+# ➡ is nice but only in this text formatting.  blue box right arrow would be uglier than "=>"
+
+

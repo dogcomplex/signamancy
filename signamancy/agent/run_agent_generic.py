@@ -14,6 +14,7 @@ from signamancy.bridge import SignamancyBridge
 from signamancy.agent.policy import PolicyManager
 from signamancy.agent.reachability import ReachabilityAnalyzer
 from signamancy.registry import BlockType
+from signamancy.agent.planner_gpu import GPUPlanner
 
 
 def load_recipes(csv_path: Path) -> str:
@@ -182,11 +183,21 @@ def cem_optimize(csv_path: Path, device: str):
     horizon = int(os.environ.get("AGENT_HORIZON", "500"))
     iters = int(os.environ.get("CEM_ITERS", "10"))
     pop = int(os.environ.get("CEM_POP", "24"))
+    # Training-time overrides to speed up CEM (smaller batch/horizon)
+    train_batch = int(os.environ.get("CEM_TRAIN_BATCH", str(batch_size)))
+    train_horizon = int(os.environ.get("CEM_TRAIN_HORIZON", str(horizon)))
     elite_frac = float(os.environ.get("CEM_ELITE_FRAC", "0.2"))
     init_std = float(os.environ.get("CEM_INIT_STD", "0.5"))
     prefixes = [p.strip() for p in os.environ.get("TARGET_RESOURCE_PREFIXES", "👑,💰").replace(",", " ").split() if p.strip()]
     weights = None  # default equal
     log_every_cand = int(os.environ.get("LOG_EVERY_CAND", "4"))
+    # Objective aggregation over the candidate rollout:
+    #   final (default): score at last evaluation point
+    #   max:   max score over trajectory
+    #   sum:   sum of scores over trajectory
+    #   avg:   average score over trajectory
+    obj_mode = os.environ.get("CEM_OBJECTIVE", "final").strip().lower()
+    eval_every = int(os.environ.get("CEM_EVAL_EVERY", "10"))  # evaluate trajectory score every N decision/steps
     policy_file = os.environ.get("POLICY_FILE", "")
     policy_gain = float(os.environ.get("POLICY_GAIN", "1.0"))
     policy_export = os.environ.get("POLICY_EXPORT_FILE", "")
@@ -195,6 +206,9 @@ def cem_optimize(csv_path: Path, device: str):
     reach_strict = int(os.environ.get("REACHABILITY_STRICT_PRIORITY", "1")) == 1
     uniform_branches = int(os.environ.get("POLICY_UNIFORM_BRANCHES", "1")) == 1
     use_crn = int(os.environ.get("AGENT_USE_CRN", "1")) == 1
+    # GPU planner (optional)
+    planner_enable = int(os.environ.get("PLANNER_ENABLE", "0")) == 1
+    planner_in_cem = int(os.environ.get("PLANNER_IN_CEM", "0")) == 1
     do_autotune = int(os.environ.get("AGENT_AUTOTUNE", "0")) == 1
     profile_iter = int(os.environ.get("AGENT_PROFILE", "0")) == 1
     single_action = int(os.environ.get("AGENT_SINGLE_ACTION", "1")) == 1
@@ -227,6 +241,21 @@ def cem_optimize(csv_path: Path, device: str):
 
     # Compile once
     rules, idx_to_id, registry = load_rules_with_ids(csv_path)
+    # Optionally append policy rules (text file) to physics rules before compile
+    policy_rules_appended = 0
+    policy_file_path = os.environ.get("POLICY_FILE", "")
+    if policy_file_path:
+        try:
+            ptxt = Path(policy_file_path)
+            if ptxt.exists():
+                parser_extra = SignamancyParser(registry)
+                extra_rules = parser_extra.parse_text(ptxt.read_text(encoding="utf-8"))
+                if extra_rules:
+                    rules.extend(extra_rules)
+                    policy_rules_appended = len(extra_rules)
+                    print(f"[Policy] appended {policy_rules_appended} policy rules into physics")
+        except Exception as e:
+            print(f"[Policy] append rules failed: {e}")
     compiler = SignamancyCompiler(registry)
     kernel = compiler.compile(rules)
     num_rules = kernel.num_rules
@@ -242,6 +271,7 @@ def cem_optimize(csv_path: Path, device: str):
 
     # Load policy once (verify) if provided
     pm: PolicyManager | None = None
+    policy_bias_vec = torch.zeros(0)
     if policy_file:
         try:
             pm = PolicyManager()
@@ -255,6 +285,20 @@ def cem_optimize(csv_path: Path, device: str):
                 if policy_fail:
                     print("[Policy] failing due to violations.")
                     return
+            # Precompute static rule bias vector from policy (log-weights per rule)
+            policy_bias_vec = torch.zeros(num_rules, dtype=torch.float32)
+            for rid, w in pm.rule_desires.items():
+                idxs = id_to_indices.get(rid, [])
+                if not idxs and "#" not in rid:
+                    base = rid
+                    for key, indices in id_to_indices.items():
+                        if key == base or key.startswith(base + "#"):
+                            idxs += indices
+                if not idxs:
+                    continue
+                logw = float(torch.log(torch.tensor(max(w, 1e-6))).item())
+                for i in idxs:
+                    policy_bias_vec[i] += logw
         except Exception as e:
             print(f"[Policy] load/verify error: {e}")
 
@@ -366,6 +410,45 @@ def cem_optimize(csv_path: Path, device: str):
             print(f"[CEM] resume failed: {e}")
 
     if not only_final and iters > 0:
+        # Build a single reusable engine for candidate evaluation to avoid per-candidate reinitialization cost
+        engine_train, bridge_train = build_engine_from_kernel(kernel, registry, train_batch, device)
+        engine_train.cfg.enable_cpu_offload = cpu_needed
+        engine_train.cfg.single_action_mode = single_action
+        # Attach rule IDs once
+        engine_train.rule_ids = [idx_to_id.get(i2, f"Rule#{i2}") for i2 in range(num_rules)]
+        # Seed once to baseline (physics + policy start)
+        bridge_train.inject_signal("🎬")
+        bridge_train.inject_signal("💫")
+        engine_train.step(); engine_train.step()
+        # Apply static policy once (sheet does not depend on candidate bias)
+        if pm:
+            try:
+                pm.apply_to_engine(engine_train, registry, id_to_indices, policy_gain=policy_gain)
+            except Exception as e:
+                print(f"[Policy] warning: {e}")
+        # Build prefix indices once (for GPU objective)
+        prefix_idx_by_block_train = _build_prefix_indices(registry, prefixes)
+        # Snapshot baseline engine state to restore before each candidate
+        def _snapshot_engine_state(eng: SignamancyEngine):
+            return {bt: eng.state[bt].clone() for bt in BlockType}
+        def _restore_engine_state(eng: SignamancyEngine, snap: dict[BlockType, torch.Tensor]):
+            for bt in BlockType:
+                eng.state[bt].copy_(snap[bt])
+            # Clear transient traces
+            eng.last_fired_mask = None
+            eng.last_prior_valid = None
+            eng.last_scaled_logits = None
+            eng.last_choice = None
+        baseline_state = _snapshot_engine_state(engine_train)
+        # Also snapshot one-shot bookkeeping so single-fire constraints reset properly
+        oneshot_ready0 = getattr(engine_train, "_oneshot_ready", False)
+        oneshot_fired0 = {k: v.clone() for k, v in getattr(engine_train, "_oneshot_fired", {}).items()}
+        def _restore_oneshot(eng: SignamancyEngine):
+            try:
+                eng._oneshot_ready = oneshot_ready0  # type: ignore[attr-defined]
+                eng._oneshot_fired = {k: v.clone() for k, v in oneshot_fired0.items()}  # type: ignore[attr-defined]
+            except Exception:
+                pass
         for it in range(iters):
             print(f"[CEM] iter {it+1}/{iters}...")
             # Capture a base RNG state once per iteration for common random numbers
@@ -384,20 +467,10 @@ def cem_optimize(csv_path: Path, device: str):
                     if base_cuda_states is not None:
                         torch.cuda.set_rng_state_all(base_cuda_states)
                 bias = (mean + std * torch.randn_like(mean)).clamp_(-3.0, 3.0)
-                engine, bridge = build_engine_from_kernel(kernel, registry, batch_size, device)
-                engine.cfg.enable_cpu_offload = cpu_needed
-                engine.cfg.single_action_mode = single_action
-                # Attach rule IDs for any internal logs
-                engine.rule_ids = [idx_to_id.get(i2, f"Rule#{i2}") for i2 in range(num_rules)]
-                # seed
-                bridge.inject_signal("💫")
-                engine.step(); engine.step()
-                # apply policy sheet once per candidate (static + token desires)
-                if pm:
-                    try:
-                        pm.apply_to_engine(engine, registry, id_to_indices, policy_gain=policy_gain)
-                    except Exception as e:
-                        print(f"[Policy] warning: {e}")
+                # Reuse engine; restore baseline and one-shot bookkeeping
+                engine = engine_train
+                _restore_engine_state(engine, baseline_state)
+                _restore_oneshot(engine)
                 if reach_report and i == 0 and it == 0:
                     try:
                         ra = ReachabilityAnalyzer(engine, registry)
@@ -408,16 +481,35 @@ def cem_optimize(csv_path: Path, device: str):
                 use_bias = bias
                 if uniform_branches:
                     use_bias = uniformize_biases_by_base(use_bias, idx_to_id)
-                set_biases(engine, use_bias.to(engine.device))
-                # Precompute indices for resampling objectives
-                prefix_idx_by_block = _build_prefix_indices(registry, prefixes)
+                # Combine learned bias with static policy bias (if any)
+                if policy_bias_vec.numel() == num_rules:
+                    combined = use_bias + policy_bias_vec.to(use_bias.device)
+                else:
+                    combined = use_bias
+                # Optional: add GPU planner aggregated bias once per candidate (using same target prefixes)
+                if planner_enable and planner_in_cem:
+                    try:
+                        planner = GPUPlanner.from_env()
+                        # Planner targets default to CEM prefixes with unit weights
+                        t_weights = [1.0] * len(prefixes)
+                        t_pairs = list(zip(prefixes, t_weights))
+                        pbias = planner.aggregated_bias(engine, registry, t_pairs)
+                        combined = combined + pbias.to(combined.device)
+                    except Exception:
+                        pass
+                set_biases(engine, combined.to(engine.device))
                 # Lineage (optimization-time): per-row origin and generation
                 lineage_id = torch.arange(engine.cfg.batch_size, dtype=torch.long)
                 lineage_gen = torch.zeros(engine.cfg.batch_size, dtype=torch.long)
                 steps_run = 0
                 decisions = 0
+                # Trajectory aggregation
+                traj_sum = 0.0
+                traj_cnt = 0
+                traj_max = float("-inf")
+                last_score = 0.0
                 if decision_only:
-                    while decisions < horizon:
+                    while decisions < train_horizon:
                         # Burst through physics-only frames (≤1 effective choice)
                         sub = 0
                         while sub < physics_burst_max:
@@ -437,10 +529,20 @@ def cem_optimize(csv_path: Path, device: str):
                         if getattr(engine, "last_prior_valid", None) is not None:
                             has_any = engine.last_prior_valid.any(dim=1)
                             iter_dead_rows += int((~has_any).sum().item())
+                        # Evaluate objective on schedule
+                        if (decisions % max(1, eval_every) == 0) or (decisions >= train_horizon):
+                            with torch.no_grad():
+                                scores_vec = _score_universes(engine, prefix_idx_by_block_train)
+                                s_now = float(scores_vec.mean().item())
+                                last_score = s_now
+                                traj_sum += s_now
+                                traj_cnt += 1
+                                if s_now > traj_max:
+                                    traj_max = s_now
                         # Periodic resampling at decision boundaries
                         if resample_every > 0 and (decisions % resample_every == 0):
                             with torch.no_grad():
-                                scores_vec = _score_universes(engine, prefix_idx_by_block)
+                                scores_vec = _score_universes(engine, prefix_idx_by_block_train)
                                 k = max(resample_min_k, int(resample_top_frac * engine.cfg.batch_size))
                                 k = min(k, engine.cfg.batch_size // 2)
                                 if k > 0:
@@ -469,14 +571,24 @@ def cem_optimize(csv_path: Path, device: str):
                                                 rf.write(json.dumps(rec, ensure_ascii=False) + "\n")
                                     iter_replacements += int(k)
                 else:
-                    for t in range(horizon):
+                    for t in range(train_horizon):
                         engine.step(); steps_run += 1
                         if getattr(engine, "last_prior_valid", None) is not None:
                             has_any = engine.last_prior_valid.any(dim=1)
                             iter_dead_rows += int((~has_any).sum().item())
+                        # Evaluate objective on schedule
+                        if ((t + 1) % max(1, eval_every) == 0) or (t + 1 >= train_horizon):
+                            with torch.no_grad():
+                                scores_vec = _score_universes(engine, prefix_idx_by_block_train)
+                                s_now = float(scores_vec.mean().item())
+                                last_score = s_now
+                                traj_sum += s_now
+                                traj_cnt += 1
+                                if s_now > traj_max:
+                                    traj_max = s_now
                         if resample_every > 0 and ((t + 1) % resample_every == 0):
                             with torch.no_grad():
-                                scores_vec = _score_universes(engine, prefix_idx_by_block)
+                                scores_vec = _score_universes(engine, prefix_idx_by_block_train)
                                 k = max(resample_min_k, int(resample_top_frac * engine.cfg.batch_size))
                                 k = min(k, engine.cfg.batch_size // 2)
                                 if k > 0:
@@ -505,8 +617,15 @@ def cem_optimize(csv_path: Path, device: str):
                                                 rf.write(json.dumps(rec, ensure_ascii=False) + "\n")
                                     iter_replacements += int(k)
                 total_engine_steps += steps_run
-                snap = bridge.get_state_snapshot()
-                score = objective_from_snapshot(snap, prefixes, weights)
+                # Aggregate trajectory into candidate score
+                if obj_mode == "max":
+                    score = traj_max if traj_cnt > 0 else last_score
+                elif obj_mode == "sum":
+                    score = traj_sum
+                elif obj_mode in ("avg", "mean"):
+                    score = (traj_sum / max(1, traj_cnt))
+                else:  # 'final'
+                    score = last_score
                 candidates.append(use_bias)
                 scores.append(score)
                 if (i + 1) % max(1, log_every_cand) == 0:
@@ -554,7 +673,7 @@ def cem_optimize(csv_path: Path, device: str):
             torch.cuda.manual_seed_all(12345)
     # Attach rule IDs before any steps (for one-shot bases masking)
     engine.rule_ids = [idx_to_id.get(i, f"Rule#{i}") for i in range(num_rules)]
-    bridge.inject_signal("💫"); engine.step(); engine.step()
+    bridge.inject_signal("🎬"); bridge.inject_signal("💫"); engine.step(); engine.step()
     last_hb_t = time.perf_counter()
     # Optional debug: check if any rules are valid after seeding
     if int(os.environ.get("AGENT_DEBUG_VALID", "0")) == 1:
@@ -574,6 +693,29 @@ def cem_optimize(csv_path: Path, device: str):
             pm.apply_to_engine(engine, registry, id_to_indices, policy_gain=policy_gain)
         except Exception as e:
             print(f"[Policy] warning: {e}")
+    # Optional: initialize GPU planner for final run
+    planner = GPUPlanner.from_env() if planner_enable else None
+    planner_every = 0
+    planner_targets: list[tuple[str, float]] = []
+    planner_uni_targets_idx_by_block: dict[BlockType, torch.Tensor] = {}
+    if planner is not None:
+        try:
+            # Planner prefixes: PLANNER_PREFIXES > TRACE_PREFIXES > TARGET_RESOURCE_PREFIXES
+            raw_pp = os.environ.get("PLANNER_PREFIXES", "").strip()
+            if raw_pp in ("*", "ALL", "all"):
+                # All tokens -> not recommended; default to TARGET prefixes
+                pfx = prefixes
+            else:
+                base_pp = raw_pp if raw_pp else os.environ.get("TRACE_PREFIXES", "")
+                pfx = [p.strip() for p in base_pp.replace(",", " ").split() if p.strip()]
+                if not pfx:
+                    pfx = prefixes
+            planner_targets = list(zip(pfx, [1.0] * len(pfx)))
+            planner_every = max(1, int(os.environ.get("PLANNER_EVERY", str(planner.cfg.eval_every_steps))))
+            planner_uni_targets_idx_by_block = _build_prefix_indices(registry, pfx)
+        except Exception:
+            planner_targets = []
+            planner_every = 0
     if reach_report:
         try:
             ra = ReachabilityAnalyzer(engine, registry)
@@ -597,6 +739,9 @@ def cem_optimize(csv_path: Path, device: str):
         final_bias = best_bias if best_bias is not None else torch.zeros(num_rules, dtype=torch.float32)
     if uniform_branches:
         final_bias = uniformize_biases_by_base(final_bias, idx_to_id)
+    # Merge final learned bias with static policy bias
+    if policy_bias_vec.numel() == num_rules:
+        final_bias = final_bias + policy_bias_vec.to(final_bias.device)
     set_biases(engine, final_bias.to(engine.device))
     if bias_out_path:
         try:
@@ -913,6 +1058,28 @@ def cem_optimize(csv_path: Path, device: str):
                 if bool(stats.get("any_decision", False)):
                     break
                 engine.step(); steps_run_final += 1; sub += 1; step_idx += 1
+                # Planner aggregated pass on schedule
+                if planner is not None and planner_targets and (step_idx % max(1, planner_every) == 0):
+                    try:
+                        base = final_bias
+                        if policy_bias_vec.numel() == num_rules:
+                            base = base + policy_bias_vec.to(base.device)
+                        # Aggregated bias
+                        pbias_agg = planner.aggregated_bias(engine, registry, planner_targets)
+                        # Optional per-universe bias on selected "hard" rows: choose bottom M by current target score
+                        pbias_uni = torch.zeros_like(pbias_agg)
+                        if planner.cfg.enable_per_universe:
+                            try:
+                                scores_vec = _score_universes(engine, planner_uni_targets_idx_by_block)
+                                m = max(1, int(os.environ.get("PLANNER_MAX_UNI", str(planner.cfg.max_universes))))
+                                m = min(m, engine.cfg.batch_size)
+                                uni_idx = torch.topk(scores_vec, k=m, largest=False).indices  # bottom M universes
+                                pbias_uni = planner.per_universe_bias(engine, registry, planner_targets, uni_idx.to(engine.device))
+                            except Exception:
+                                pass
+                        set_biases(engine, (base + pbias_agg.to(base.device) + pbias_uni.to(base.device)))
+                    except Exception:
+                        pass
                 now = time.perf_counter()
                 if final_heartbeat_every > 0 and (step_idx % final_heartbeat_every == 0):
                     _emit_hb()
@@ -929,6 +1096,26 @@ def cem_optimize(csv_path: Path, device: str):
                 break
             # Execute exactly one decision step (also logged)
             engine.step(); steps_run_final += 1; decisions += 1; step_idx += 1
+            # Planner aggregated pass on schedule
+            if planner is not None and planner_targets and (step_idx % max(1, planner_every) == 0):
+                try:
+                    base = final_bias
+                    if policy_bias_vec.numel() == num_rules:
+                        base = base + policy_bias_vec.to(base.device)
+                    pbias_agg = planner.aggregated_bias(engine, registry, planner_targets)
+                    pbias_uni = torch.zeros_like(pbias_agg)
+                    if planner.cfg.enable_per_universe:
+                        try:
+                            scores_vec = _score_universes(engine, planner_uni_targets_idx_by_block)
+                            m = max(1, int(os.environ.get("PLANNER_MAX_UNI", str(planner.cfg.max_universes))))
+                            m = min(m, engine.cfg.batch_size)
+                            uni_idx = torch.topk(scores_vec, k=m, largest=False).indices
+                            pbias_uni = planner.per_universe_bias(engine, registry, planner_targets, uni_idx.to(engine.device))
+                        except Exception:
+                            pass
+                    set_biases(engine, (base + pbias_agg.to(base.device) + pbias_uni.to(base.device)))
+                except Exception:
+                    pass
             now = time.perf_counter()
             if final_heartbeat_every > 0 and (step_idx % final_heartbeat_every == 0):
                 _emit_hb()
@@ -942,6 +1129,26 @@ def cem_optimize(csv_path: Path, device: str):
     else:
         for t in range(horizon):
             engine.step(); steps_run_final += 1; step_idx += 1
+            # Planner aggregated pass on schedule
+            if planner is not None and planner_targets and (step_idx % max(1, planner_every) == 0):
+                try:
+                    base = final_bias
+                    if policy_bias_vec.numel() == num_rules:
+                        base = base + policy_bias_vec.to(base.device)
+                    pbias_agg = planner.aggregated_bias(engine, registry, planner_targets)
+                    pbias_uni = torch.zeros_like(pbias_agg)
+                    if planner.cfg.enable_per_universe:
+                        try:
+                            scores_vec = _score_universes(engine, planner_uni_targets_idx_by_block)
+                            m = max(1, int(os.environ.get("PLANNER_MAX_UNI", str(planner.cfg.max_universes))))
+                            m = min(m, engine.cfg.batch_size)
+                            uni_idx = torch.topk(scores_vec, k=m, largest=False).indices
+                            pbias_uni = planner.per_universe_bias(engine, registry, planner_targets, uni_idx.to(engine.device))
+                        except Exception:
+                            pass
+                    set_biases(engine, (base + pbias_agg.to(base.device) + pbias_uni.to(base.device)))
+                except Exception:
+                    pass
             now = time.perf_counter()
             if final_heartbeat_every > 0 and (step_idx % final_heartbeat_every == 0):
                 _emit_hb()
