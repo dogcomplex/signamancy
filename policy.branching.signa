@@ -1,0 +1,54 @@
+🎬 => 💫 ♥ ⛳ ♥THUR ♥FRI ♥SAT ♥POST_R1 ♥POST_R2 ♥STRAT
+
+// ═══════════════════════════════════════════════════════════════
+// BRANCHING STRATEGY POLICY
+// Uses probabilistic branching to explore multiple strategies.
+// Each universe gets randomly assigned ONE strategy at start.
+// ═══════════════════════════════════════════════════════════════
+
+// ──────────────────────────────────────────────────────────────
+// STRATEGY BRANCHING - Fires ONCE, consumed
+// Produces ONE of the strategy triggers
+// ──────────────────────────────────────────────────────────────
+
+♥STRAT => ♥DO_RUSH%35 ♥DO_BALANCED%35 ♥DO_FISH%30
+
+// ──────────────────────────────────────────────────────────────
+// RUSH STRATEGY - Consumes trigger, produces weights + marker
+// Marker (♥WAS_RUSH) persists for final state tracking
+// ──────────────────────────────────────────────────────────────
+
+♥DO_RUSH => ♥WAS_RUSH ♥ID_Sell_Wood_45.0 ♥ID_Sell_Stone_45.0 ♥ID_Sell_Apple_42.0 ♥ID_Sell_Berry_42.0 ♥ID_Sell_Orange_42.0 ♥ID_Sell_Copper_Ore_40.0 ♥ID_Sell_Iron_Ore_40.0 ♥ID_Sell_Gold_Ore_40.0 ♥ID_Sell_Coal_40.0 ♥ID_Sell_Sardine_40.0 ♥ID_Sell_Halibut_40.0 ♥ID_Sell_Bullhead_40.0 ♥ID_Sell_Carp_40.0 ♥ID_Day_38.0 ♥ID_Rent1_50.0 ♥ID_Rent2_50.0 ♥ID_Rent3_50.0 ♥ID_Rent4_50.0 ♥ID_Rent5_50.0 ♥ID_Chop_Axe_32.0 ♥ID_Chop_Axe_Copper_32.0 ♥ID_Chop_Axe_Iron_32.0 ♥ID_Chop_Axe_Gold_32.0 ♥ID_Pick_Pickaxe_32.0 ♥ID_Pick_Pickaxe_Copper_32.0 ♥ID_Pick_Pickaxe_Iron_32.0 ♥ID_Pick_Pickaxe_Gold_32.0 ♥ID_Chop_Tree_30.0 ♥ID_Chop_Apple_Tree_30.0 ♥ID_Chop_Orange_Tree_30.0 ♥ID_Chop_Stump_28.0 ♥ID_Chop_Bush_28.0 ♥ID_Chop_Bush_Apple_28.0 ♥ID_Chop_Bush_Berry_28.0 ♥ID_Chop_Bush_Orange_28.0 ♥ID_Pick_Stone_28.0 ♥ID_Pick_Stone_Small_28.0 ♥ID_Pick_Stone_Large_28.0 ♥ID_Pick_Copper_26.0 ♥ID_Pick_Copper_Large_26.0 ♥ID_Pick_Iron_26.0 ♥ID_Pick_Iron_Large_26.0 ♥ID_Pick_Gold_26.0 ♥ID_Pick_Gold_Large_26.0 ♥ID_Pick_Coal_26.0 ♥ID_Pick_Coal_Large_26.0 ♥ID_Rod_Fish_18.0
+
+// ──────────────────────────────────────────────────────────────
+// BALANCED STRATEGY - Mix of gathering and fishing
+// ──────────────────────────────────────────────────────────────
+
+♥DO_BALANCED => ♥WAS_BALANCED ♥ID_Sell_Wood_40.0 ♥ID_Sell_Stone_40.0 ♥ID_Sell_Apple_40.0 ♥ID_Sell_Berry_40.0 ♥ID_Sell_Orange_40.0 ♥ID_Sell_Copper_Ore_38.0 ♥ID_Sell_Iron_Ore_38.0 ♥ID_Sell_Gold_Ore_38.0 ♥ID_Sell_Coal_38.0 ♥ID_Sell_Sardine_40.0 ♥ID_Sell_Halibut_40.0 ♥ID_Sell_Bullhead_40.0 ♥ID_Sell_Carp_40.0 ♥ID_Sell_Red_Mullet_40.0 ♥ID_Sell_Sturgeon_40.0 ♥ID_Day_35.0 ♥ID_Rent1_45.0 ♥ID_Rent2_45.0 ♥ID_Rent3_45.0 ♥ID_Rent4_45.0 ♥ID_Rent5_45.0 ♥ID_Chop_Axe_28.0 ♥ID_Chop_Axe_Copper_28.0 ♥ID_Chop_Axe_Iron_28.0 ♥ID_Chop_Axe_Gold_28.0 ♥ID_Pick_Pickaxe_28.0 ♥ID_Pick_Pickaxe_Copper_28.0 ♥ID_Pick_Pickaxe_Iron_28.0 ♥ID_Pick_Pickaxe_Gold_28.0 ♥ID_Chop_Tree_25.0 ♥ID_Chop_Apple_Tree_25.0 ♥ID_Chop_Orange_Tree_25.0 ♥ID_Chop_Stump_25.0 ♥ID_Chop_Bush_25.0 ♥ID_Chop_Bush_Apple_25.0 ♥ID_Chop_Bush_Berry_25.0 ♥ID_Chop_Bush_Orange_25.0 ♥ID_Pick_Stone_24.0 ♥ID_Pick_Stone_Small_24.0 ♥ID_Pick_Stone_Large_24.0 ♥ID_Pick_Copper_22.0 ♥ID_Pick_Copper_Large_22.0 ♥ID_Pick_Iron_22.0 ♥ID_Pick_Iron_Large_22.0 ♥ID_Pick_Gold_22.0 ♥ID_Pick_Gold_Large_22.0 ♥ID_Pick_Coal_22.0 ♥ID_Pick_Coal_Large_22.0 ♥ID_Rod_Fish_28.0 ♥ID_Rod_Fish_Copper_28.0 ♥ID_Rod_Fish_Iron_28.0 ♥ID_Rod_Fish_Gold_28.0
+
+// ──────────────────────────────────────────────────────────────
+// FISH_FIRST STRATEGY - Heavy fishing focus from start
+// ──────────────────────────────────────────────────────────────
+
+♥DO_FISH => ♥WAS_FISH ♥ID_Sell_Wood_35.0 ♥ID_Sell_Stone_35.0 ♥ID_Sell_Apple_38.0 ♥ID_Sell_Berry_38.0 ♥ID_Sell_Orange_38.0 ♥ID_Sell_Copper_Ore_32.0 ♥ID_Sell_Iron_Ore_32.0 ♥ID_Sell_Gold_Ore_32.0 ♥ID_Sell_Coal_32.0 ♥ID_Sell_Sardine_45.0 ♥ID_Sell_Halibut_45.0 ♥ID_Sell_Bullhead_45.0 ♥ID_Sell_Carp_45.0 ♥ID_Sell_Red_Mullet_45.0 ♥ID_Sell_Sturgeon_45.0 ♥ID_Day_35.0 ♥ID_Rent1_45.0 ♥ID_Rent2_45.0 ♥ID_Rent3_45.0 ♥ID_Rent4_45.0 ♥ID_Rent5_45.0 ♥ID_Chop_Axe_22.0 ♥ID_Chop_Axe_Copper_22.0 ♥ID_Chop_Axe_Iron_22.0 ♥ID_Chop_Axe_Gold_22.0 ♥ID_Pick_Pickaxe_22.0 ♥ID_Pick_Pickaxe_Copper_22.0 ♥ID_Pick_Pickaxe_Iron_22.0 ♥ID_Pick_Pickaxe_Gold_22.0 ♥ID_Chop_Tree_20.0 ♥ID_Chop_Apple_Tree_20.0 ♥ID_Chop_Orange_Tree_20.0 ♥ID_Chop_Stump_20.0 ♥ID_Chop_Bush_20.0 ♥ID_Chop_Bush_Apple_20.0 ♥ID_Chop_Bush_Berry_20.0 ♥ID_Chop_Bush_Orange_20.0 ♥ID_Pick_Stone_18.0 ♥ID_Pick_Stone_Small_18.0 ♥ID_Pick_Stone_Large_18.0 ♥ID_Pick_Copper_16.0 ♥ID_Pick_Copper_Large_16.0 ♥ID_Pick_Iron_16.0 ♥ID_Pick_Iron_Large_16.0 ♥ID_Pick_Gold_16.0 ♥ID_Pick_Gold_Large_16.0 ♥ID_Pick_Coal_16.0 ♥ID_Pick_Coal_Large_16.0 ♥ID_Rod_Fish_38.0 ♥ID_Rod_Fish_Copper_38.0 ♥ID_Rod_Fish_Iron_38.0 ♥ID_Rod_Fish_Gold_38.0
+
+// ──────────────────────────────────────────────────────────────
+// SHARED CONDITIONALS - Late-week urgency (all strategies)
+// ──────────────────────────────────────────────────────────────
+
+☀4️⃣ ♥THUR => ☀4️⃣ ♥ID_Sell_Wood_10.0 ♥ID_Sell_Stone_10.0 ♥ID_Sell_Sardine_8.0 ♥ID_Day_5.0
+☀5️⃣ ♥FRI => ☀5️⃣ ♥ID_Sell_Wood_15.0 ♥ID_Sell_Stone_15.0 ♥ID_Sell_Sardine_12.0 ♥ID_Day_10.0
+☀6️⃣ ♥SAT => ☀6️⃣ ♥ID_Sell_Wood_20.0 ♥ID_Sell_Stone_20.0 ♥ID_Sell_Sardine_15.0 ♥ID_Day_15.0 ♥ID_Rent1_20.0
+
+// ──────────────────────────────────────────────────────────────
+// SHARED CONDITIONALS - Post-rent pivots (all strategies)
+// ──────────────────────────────────────────────────────────────
+
+🏦2️⃣ ♥POST_R1 => 🏦2️⃣ ♥ID_Rod_Fish_15.0 ♥ID_Sell_Sardine_10.0 ♥ID_Sell_Halibut_10.0
+🏦3️⃣ ♥POST_R2 => 🏦3️⃣ ♥ID_Rod_Fish_20.0 ♥ID_Sell_Carp_15.0
+
+// ──────────────────────────────────────────────────────────────
+// OBJECTIVE
+// ──────────────────────────────────────────────────────────────
+
+⛳ => ⛳👑28.0 ⛳💰24.0

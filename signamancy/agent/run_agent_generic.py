@@ -698,6 +698,8 @@ def cem_optimize(csv_path: Path, device: str):
     planner_every = 0
     planner_targets: list[tuple[str, float]] = []
     planner_uni_targets_idx_by_block: dict[BlockType, torch.Tensor] = {}
+    # Conditional policy refresh: read ♥ID_* tokens produced mid-simulation and add biases
+    policy_refresh_every = int(os.environ.get("POLICY_REFRESH_EVERY", "0"))
     if planner is not None:
         try:
             # Planner prefixes: PLANNER_PREFIXES > TRACE_PREFIXES > TARGET_RESOURCE_PREFIXES
@@ -1064,6 +1066,11 @@ def cem_optimize(csv_path: Path, device: str):
                         base = final_bias
                         if policy_bias_vec.numel() == num_rules:
                             base = base + policy_bias_vec.to(base.device)
+                        # Add conditional policy bias from ♥ID_* tokens produced mid-simulation
+                        if pm and policy_refresh_every > 0:
+                            snap = bridge.get_state_snapshot()
+                            cond_bias = pm.get_conditional_bias(engine, id_to_indices, snap)
+                            base = base + cond_bias.to(base.device)
                         # Aggregated bias
                         pbias_agg = planner.aggregated_bias(engine, registry, planner_targets)
                         # Optional per-universe bias on selected "hard" rows: choose bottom M by current target score
@@ -1078,6 +1085,17 @@ def cem_optimize(csv_path: Path, device: str):
                             except Exception:
                                 pass
                         set_biases(engine, (base + pbias_agg.to(base.device) + pbias_uni.to(base.device)))
+                    except Exception:
+                        pass
+                # Conditional policy refresh (without planner)
+                elif pm and policy_refresh_every > 0 and (step_idx % policy_refresh_every == 0):
+                    try:
+                        snap = bridge.get_state_snapshot()
+                        cond_bias = pm.get_conditional_bias(engine, id_to_indices, snap)
+                        base = final_bias
+                        if policy_bias_vec.numel() == num_rules:
+                            base = base + policy_bias_vec.to(base.device)
+                        set_biases(engine, (base + cond_bias.to(base.device)))
                     except Exception:
                         pass
                 now = time.perf_counter()
@@ -1102,6 +1120,11 @@ def cem_optimize(csv_path: Path, device: str):
                     base = final_bias
                     if policy_bias_vec.numel() == num_rules:
                         base = base + policy_bias_vec.to(base.device)
+                    # Add conditional policy bias from ♥ID_* tokens produced mid-simulation
+                    if pm and policy_refresh_every > 0:
+                        snap = bridge.get_state_snapshot()
+                        cond_bias = pm.get_conditional_bias(engine, id_to_indices, snap)
+                        base = base + cond_bias.to(base.device)
                     pbias_agg = planner.aggregated_bias(engine, registry, planner_targets)
                     pbias_uni = torch.zeros_like(pbias_agg)
                     if planner.cfg.enable_per_universe:
@@ -1114,6 +1137,17 @@ def cem_optimize(csv_path: Path, device: str):
                         except Exception:
                             pass
                     set_biases(engine, (base + pbias_agg.to(base.device) + pbias_uni.to(base.device)))
+                except Exception:
+                    pass
+            # Conditional policy refresh (without planner)
+            elif pm and policy_refresh_every > 0 and (step_idx % policy_refresh_every == 0):
+                try:
+                    snap = bridge.get_state_snapshot()
+                    cond_bias = pm.get_conditional_bias(engine, id_to_indices, snap)
+                    base = final_bias
+                    if policy_bias_vec.numel() == num_rules:
+                        base = base + policy_bias_vec.to(base.device)
+                    set_biases(engine, (base + cond_bias.to(base.device)))
                 except Exception:
                     pass
             now = time.perf_counter()
@@ -1135,6 +1169,11 @@ def cem_optimize(csv_path: Path, device: str):
                     base = final_bias
                     if policy_bias_vec.numel() == num_rules:
                         base = base + policy_bias_vec.to(base.device)
+                    # Add conditional policy bias from ♥ID_* tokens produced mid-simulation
+                    if pm and policy_refresh_every > 0:
+                        snap = bridge.get_state_snapshot()
+                        cond_bias = pm.get_conditional_bias(engine, id_to_indices, snap)
+                        base = base + cond_bias.to(base.device)
                     pbias_agg = planner.aggregated_bias(engine, registry, planner_targets)
                     pbias_uni = torch.zeros_like(pbias_agg)
                     if planner.cfg.enable_per_universe:
@@ -1147,6 +1186,17 @@ def cem_optimize(csv_path: Path, device: str):
                         except Exception:
                             pass
                     set_biases(engine, (base + pbias_agg.to(base.device) + pbias_uni.to(base.device)))
+                except Exception:
+                    pass
+            # Conditional policy refresh (without planner)
+            elif pm and policy_refresh_every > 0 and (step_idx % policy_refresh_every == 0):
+                try:
+                    snap = bridge.get_state_snapshot()
+                    cond_bias = pm.get_conditional_bias(engine, id_to_indices, snap)
+                    base = final_bias
+                    if policy_bias_vec.numel() == num_rules:
+                        base = base + policy_bias_vec.to(base.device)
+                    set_biases(engine, (base + cond_bias.to(base.device)))
                 except Exception:
                     pass
             now = time.perf_counter()

@@ -147,22 +147,62 @@ class PolicyManager:
             tokens.append(t)
         return tokens
 
+    # Compute conditional bias from snapshot --------------------------------
+    def get_conditional_bias(self, engine: SignamancyEngine, rule_id_to_indices: Dict[str, List[int]], snapshot: dict) -> torch.Tensor:
+        """
+        Compute bias delta from ♥ID_* tokens present in the snapshot.
+        Returns a bias vector that should be ADDED to existing biases.
+        This allows conditional policy rules to contribute biases when they fire.
+        """
+        num_rules = engine.num_rules
+        bias_delta = torch.zeros(num_rules, dtype=torch.float32, device=engine.device)
+        for k, meta in snapshot.items():
+            if not k.startswith("♥ID_"):
+                continue
+            val = float(meta.get("val", 0.0))
+            if val <= 0:
+                continue
+            m = re.match(r"^♥(ID_.+?)_([0-9.]+)$", k)
+            if not m:
+                continue
+            rid = m.group(1)
+            w = float(m.group(2))
+            idxs = rule_id_to_indices.get(rid, [])
+            if not idxs and "#" not in rid:
+                base = rid
+                for key, indices in rule_id_to_indices.items():
+                    if key == base or key.startswith(base + "#"):
+                        idxs += indices
+            if idxs:
+                logw = float(torch.log(torch.tensor(max(w, 1e-6), device=engine.device)))
+                for i in idxs:
+                    bias_delta[i] += logw
+        return bias_delta
+
     # Refresh from snapshot ------------------------------------------------
     def apply_from_snapshot(self, engine: SignamancyEngine, registry: TokenRegistry, rule_id_to_indices: Dict[str, List[int]], snapshot: dict, policy_gain: float = 1.0):
         """
         Recompute and apply biases from current ♥ tokens in the snapshot.
         This does not re-run policy rules; it only reads their current outputs.
-        - ♥ID_* tokens map to per-rule static bias (log w)
+        - ♥ID_*_weight tokens map to per-rule static bias (log weight)
         - ♥<prefix> tokens map to per-token desirability (log w) via sparse matvec
         """
         num_rules = engine.num_rules
         static_bias = torch.zeros(num_rules, dtype=torch.float32, device=engine.device)
-        # Rule-level desires
+        # Rule-level desires - parse weight from token name like ♥ID_Rule_15.0
         for k, meta in snapshot.items():
             if not k.startswith("♥ID_"):
                 continue
-            w = float(meta.get("val", 1.0))
-            rid = k[1:]  # drop leading heart
+            # Check if token is present (val > 0 for BIT tokens)
+            val = float(meta.get("val", 0.0))
+            if val <= 0:
+                continue
+            # Parse weight from token name: ♥ID_Rule_weight
+            m = re.match(r"^♥(ID_.+?)_([0-9.]+)$", k)
+            if not m:
+                continue
+            rid = m.group(1)
+            w = float(m.group(2))
             idxs = rule_id_to_indices.get(rid, [])
             if not idxs and "#" not in rid:
                 base = rid

@@ -1,0 +1,18 @@
+🎬 => 💫 ♥ ⛳ ♥THUR ♥FRI ♥SAT ♥POST_R1 ♥POST_R2
+
+// ═══════════════════════════════════════════════════════════════
+// FISH STRATEGY - Heavy fishing focus (sustainable income)
+// ═══════════════════════════════════════════════════════════════
+
+❗ ♥ => ♥ID_Sell_Wood_35.0 ♥ID_Sell_Stone_35.0 ♥ID_Sell_Apple_38.0 ♥ID_Sell_Berry_38.0 ♥ID_Sell_Orange_38.0 ♥ID_Sell_Copper_Ore_32.0 ♥ID_Sell_Iron_Ore_32.0 ♥ID_Sell_Gold_Ore_32.0 ♥ID_Sell_Coal_32.0 ♥ID_Sell_Sardine_45.0 ♥ID_Sell_Halibut_45.0 ♥ID_Sell_Bullhead_45.0 ♥ID_Sell_Carp_45.0 ♥ID_Sell_Red_Mullet_45.0 ♥ID_Sell_Sturgeon_45.0 ♥ID_Day_35.0 ♥ID_Rent1_45.0 ♥ID_Rent2_45.0 ♥ID_Rent3_45.0 ♥ID_Rent4_45.0 ♥ID_Rent5_45.0 ♥ID_Chop_Axe_22.0 ♥ID_Chop_Axe_Copper_22.0 ♥ID_Chop_Axe_Iron_22.0 ♥ID_Chop_Axe_Gold_22.0 ♥ID_Pick_Pickaxe_22.0 ♥ID_Pick_Pickaxe_Copper_22.0 ♥ID_Pick_Pickaxe_Iron_22.0 ♥ID_Pick_Pickaxe_Gold_22.0 ♥ID_Chop_Tree_20.0 ♥ID_Chop_Apple_Tree_20.0 ♥ID_Chop_Orange_Tree_20.0 ♥ID_Chop_Stump_20.0 ♥ID_Chop_Bush_20.0 ♥ID_Chop_Bush_Apple_20.0 ♥ID_Chop_Bush_Berry_20.0 ♥ID_Chop_Bush_Orange_20.0 ♥ID_Pick_Stone_18.0 ♥ID_Pick_Stone_Small_18.0 ♥ID_Pick_Stone_Large_18.0 ♥ID_Pick_Copper_16.0 ♥ID_Pick_Copper_Large_16.0 ♥ID_Pick_Iron_16.0 ♥ID_Pick_Iron_Large_16.0 ♥ID_Pick_Gold_16.0 ♥ID_Pick_Gold_Large_16.0 ♥ID_Pick_Coal_16.0 ♥ID_Pick_Coal_Large_16.0 ♥ID_Rod_Fish_38.0 ♥ID_Rod_Fish_Copper_38.0 ♥ID_Rod_Fish_Iron_38.0 ♥ID_Rod_Fish_Gold_38.0
+
+// Late-week urgency (fish sales higher)
+☀4️⃣ ♥THUR => ☀4️⃣ ♥ID_Sell_Sardine_10.0 ♥ID_Sell_Halibut_10.0 ♥ID_Day_5.0
+☀5️⃣ ♥FRI => ☀5️⃣ ♥ID_Sell_Sardine_15.0 ♥ID_Sell_Halibut_15.0 ♥ID_Day_10.0
+☀6️⃣ ♥SAT => ☀6️⃣ ♥ID_Sell_Sardine_20.0 ♥ID_Sell_Halibut_20.0 ♥ID_Day_15.0 ♥ID_Rent1_25.0
+
+// Post-rent pivots (continue fishing)
+🏦2️⃣ ♥POST_R1 => 🏦2️⃣ ♥ID_Rod_Fish_25.0 ♥ID_Sell_Sardine_20.0 ♥ID_Sell_Halibut_20.0
+🏦3️⃣ ♥POST_R2 => 🏦3️⃣ ♥ID_Rod_Fish_30.0 ♥ID_Sell_Carp_22.0 ♥ID_Sell_Red_Mullet_22.0
+
+⛳ => ⛳👑28.0 ⛳💰24.0

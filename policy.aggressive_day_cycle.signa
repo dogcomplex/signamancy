@@ -1,0 +1,19 @@
+
+🎬 => 💫 ♥ ⛳ ♥⏰1 ♥⏰2 ♥⏰3 ♥⏰4 ♥⏰5 ♥⏰6 ♥🏦2 ♥🏦3
+
+// BASE - Standard selling, VERY high day priority
+❗ ♥ => ♥ID_Sell_Wood_40.0 ♥ID_Sell_Stone_40.0 ♥ID_Sell_Apple_40.0 ♥ID_Sell_Berry_40.0 ♥ID_Sell_Orange_40.0 ♥ID_Sell_Copper_Ore_38.0 ♥ID_Sell_Iron_Ore_38.0 ♥ID_Sell_Gold_Ore_38.0 ♥ID_Sell_Coal_38.0 ♥ID_Sell_Sardine_38.0 ♥ID_Sell_Halibut_38.0 ♥ID_Sell_Bullhead_38.0 ♥ID_Sell_Carp_38.0 ♥ID_Day_40.0 ♥ID_Rent1_48.0 ♥ID_Rent2_48.0 ♥ID_Rent3_48.0 ♥ID_Rent4_48.0 ♥ID_Rent5_48.0 ♥ID_Chop_Axe_28.0 ♥ID_Pick_Pickaxe_28.0 ♥ID_Chop_Tree_25.0 ♥ID_Pick_Stone_22.0 ♥ID_Rod_Fish_24.0
+
+// EVERY day gets an urgency boost - ensure steady progress
+☀1️⃣ ♥⏰1 => ☀1️⃣ ♥ID_Day_5.0 ♥ID_Sell_Wood_5.0 ♥ID_Sell_Stone_5.0
+☀2️⃣ ♥⏰2 => ☀2️⃣ ♥ID_Day_5.0 ♥ID_Sell_Wood_5.0 ♥ID_Sell_Stone_5.0
+☀3️⃣ ♥⏰3 => ☀3️⃣ ♥ID_Day_8.0 ♥ID_Sell_Wood_8.0 ♥ID_Sell_Stone_8.0
+☀4️⃣ ♥⏰4 => ☀4️⃣ ♥ID_Day_12.0 ♥ID_Sell_Wood_12.0 ♥ID_Sell_Stone_12.0
+☀5️⃣ ♥⏰5 => ☀5️⃣ ♥ID_Day_18.0 ♥ID_Sell_Wood_18.0 ♥ID_Sell_Stone_18.0
+☀6️⃣ ♥⏰6 => ☀6️⃣ ♥ID_Day_25.0 ♥ID_Sell_Wood_25.0 ♥ID_Sell_Stone_25.0 ♥ID_Rent1_25.0
+
+// Post-Rent pivots
+🏦2️⃣ ♥🏦2 => 🏦2️⃣ ♥ID_Rod_Fish_18.0 ♥ID_Sell_Sardine_12.0
+🏦3️⃣ ♥🏦3 => 🏦3️⃣ ♥ID_Rod_Fish_22.0 ♥ID_Sell_Halibut_15.0
+
+⛳ => ⛳👑28.0 ⛳💰24.0
