@@ -1,0 +1,38 @@
+🎬 => 💫 ♥ ⛳ ♥PIVOT1 ♥PIVOT2 ♥PIVOT3
+
+// ═══════════════════════════════════════════════════════════════
+// STAGED POLICY - Clean stage transitions based on rent progress
+// Base: proven weights from policy.best.signa
+// Pivots: one-shot biases when rent tiers are reached
+// ═══════════════════════════════════════════════════════════════
+
+// ──────────────────────────────────────────────────────────────
+// STAGE 1: Base policy (always active) - Rush resources, sell fast
+// ──────────────────────────────────────────────────────────────
+
+❗ ♥ => ♥ID_Sell_Wood_40.0 ♥ID_Sell_Stone_40.0 ♥ID_Sell_Apple_40.0 ♥ID_Sell_Berry_40.0 ♥ID_Sell_Orange_40.0 ♥ID_Sell_Copper_Ore_38.0 ♥ID_Sell_Iron_Ore_38.0 ♥ID_Sell_Gold_Ore_38.0 ♥ID_Sell_Coal_38.0 ♥ID_Sell_Grass_35.0 ♥ID_Sell_Sardine_38.0 ♥ID_Sell_Halibut_38.0 ♥ID_Sell_Bullhead_38.0 ♥ID_Sell_Carp_38.0 ♥ID_Sell_Red_Mullet_38.0 ♥ID_Sell_Sturgeon_38.0 ♥ID_Day_35.0 ♥ID_Rent1_35.0 ♥ID_Chop_Axe_28.0 ♥ID_Chop_Axe_Copper_28.0 ♥ID_Chop_Axe_Iron_28.0 ♥ID_Chop_Axe_Gold_28.0 ♥ID_Pick_Pickaxe_28.0 ♥ID_Pick_Pickaxe_Copper_28.0 ♥ID_Pick_Pickaxe_Iron_28.0 ♥ID_Pick_Pickaxe_Gold_28.0 ♥ID_Chop_Tree_25.0 ♥ID_Chop_Apple_Tree_25.0 ♥ID_Chop_Orange_Tree_25.0 ♥ID_Chop_Stump_25.0 ♥ID_Chop_Bush_25.0 ♥ID_Chop_Bush_Apple_25.0 ♥ID_Chop_Bush_Berry_25.0 ♥ID_Chop_Bush_Orange_25.0 ♥ID_Pick_Stone_22.0 ♥ID_Pick_Stone_Small_22.0 ♥ID_Pick_Stone_Large_22.0 ♥ID_Pick_Copper_20.0 ♥ID_Pick_Copper_Large_20.0 ♥ID_Pick_Iron_20.0 ♥ID_Pick_Iron_Large_20.0 ♥ID_Pick_Gold_20.0 ♥ID_Pick_Gold_Large_20.0 ♥ID_Pick_Coal_20.0 ♥ID_Pick_Coal_Large_20.0 ♥ID_Rod_Fish_18.0 ♥ID_Rod_Fish_Copper_18.0 ♥ID_Rod_Fish_Iron_18.0 ♥ID_Rod_Fish_Gold_18.0
+
+// ──────────────────────────────────────────────────────────────
+// STAGE 2: After Rent1 (🏦2️⃣ appears) - Pivot to fishing + Rent2
+// Fires ONCE, adds biases for sustainable income
+// ──────────────────────────────────────────────────────────────
+
+🏦2️⃣ ♥PIVOT1 => 🏦2️⃣ ♥STAGE2 ♥ID_Rod_Fish_15.0 ♥ID_Rod_Fish_Copper_15.0 ♥ID_Rod_Fish_Iron_15.0 ♥ID_Rod_Fish_Gold_15.0 ♥ID_Sell_Sardine_12.0 ♥ID_Sell_Halibut_12.0 ♥ID_Sell_Bullhead_12.0 ♥ID_Sell_Carp_12.0 ♥ID_Rent2_20.0
+
+// ──────────────────────────────────────────────────────────────
+// STAGE 3: After Rent2 (🏦3️⃣ appears) - Add processing + Rent3
+// ──────────────────────────────────────────────────────────────
+
+🏦3️⃣ ♥PIVOT2 => 🏦3️⃣ ♥STAGE3 ♥ID_Build_Furnace_12.0 ♥ID_Sell_Baked_Fish_Sardine_15.0 ♥ID_Sell_Baked_Fish_Halibut_15.0 ♥ID_Rent3_18.0
+
+// ──────────────────────────────────────────────────────────────
+// STAGE 4: After Rent3 (🏦4️⃣ appears) - Push for higher tiers
+// ──────────────────────────────────────────────────────────────
+
+🏦4️⃣ ♥PIVOT3 => 🏦4️⃣ ♥STAGE4 ♥ID_Rent4_15.0 ♥ID_Rent5_12.0
+
+// ──────────────────────────────────────────────────────────────
+// OBJECTIVE
+// ──────────────────────────────────────────────────────────────
+
+⛳ => ⛳👑25.0 ⛳💰25.0

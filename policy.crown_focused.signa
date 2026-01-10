@@ -1,0 +1,19 @@
+
+🎬 => 💫 ♥ ⛳ ♥⏰4 ♥⏰5 ♥⏰6 ♥🏦2 ♥🏦3
+
+// BASE - Same selling but HIGHER rent priority
+❗ ♥ => ♥ID_Sell_Wood_40.0 ♥ID_Sell_Stone_40.0 ♥ID_Sell_Apple_40.0 ♥ID_Sell_Berry_40.0 ♥ID_Sell_Orange_40.0 ♥ID_Sell_Copper_Ore_38.0 ♥ID_Sell_Iron_Ore_38.0 ♥ID_Sell_Gold_Ore_38.0 ♥ID_Sell_Coal_38.0 ♥ID_Sell_Sardine_38.0 ♥ID_Sell_Halibut_38.0 ♥ID_Sell_Bullhead_38.0 ♥ID_Sell_Carp_38.0 ♥ID_Sell_Red_Mullet_38.0 ♥ID_Sell_Sturgeon_38.0 ♥ID_Day_35.0 ♥ID_Rent1_50.0 ♥ID_Rent2_50.0 ♥ID_Rent3_50.0 ♥ID_Rent4_50.0 ♥ID_Rent5_50.0 ♥ID_Chop_Axe_28.0 ♥ID_Pick_Pickaxe_28.0 ♥ID_Chop_Tree_25.0 ♥ID_Pick_Stone_22.0 ♥ID_Rod_Fish_22.0
+
+// Late-week urgency - escalating
+☀4️⃣ ♥⏰4 => ☀4️⃣ ♥ID_Sell_Wood_10.0 ♥ID_Sell_Stone_10.0 ♥ID_Day_5.0
+☀5️⃣ ♥⏰5 => ☀5️⃣ ♥ID_Sell_Wood_15.0 ♥ID_Sell_Stone_15.0 ♥ID_Day_10.0
+☀6️⃣ ♥⏰6 => ☀6️⃣ ♥ID_Sell_Wood_25.0 ♥ID_Sell_Stone_25.0 ♥ID_Day_20.0 ♥ID_Rent1_30.0
+
+// Post-Rent1: aggressive fishing
+🏦2️⃣ ♥🏦2 => 🏦2️⃣ ♥ID_Rod_Fish_20.0 ♥ID_Sell_Sardine_15.0 ♥ID_Sell_Halibut_15.0 ♥ID_Sell_Bullhead_15.0 ♥ID_Sell_Carp_15.0
+
+// Post-Rent2: even more fishing, start processing
+🏦3️⃣ ♥🏦3 => 🏦3️⃣ ♥ID_Rod_Fish_25.0 ♥ID_Sell_Sardine_20.0 ♥ID_Build_Furnace_15.0
+
+// OBJECTIVE: Weight crowns MORE than gold (pay rent ASAP)
+⛳ => ⛳👑35.0 ⛳💰20.0

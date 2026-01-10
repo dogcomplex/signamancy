@@ -1,0 +1,19 @@
+
+🎬 => 💫 ♥ ⛳ ♥⏰4 ♥⏰5 ♥⏰6 ♥🏦2 ♥🏦3 ♥🐟early
+
+// BASE - Boost fishing from start (sustainable income)
+❗ ♥ => ♥ID_Sell_Wood_38.0 ♥ID_Sell_Stone_38.0 ♥ID_Sell_Apple_38.0 ♥ID_Sell_Berry_38.0 ♥ID_Sell_Orange_38.0 ♥ID_Sell_Copper_Ore_35.0 ♥ID_Sell_Iron_Ore_35.0 ♥ID_Sell_Gold_Ore_35.0 ♥ID_Sell_Coal_35.0 ♥ID_Sell_Sardine_40.0 ♥ID_Sell_Halibut_40.0 ♥ID_Sell_Bullhead_40.0 ♥ID_Sell_Carp_40.0 ♥ID_Sell_Red_Mullet_40.0 ♥ID_Sell_Sturgeon_40.0 ♥ID_Day_35.0 ♥ID_Rent1_45.0 ♥ID_Rent2_45.0 ♥ID_Rent3_45.0 ♥ID_Rent4_45.0 ♥ID_Rent5_45.0 ♥ID_Chop_Axe_25.0 ♥ID_Pick_Pickaxe_25.0 ♥ID_Chop_Tree_22.0 ♥ID_Pick_Stone_20.0 ♥ID_Rod_Fish_30.0 ♥ID_Rod_Fish_Copper_30.0 ♥ID_Rod_Fish_Iron_30.0 ♥ID_Rod_Fish_Gold_30.0
+
+// Early fishing boost (consume charge on first fish attempt)
+🐟 ♥🐟early => 🐟 ♥ID_Rod_Fish_15.0 ♥ID_Sell_Sardine_10.0
+
+// Late-week urgency
+☀4️⃣ ♥⏰4 => ☀4️⃣ ♥ID_Sell_Wood_10.0 ♥ID_Sell_Stone_10.0 ♥ID_Sell_Sardine_10.0 ♥ID_Day_5.0
+☀5️⃣ ♥⏰5 => ☀5️⃣ ♥ID_Sell_Wood_15.0 ♥ID_Sell_Stone_15.0 ♥ID_Sell_Sardine_15.0 ♥ID_Day_10.0
+☀6️⃣ ♥⏰6 => ☀6️⃣ ♥ID_Sell_Wood_20.0 ♥ID_Sell_Stone_20.0 ♥ID_Sell_Sardine_20.0 ♥ID_Day_15.0 ♥ID_Rent1_20.0
+
+// Post-Rent pivots
+🏦2️⃣ ♥🏦2 => 🏦2️⃣ ♥ID_Rod_Fish_20.0 ♥ID_Sell_Sardine_15.0 ♥ID_Sell_Halibut_15.0
+🏦3️⃣ ♥🏦3 => 🏦3️⃣ ♥ID_Rod_Fish_25.0 ♥ID_Sell_Carp_20.0 ♥ID_Sell_Red_Mullet_20.0
+
+⛳ => ⛳👑30.0 ⛳💰22.0

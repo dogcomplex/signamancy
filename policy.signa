@@ -1,7 +1,44 @@
-🎬 => 💫 ♥ ⛳
+🎬 => 💫 ♥ ⛳ ♥THUR ♥FRI ♥SAT ♥POST_R1
 
-// Consolidated single-spend policy: apply all weights once
-❗ ♥ => ♥ID_Day_0.1 ♥ID_Rent1_3.0 ♥ID_Rent2_3.0 ♥ID_Rent3_3.0 ♥ID_Rent4_3.0 ♥ID_Rent5_3.0 ♥ID_Rent6_3.0 ♥ID_Rent7_3.0 ♥ID_Rent8_3.0 ♥ID_Rent9_3.0 ♥ID_Rent10_3.0 ♥ID_Rent11_3.0 ♥ID_Rent12_3.0 ♥ID_Rent13_3.0 ♥ID_Rent14_3.0 ♥ID_Rent15_3.0 ♥ID_Sell_Copper_Ore_0.5 ♥ID_Sell_Iron_Ore_0.5 ♥ID_Sell_Gold_Ore_0.5 ♥ID_Sell_Coal_0.5 ♥ID_Day_Baked_Copper_1.7 ♥ID_Day_Baked_Iron_1.7 ♥ID_Day_Baked_Gold_1.7 ♥🍫🥉1.2 ♥🍫🥈1.2 ♥🍫🥇1.2 ♥ID_Build_Furnace_1.6 ♥ID_Build_Keg_1.6 ♥ID_Build_Preserves_1.6 ♥ID_Build_Sprinkler_1.6 ♥ID_Copper_Axe_1.5 ♥ID_Iron_Axe_1.5 ♥ID_Gold_Axe_1.5 ♥ID_Copper_Pickaxe_1.5 ♥ID_Iron_Pickaxe_1.5 ♥ID_Gold_Pickaxe_1.5 ♥ID_Copper_Watering_Can_1.5 ♥ID_Iron_Watering_Can_1.5 ♥ID_Gold_Watering_Can_1.5 ♥ID_Feat_Performance_Chop_Axe_1.4 ♥ID_Feat_Performance_Pick_Pickaxe_Gold_1.6 ♥ID_Feat_Performance_Water_Dirt_Gold_1.6 ♥ID_Buy_Pumpkin_Seed_1.4 ♥ID_Buy_Cauliflower_Seed_1.4 ♥ID_Buy_Sunflower_Seed_1.4 ♥🌱🎃1.3 ♥🌱🤍1.3 ♥🌱🌻1.3 ♥ID_Water_Dirt_1.3 ♥ID_Water_Dirt_Gold_1.5 ♥ID_Harvest_Pumpkin_1.3 ♥ID_Harvest_Cauliflower_1.3 ♥ID_Harvest_Sunflower_1.3 ♥ID_Sell_Pumpkin_0.5 ♥ID_Sell_Cauliflower_0.5 ♥ID_Sell_Sunflower_0.5 ♥ID_Sell_Berry_0.7 ♥ID_Sell_Orange_0.7 ♥ID_Sell_Apple_0.7 ♥ID_Day_Preserves_Pumpkin_1.6 ♥ID_Day_Preserves_Cauliflower_1.6 ♥ID_Day_Preserves_Sunflower_1.6 ♥ID_Day_Keg_Apple_1.4 ♥ID_Day_Keg_Berry_1.4 ♥ID_Day_Keg_Orange_1.4 ♥ID_Sell_Preserves_Pumpkin_1.6 ♥ID_Sell_Preserves_Cauliflower_1.6 ♥ID_Sell_Apple_Juice_1.4 ♥ID_Buy_Feat_Steroids_1.5 ♥ID_Buy_Feat_Fruit_Expert_1.5 ♥ID_Buy_Feat_Miner_1.5 ♥ID_Buy_Feat_Animal_Lover_1.5
+// ═══════════════════════════════════════════════════════════════
+// CONDITIONAL ECONOMY POLICY
+// Phase 1: Rush raw resources for Rent1
+// Phase 2: Transition to sustainable income (fishing, farming)
+// ═══════════════════════════════════════════════════════════════
+//
+// Current best: 97% Rent1, 87% Rent2, 10% Rent3 with GPU planner
+// NEW: Conditional rules for late-week urgency and post-rent pivot
+// ═══════════════════════════════════════════════════════════════
 
-⛳ => ⛳👑5.0 ⛳💰1.5
+// ──────────────────────────────────────────────────────────────
+// BASE POLICY - Always active priorities
+// ──────────────────────────────────────────────────────────────
+❗ ♥ => ♥ID_Sell_Wood_40.0 ♥ID_Sell_Stone_40.0 ♥ID_Sell_Apple_40.0 ♥ID_Sell_Berry_40.0 ♥ID_Sell_Orange_40.0 ♥ID_Sell_Copper_Ore_38.0 ♥ID_Sell_Iron_Ore_38.0 ♥ID_Sell_Gold_Ore_38.0 ♥ID_Sell_Coal_38.0 ♥ID_Sell_Grass_35.0 ♥ID_Sell_Sardine_38.0 ♥ID_Sell_Halibut_38.0 ♥ID_Sell_Bullhead_38.0 ♥ID_Sell_Carp_38.0 ♥ID_Sell_Red_Mullet_38.0 ♥ID_Sell_Sturgeon_38.0 ♥ID_Day_35.0 ♥ID_Rent1_45.0 ♥ID_Rent2_45.0 ♥ID_Rent3_45.0 ♥ID_Rent4_45.0 ♥ID_Rent5_45.0 ♥ID_Chop_Axe_28.0 ♥ID_Chop_Axe_Copper_28.0 ♥ID_Chop_Axe_Iron_28.0 ♥ID_Chop_Axe_Gold_28.0 ♥ID_Pick_Pickaxe_28.0 ♥ID_Pick_Pickaxe_Copper_28.0 ♥ID_Pick_Pickaxe_Iron_28.0 ♥ID_Pick_Pickaxe_Gold_28.0 ♥ID_Chop_Tree_25.0 ♥ID_Chop_Apple_Tree_25.0 ♥ID_Chop_Orange_Tree_25.0 ♥ID_Chop_Stump_25.0 ♥ID_Chop_Bush_25.0 ♥ID_Chop_Bush_Apple_25.0 ♥ID_Chop_Bush_Berry_25.0 ♥ID_Chop_Bush_Orange_25.0 ♥ID_Pick_Stone_22.0 ♥ID_Pick_Stone_Small_22.0 ♥ID_Pick_Stone_Large_22.0 ♥ID_Pick_Copper_20.0 ♥ID_Pick_Copper_Large_20.0 ♥ID_Pick_Iron_20.0 ♥ID_Pick_Iron_Large_20.0 ♥ID_Pick_Gold_20.0 ♥ID_Pick_Gold_Large_20.0 ♥ID_Pick_Coal_20.0 ♥ID_Pick_Coal_Large_20.0 ♥ID_Rod_Fish_22.0 ♥ID_Rod_Fish_Copper_22.0 ♥ID_Rod_Fish_Iron_22.0 ♥ID_Rod_Fish_Gold_22.0 ♥ID_Sell_Copper_Bar_35.0 ♥ID_Sell_Iron_35.0 ♥ID_Sell_Gold_35.0 ♥ID_Build_Furnace_18.0 ♥ID_Day_Baked_Copper_20.0 ♥ID_Day_Baked_Iron_20.0 ♥ID_Day_Baked_Gold_20.0 ♥ID_Sell_Baked_Fish_Sardine_35.0 ♥ID_Sell_Baked_Fish_Halibut_35.0 ♥ID_Sell_Baked_Fish_Bullhead_35.0 ♥ID_Sell_Baked_Fish_Carp_35.0 ♥ID_Sell_Baked_Fish_Red_Mullet_35.0 ♥ID_Sell_Baked_Fish_Sturgeon_35.0 ♥ID_Day_Baked_Fish_Sardine_18.0 ♥ID_Day_Baked_Fish_Halibut_18.0 ♥ID_Day_Baked_Fish_Bullhead_18.0 ♥ID_Day_Baked_Fish_Carp_18.0 ♥ID_Day_Baked_Fish_Red_Mullet_18.0 ♥ID_Day_Baked_Fish_Sturgeon_18.0
 
+// ──────────────────────────────────────────────────────────────
+// CONDITIONAL RULES - Late-week urgency (Thu/Fri/Sat)
+// Catalyst pattern: day token on both sides, consume charge token
+// ──────────────────────────────────────────────────────────────
+
+// Thursday (☀4️⃣): Moderate urgency - boost selling and day transitions
+☀4️⃣ ♥THUR => ☀4️⃣ ♥ID_Sell_Wood_10.0 ♥ID_Sell_Stone_10.0 ♥ID_Sell_Apple_5.0 ♥ID_Sell_Berry_5.0 ♥ID_Sell_Orange_5.0 ♥ID_Sell_Sardine_8.0 ♥ID_Sell_Halibut_8.0 ♥ID_Day_5.0
+
+// Friday (☀5️⃣): High urgency - significantly boost selling
+☀5️⃣ ♥FRI => ☀5️⃣ ♥ID_Sell_Wood_15.0 ♥ID_Sell_Stone_15.0 ♥ID_Sell_Apple_8.0 ♥ID_Sell_Berry_8.0 ♥ID_Sell_Orange_8.0 ♥ID_Sell_Sardine_12.0 ♥ID_Sell_Halibut_12.0 ♥ID_Day_10.0
+
+// Saturday (☀6️⃣): Critical urgency - maximize selling and day end
+☀6️⃣ ♥SAT => ☀6️⃣ ♥ID_Sell_Wood_20.0 ♥ID_Sell_Stone_20.0 ♥ID_Sell_Apple_12.0 ♥ID_Sell_Berry_12.0 ♥ID_Sell_Orange_12.0 ♥ID_Sell_Sardine_15.0 ♥ID_Sell_Halibut_15.0 ♥ID_Day_15.0 ♥ID_Rent1_20.0
+
+// ──────────────────────────────────────────────────────────────
+// CONDITIONAL RULES - Post-Rent1 sustainable pivot
+// Once 🏦2️⃣ exists (Rent1 paid), boost fishing for sustainable income
+// ──────────────────────────────────────────────────────────────
+
+// After Rent1: Pivot to sustainable income (fishing, since water tiles persist)
+🏦2️⃣ ♥POST_R1 => 🏦2️⃣ ♥ID_Rod_Fish_15.0 ♥ID_Rod_Fish_Copper_15.0 ♥ID_Rod_Fish_Iron_15.0 ♥ID_Rod_Fish_Gold_15.0 ♥ID_Sell_Sardine_10.0 ♥ID_Sell_Halibut_10.0 ♥ID_Sell_Bullhead_10.0 ♥ID_Sell_Carp_10.0 ♥ID_Sell_Red_Mullet_10.0 ♥ID_Sell_Sturgeon_10.0
+
+// ──────────────────────────────────────────────────────────────
+// OBJECTIVE: GOLD AND CROWNS EQUAL PRIORITY
+// ──────────────────────────────────────────────────────────────
+
+⛳ => ⛳👑25.0 ⛳💰25.0
