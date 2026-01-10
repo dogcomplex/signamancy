@@ -15,6 +15,11 @@ from signamancy.agent.policy import PolicyManager
 from signamancy.agent.reachability import ReachabilityAnalyzer
 from signamancy.registry import BlockType
 from signamancy.agent.planner_gpu import GPUPlanner
+from signamancy.agent.cem_improved import (
+    TemporalBiasScheduler,
+    create_improved_sampler,
+    RuleGrouper,
+)
 
 
 def load_recipes(csv_path: Path) -> str:
@@ -238,6 +243,11 @@ def cem_optimize(csv_path: Path, device: str):
     # Final-run heartbeat (prints progress without needing CEM iterations)
     final_heartbeat_every = int(os.environ.get("FINAL_HEARTBEAT_EVERY", "0"))
     final_heartbeat_secs = float(os.environ.get("FINAL_HEARTBEAT_SECS", "0"))
+    # Improved CEM options
+    cem_grouped_sampling = int(os.environ.get("CEM_GROUPED_SAMPLING", "0")) == 1
+    cem_group_correlation = float(os.environ.get("CEM_GROUP_CORR", "0.7"))
+    cem_temporal_bias = int(os.environ.get("CEM_TEMPORAL_BIAS", "0")) == 1
+    cem_temporal_blend = float(os.environ.get("CEM_TEMPORAL_BLEND", "0.3"))
 
     # Compile once
     rules, idx_to_id, registry = load_rules_with_ids(csv_path)
@@ -386,6 +396,15 @@ def cem_optimize(csv_path: Path, device: str):
         batch_size, pop, horizon = bbest, pbest, hbest
 
     print(f"[CEM] device={device} batch={batch_size} horizon={horizon} iters={iters} pop={pop} prefixes={prefixes}", flush=True)
+    if cem_grouped_sampling:
+        print(f"[CEM] Grouped sampling enabled (correlation={cem_group_correlation})")
+        grouper = RuleGrouper(idx_to_id)
+        print(f"[CEM] Rule groups discovered: {list(grouper.groups.keys())}")
+    if cem_temporal_bias:
+        print(f"[CEM] Temporal bias enabled (blend={cem_temporal_blend})")
+        temporal_scheduler = TemporalBiasScheduler(num_rules, idx_to_id)
+    else:
+        temporal_scheduler = None
 
     mean = torch.zeros(num_rules, dtype=torch.float32)
     std = torch.full((num_rules,), init_std, dtype=torch.float32)
@@ -466,7 +485,14 @@ def cem_optimize(csv_path: Path, device: str):
                     torch.set_rng_state(base_cpu_state)
                     if base_cuda_states is not None:
                         torch.cuda.set_rng_state_all(base_cuda_states)
-                bias = (mean + std * torch.randn_like(mean)).clamp_(-3.0, 3.0)
+                # Sample bias: grouped (correlated) or independent
+                if cem_grouped_sampling:
+                    bias = create_improved_sampler(
+                        num_rules, idx_to_id, mean, std,
+                        enable_groups=True, group_correlation=cem_group_correlation
+                    )
+                else:
+                    bias = (mean + std * torch.randn_like(mean)).clamp_(-3.0, 3.0)
                 # Reuse engine; restore baseline and one-shot bookkeeping
                 engine = engine_train
                 _restore_engine_state(engine, baseline_state)
@@ -497,7 +523,13 @@ def cem_optimize(csv_path: Path, device: str):
                         combined = combined + pbias.to(combined.device)
                     except Exception:
                         pass
+                # Apply temporal bias if enabled (blends phase-specific priorities)
+                if temporal_scheduler is not None:
+                    combined = temporal_scheduler.blend_biases(combined, 0, cem_temporal_blend)
                 set_biases(engine, combined.to(engine.device))
+                # Cache base bias for temporal updates
+                base_combined = combined.clone()
+                last_temporal_phase = 0
                 # Lineage (optimization-time): per-row origin and generation
                 lineage_id = torch.arange(engine.cfg.batch_size, dtype=torch.long)
                 lineage_gen = torch.zeros(engine.cfg.batch_size, dtype=torch.long)
@@ -529,6 +561,13 @@ def cem_optimize(csv_path: Path, device: str):
                         if getattr(engine, "last_prior_valid", None) is not None:
                             has_any = engine.last_prior_valid.any(dim=1)
                             iter_dead_rows += int((~has_any).sum().item())
+                        # Update temporal bias when phase changes
+                        if temporal_scheduler is not None:
+                            current_phase = decisions // 100  # Phase every 100 decisions
+                            if current_phase != last_temporal_phase:
+                                new_combined = temporal_scheduler.blend_biases(base_combined, decisions, cem_temporal_blend)
+                                set_biases(engine, new_combined.to(engine.device))
+                                last_temporal_phase = current_phase
                         # Evaluate objective on schedule
                         if (decisions % max(1, eval_every) == 0) or (decisions >= train_horizon):
                             with torch.no_grad():
