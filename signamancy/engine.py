@@ -29,11 +29,20 @@ class SimulationConfig:
 class SignamancyEngine:
     """
     The Sensus Runtime (v2).
-    
+
     Architecture:
     - Data: Block-Archetype Tensors (BIT, BYTE, FLOAT).
     - Logic: Vectorized Validity Checking & Sparse Matrix Update.
     - Physics: Sub-stepping for Unit Conversion and Sink Rules.
+
+    BIT Type Notes:
+    - Currently BIT uses int8 (temporary). Future: true 1-bit packing for 8x savings.
+    - BIT overflow detection runs every step, aggregation every 50 steps.
+    - IMPORTANT: Overflows within a step ARE detected but the clamped value is used.
+      This means game state may be incorrect for that step. The detection is for
+      informing future compilations, not for live correction.
+    - For critical accuracy, use BYTE for any token that might accumulate.
+    - Parser heuristics (explicit quantity -> BYTE, accumulator detection) catch most cases.
     """
     def __init__(self, kernel: KernelData, config: SimulationConfig = SimulationConfig()):
         self.cfg = config
