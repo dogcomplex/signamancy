@@ -913,16 +913,16 @@ class SignamancyEngine:
                         self.state[BlockType.BYTE] = state_block.to(torch.int16)
                     elif bt == BlockType.BIT:
                         # Detect overflow before clamping (for escalation tracking)
-                        if self._escalation_check_interval > 0:
-                            overflow_mask = (state_block > 1) | (state_block < -1)
-                            if overflow_mask.any():
-                                # Find which token columns overflowed
-                                overflow_cols = overflow_mask.any(dim=0)
-                                if overflow_cols.any():
-                                    if not hasattr(self, '_pre_clamp_bit_overflow'):
-                                        self._pre_clamp_bit_overflow = set()
-                                    for idx in torch.nonzero(overflow_cols, as_tuple=False).squeeze(1).tolist():
-                                        self._pre_clamp_bit_overflow.add(idx)
+                        # Always check - detection is cheap, only aggregation is batched
+                        overflow_mask = (state_block > 1) | (state_block < -1)
+                        if overflow_mask.any():
+                            # Find which token columns overflowed
+                            overflow_cols = overflow_mask.any(dim=0)
+                            if overflow_cols.any():
+                                if not hasattr(self, '_pre_clamp_bit_overflow'):
+                                    self._pre_clamp_bit_overflow = set()
+                                for idx in torch.nonzero(overflow_cols, as_tuple=False).squeeze(1).tolist():
+                                    self._pre_clamp_bit_overflow.add(idx)
                         self.state[bt] = torch.clamp(state_block, -1, 1).to(torch.int8)
                     else:
                         self.state[bt] = torch.clamp(state_block, min=0)
@@ -1004,16 +1004,16 @@ class SignamancyEngine:
                     self.state[BlockType.BYTE] = new_val.to(torch.int16)
                 elif bt == BlockType.BIT:
                     # Detect overflow before clamping (for escalation tracking)
-                    if self._escalation_check_interval > 0:
-                        overflow_mask = (new_val > 1) | (new_val < -1)
-                        if overflow_mask.any():
-                            # Find which token columns overflowed
-                            overflow_cols = overflow_mask.any(dim=0)
-                            if overflow_cols.any():
-                                if not hasattr(self, '_pre_clamp_bit_overflow'):
-                                    self._pre_clamp_bit_overflow = set()
-                                for idx in torch.nonzero(overflow_cols, as_tuple=False).squeeze(1).tolist():
-                                    self._pre_clamp_bit_overflow.add(idx)
+                    # Always check - detection is cheap, only aggregation is batched
+                    overflow_mask = (new_val > 1) | (new_val < -1)
+                    if overflow_mask.any():
+                        # Find which token columns overflowed
+                        overflow_cols = overflow_mask.any(dim=0)
+                        if overflow_cols.any():
+                            if not hasattr(self, '_pre_clamp_bit_overflow'):
+                                self._pre_clamp_bit_overflow = set()
+                            for idx in torch.nonzero(overflow_cols, as_tuple=False).squeeze(1).tolist():
+                                self._pre_clamp_bit_overflow.add(idx)
                     # Clamp immediately
                     self.state[bt] = torch.clamp(new_val, -1, 1).to(torch.int8)
                 else:
