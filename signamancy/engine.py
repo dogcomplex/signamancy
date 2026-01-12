@@ -63,6 +63,8 @@ class SignamancyEngine:
         # Initialize per-rule biases (default zeros = no effect)
         self.rule_biases_static = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
         self.rule_biases_dyn = torch.zeros(self.num_rules, dtype=torch.float32, device=self.device)
+        # Advantage biases from value network: [Batch, Rules] per-universe per-rule advantages
+        self._advantage_biases: torch.Tensor | None = None
         # Profiling accumulators (ms)
         self._prof_enable = os.environ.get("ENGINE_PROFILE_PHASES", "0") == "1"
         self._prof_count = 0
@@ -102,7 +104,34 @@ class SignamancyEngine:
             if b.shape[-1] != self.num_rules:
                 raise ValueError("rule_biases length must equal num_rules")
             self.rule_biases_static = b
-    
+
+    def set_advantage_biases(self, advantages: torch.Tensor | None):
+        """
+        Set per-universe, per-rule advantage biases for value-guided selection.
+
+        These are added to the scaled logits during rule selection, allowing
+        the value network to guide rule choices based on estimated advantages.
+
+        Args:
+            advantages: [Batch, Rules] tensor of advantage estimates, or None to disable.
+                        Positive values increase probability of selecting a rule,
+                        negative values decrease it.
+        """
+        if advantages is None:
+            self._advantage_biases = None
+        else:
+            a = advantages.to(self.device).float()
+            if a.ndim == 1:
+                # Broadcast [Rules] to [Batch, Rules]
+                a = a.unsqueeze(0).expand(self.cfg.batch_size, -1)
+            if a.shape != (self.cfg.batch_size, self.num_rules):
+                raise ValueError(f"advantage_biases shape must be [batch_size={self.cfg.batch_size}, num_rules={self.num_rules}], got {a.shape}")
+            self._advantage_biases = a
+
+    def clear_advantage_biases(self):
+        """Clear advantage biases (revert to bias-only selection)."""
+        self._advantage_biases = None
+
     def compute_choice_stats(self, collapse_same_base: bool = True) -> dict:
         """
         Peek at current frame's valid choices after strict-priority masking,
@@ -611,6 +640,9 @@ class SignamancyEngine:
         if getattr(self.cfg, "single_action_mode", False):
             # Scores: scaled logits + gumbel
             base_group_logits = scaled_logits.unsqueeze(0).expand(bs, -1)
+            # Inject per-universe advantage biases from value network (if set)
+            if self._advantage_biases is not None:
+                base_group_logits = base_group_logits + self._advantage_biases
             if no_gumbel:
                 gumbel = 0.0
             else:
@@ -666,6 +698,9 @@ class SignamancyEngine:
             # Convert scaled logits (with bias/temperature) to probabilities, then to log-probabilities
             base_probs = torch.sigmoid(scaled_logits).clamp_min(eps)
             base_group_logp = torch.log(base_probs).unsqueeze(0).expand(bs, -1)
+            # Inject per-universe advantage biases from value network (if set)
+            if self._advantage_biases is not None:
+                base_group_logp = base_group_logp + self._advantage_biases
             if no_gumbel:
                 gumbel = 0.0
             else:

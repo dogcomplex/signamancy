@@ -1,0 +1,16 @@
+🎬 => 💫 ♥ ⛳
+
+// ═══════════════════════════════════════════════════════════════
+// LLM BALANCED POLICY
+//
+// Based on max_fish + smelting value multipliers
+// Key insight: Don't over-weight water-expensive tool activations!
+// - Hammer uses 8 water - keep weight very low (2.0)
+// - Focus on income multipliers (smelting, baking)
+// ═══════════════════════════════════════════════════════════════
+
+// Sustainable infrastructure (renewable income) - high priority for long-term survival
+❗ ♥ => ♥ID_Build_Beehive_32.0 ♥ID_Build_Fishtrap_32.0 ♥ID_Day_Beehive_Honey_34.0 ♥ID_Sell_Honey_40.0 ♥ID_Rod_Fish_35.0 ♥ID_Rod_Fish_Copper_35.0 ♥ID_Rod_Fish_Iron_35.0 ♥ID_Rod_Fish_Gold_35.0 ♥ID_Day_Fishtrap_Fish_34.0 ♥ID_Day_Baked_Fish_Sturgeon_34.0 ♥ID_Day_Baked_Fish_Red_Mullet_32.0 ♥ID_Day_Baked_Fish_Carp_30.0 ♥ID_Day_Baked_Fish_Bullhead_28.0 ♥ID_Day_Baked_Fish_Halibut_26.0 ♥ID_Day_Baked_Fish_Sardine_24.0 ♥ID_Sell_Baked_Fish_Sturgeon_48.0 ♥ID_Sell_Baked_Fish_Red_Mullet_46.0 ♥ID_Sell_Baked_Fish_Carp_44.0 ♥ID_Sell_Baked_Fish_Bullhead_42.0 ♥ID_Sell_Baked_Fish_Halibut_40.0 ♥ID_Sell_Baked_Fish_Sardine_38.0 ♥ID_Sell_Sturgeon_44.0 ♥ID_Sell_Red_Mullet_42.0 ♥ID_Sell_Carp_40.0 ♥ID_Sell_Bullhead_38.0 ♥ID_Sell_Halibut_36.0 ♥ID_Sell_Sardine_34.0 ♥ID_Sell_Wood_38.0 ♥ID_Sell_Stone_38.0 ♥ID_Sell_Apple_38.0 ♥ID_Sell_Berry_38.0 ♥ID_Sell_Orange_38.0 ♥ID_Sell_Copper_Ore_36.0 ♥ID_Sell_Iron_Ore_36.0 ♥ID_Sell_Gold_Ore_36.0 ♥ID_Sell_Coal_34.0 ♥ID_Day_35.0 ♥ID_Rent1_35.0 ♥ID_Rent2_32.0 ♥ID_Rent3_30.0 ♥ID_Rent4_28.0 ♥ID_Rent5_26.0 ♥ID_Chop_Axe_26.0 ♥ID_Chop_Axe_Copper_26.0 ♥ID_Chop_Axe_Iron_26.0 ♥ID_Chop_Axe_Gold_26.0 ♥ID_Pick_Pickaxe_26.0 ♥ID_Pick_Pickaxe_Copper_26.0 ♥ID_Pick_Pickaxe_Iron_26.0 ♥ID_Pick_Pickaxe_Gold_26.0 ♥ID_Chop_Tree_22.0 ♥ID_Chop_Apple_Tree_22.0 ♥ID_Chop_Orange_Tree_22.0 ♥ID_Chop_Stump_20.0 ♥ID_Chop_Bush_20.0 ♥ID_Chop_Bush_Apple_20.0 ♥ID_Chop_Bush_Berry_20.0 ♥ID_Chop_Bush_Orange_20.0 ♥ID_Pick_Stone_18.0 ♥ID_Pick_Stone_Small_18.0 ♥ID_Pick_Stone_Large_18.0 ♥ID_Pick_Copper_16.0 ♥ID_Pick_Iron_16.0 ♥ID_Pick_Gold_16.0 ♥ID_Pick_Coal_16.0 ♥ID_Build_Furnace_28.0 ♥ID_Sell_Gold_40.0 ♥ID_Sell_Iron_38.0 ♥ID_Sell_Copper_Bar_36.0 ♥ID_Day_Baked_Gold_32.0 ♥ID_Day_Baked_Iron_30.0 ♥ID_Day_Baked_Copper_28.0 ♥ID_Hammer_Hit_2.0 ♥ID_Hammer_Hit_Copper_3.0 ♥ID_Hammer_Hit_Iron_4.0 ♥ID_Hammer_Hit_Gold_5.0
+
+// OBJECTIVE: Crown-weighted (crowns 3x gold to push for Rent2+)
+⛳ => ⛳👑75.0 ⛳💰25.0

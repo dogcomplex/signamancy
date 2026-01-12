@@ -20,6 +20,8 @@ from signamancy.agent.cem_improved import (
     create_improved_sampler,
     RuleGrouper,
 )
+from signamancy.agent.actor_critic import ActorCriticTrainer, ActorCriticConfig, create_trainer_from_env
+from signamancy.agent.replay_buffer import Transition
 
 
 def load_recipes(csv_path: Path) -> str:
@@ -248,6 +250,9 @@ def cem_optimize(csv_path: Path, device: str):
     cem_group_correlation = float(os.environ.get("CEM_GROUP_CORR", "0.7"))
     cem_temporal_bias = int(os.environ.get("CEM_TEMPORAL_BIAS", "0")) == 1
     cem_temporal_blend = float(os.environ.get("CEM_TEMPORAL_BLEND", "0.3"))
+    # Value network options (DreamerV4-inspired)
+    value_net_enabled = int(os.environ.get("VALUE_NET_ENABLED", "0")) == 1
+    value_net_train = int(os.environ.get("VALUE_NET_TRAIN", "1")) == 1  # Train vs just use pretrained
 
     # Compile once
     rules, idx_to_id, registry = load_rules_with_ids(csv_path)
@@ -797,6 +802,73 @@ def cem_optimize(csv_path: Path, device: str):
     # Final-run lineage (no resampling): default IDs/gen
     lineage_id_final = torch.arange(engine.cfg.batch_size, dtype=torch.long)
     lineage_gen_final = torch.zeros(engine.cfg.batch_size, dtype=torch.long)
+
+    # Value network setup (DreamerV4-inspired advantage-based selection)
+    value_trainer: ActorCriticTrainer | None = None
+    value_compute_every = int(os.environ.get("VALUE_COMPUTE_EVERY", "1"))  # Compute advantages every N steps
+    value_train_every = int(os.environ.get("VALUE_TRAIN_EVERY", "100"))  # Train every N steps
+    value_trajectory_len = int(os.environ.get("VALUE_TRAJ_LEN", "50"))  # Steps per trajectory segment
+    if value_net_enabled:
+        try:
+            value_trainer = create_trainer_from_env(engine)
+            # Try loading existing checkpoint
+            value_trainer.load_checkpoint()
+            print(f"[ValueNet] Initialized with {sum(p.numel() for p in value_trainer.value_net.parameters())} parameters")
+        except Exception as e:
+            print(f"[ValueNet] Initialization failed: {e}")
+            value_trainer = None
+
+    def _update_value_advantages():
+        """Update advantage biases from value network."""
+        if value_trainer is None:
+            return
+        try:
+            value_trainer.set_advantages_for_step()
+        except Exception as e:
+            if int(os.environ.get("VALUE_NET_DEBUG", "0")) == 1:
+                print(f"[ValueNet] Advantage computation failed: {e}")
+
+    # Trajectory collection for value network training
+    value_trajectory: list[Transition] = []
+    value_prev_score: torch.Tensor | None = None
+    value_train_count = 0
+
+    def _collect_value_transition(step: int):
+        """Collect a transition for value network training."""
+        nonlocal value_prev_score, value_train_count
+        if value_trainer is None or not value_net_train:
+            return
+        try:
+            # Get current state
+            bit = engine.state[BlockType.BIT].clone()
+            byte = engine.state[BlockType.BYTE].clone()
+            float_block = engine.state[BlockType.FLOAT].clone()
+            # Compute reward as score delta
+            current_score = _score_universes(engine, hb_idx_by_block)
+            if value_prev_score is None:
+                value_prev_score = torch.zeros_like(current_score)
+            reward = current_score - value_prev_score
+            value_prev_score = current_score.clone()
+            # No episode termination in our continuous simulation
+            done = torch.zeros(engine.cfg.batch_size, dtype=torch.bool, device=engine.device)
+            value_trajectory.append(Transition(
+                bit=bit, byte=byte, float_block=float_block,
+                reward=reward, done=done, step=step
+            ))
+            # When trajectory is long enough, add to buffer and train
+            if len(value_trajectory) >= value_trajectory_len:
+                value_trainer.add_trajectory_to_buffer(value_trajectory)
+                value_trajectory.clear()
+                value_train_count += 1
+                # Train periodically
+                if value_train_count % max(1, value_train_every // value_trajectory_len) == 0:
+                    loss = value_trainer.train_value_network()
+                    if int(os.environ.get("VALUE_NET_DEBUG", "0")) == 1:
+                        print(f"[ValueNet] Trained: loss={loss:.4f}")
+        except Exception as e:
+            if int(os.environ.get("VALUE_NET_DEBUG", "0")) == 1:
+                print(f"[ValueNet] Trajectory collection failed: {e}")
+
     # Heartbeat scoring over target prefixes
     hb_idx_by_block = _build_prefix_indices(registry, prefixes)
     # Build name lists per block for fast lookup
@@ -1151,8 +1223,14 @@ def cem_optimize(csv_path: Path, device: str):
             stats = engine.compute_choice_stats(collapse_same_base=True)
             if not bool(stats.get("any_decision", False)):
                 break
+            # Update value network advantages before decision step
+            if value_trainer is not None and (step_idx % value_compute_every == 0):
+                _update_value_advantages()
             # Execute exactly one decision step (also logged)
             engine.step(); steps_run_final += 1; decisions += 1; step_idx += 1
+            # Collect transition for value network training
+            if value_trainer is not None and value_net_train:
+                _collect_value_transition(step_idx)
             # Planner aggregated pass on schedule
             if planner is not None and planner_targets and (step_idx % max(1, planner_every) == 0):
                 try:
@@ -1201,7 +1279,13 @@ def cem_optimize(csv_path: Path, device: str):
                 prev_snap = snap_now
     else:
         for t in range(horizon):
+            # Update value network advantages before step
+            if value_trainer is not None and (step_idx % value_compute_every == 0):
+                _update_value_advantages()
             engine.step(); steps_run_final += 1; step_idx += 1
+            # Collect transition for value network training
+            if value_trainer is not None and value_net_train:
+                _collect_value_transition(step_idx)
             # Planner aggregated pass on schedule
             if planner is not None and planner_targets and (step_idx % max(1, planner_every) == 0):
                 try:
@@ -1252,6 +1336,34 @@ def cem_optimize(csv_path: Path, device: str):
         agg_f.close()
     if uni_f:
         uni_f.close()
+
+    # Save value network checkpoint if enabled
+    if value_trainer is not None:
+        try:
+            # Compute final score and survival for best checkpoint tracking
+            final_score = 0.0
+            final_survival = 0.0
+            try:
+                scores_vec = _score_universes(engine, hb_idx_by_block)
+                final_score = float(scores_vec.mean().item())
+                stats_final = engine.compute_choice_stats(collapse_same_base=True)
+                pv = stats_final.get("prior_valid")
+                if pv is not None and torch.is_tensor(pv):
+                    valid_count = int(pv.any(dim=1).sum().item())
+                    final_survival = valid_count / engine.cfg.batch_size
+            except Exception:
+                pass
+
+            # Check if this is a new best and save best checkpoint if so
+            is_new_best = value_trainer.update_best(final_score, final_survival)
+            if is_new_best:
+                print(f"[ValueNet] NEW BEST! score={final_score:.1f}, survival={final_survival:.1%}")
+
+            value_trainer.save_checkpoint()
+            print(f"[ValueNet] Final summary: {value_trainer.get_training_summary()}")
+        except Exception as e:
+            print(f"[ValueNet] Checkpoint save failed: {e}")
+
     snap = bridge.get_state_snapshot()
     print("\n--- Final Snapshot (first 20 tokens) ---")
     print(json.dumps({k: snap[k] for k in list(snap)[:20]}, indent=2, ensure_ascii=False))
