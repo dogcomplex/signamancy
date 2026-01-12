@@ -74,6 +74,11 @@ class SignamancyEngine:
         self._prof_physics_ms = 0.0
         self._prof_cpu_ms = 0.0
         self._prof_total_ms = 0.0
+        # BIT escalation detection
+        self._escalation_check_interval = int(os.environ.get("BIT_ESCALATION_CHECK_INTERVAL", "50"))
+        self._escalation_step_counter = 0
+        self._bit_overflow_counts: Dict[int, int] = {}  # local_id -> count of overflow events
+        self._bit_token_names: Dict[int, str] = {}  # local_id -> token name (for reporting)
     
     def reset_profile_stats(self):
         self._prof_count = 0
@@ -94,6 +99,49 @@ class SignamancyEngine:
             "cpu_ms": float(self._prof_cpu_ms),
             "total_ms": float(self._prof_total_ms),
         }
+
+    def register_bit_token_names(self, names: Dict[int, str]):
+        """Register BIT token names for escalation reporting.
+
+        Args:
+            names: Dict mapping local_id -> token name string
+        """
+        self._bit_token_names = names
+
+    def get_escalation_report(self) -> Dict[str, int]:
+        """Get tokens that have overflowed BIT bounds and need BYTE escalation.
+
+        Returns:
+            Dict mapping token name -> overflow count
+        """
+        report = {}
+        for local_id, count in self._bit_overflow_counts.items():
+            name = self._bit_token_names.get(local_id, f"bit_{local_id}")
+            report[name] = count
+        return report
+
+    def reset_escalation_stats(self):
+        """Clear escalation tracking counters."""
+        self._bit_overflow_counts.clear()
+        self._escalation_step_counter = 0
+
+    def _check_bit_escalation(self):
+        """Check if any BIT values were clamped (indicating accumulation need).
+
+        This is called periodically (every N steps) to detect tokens that
+        should be BYTE instead of BIT. The overhead is minimal when called
+        infrequently.
+
+        The check looks at the _pre_clamp_bit_overflow set populated during
+        _apply_updates, which tracks tokens that actually had values > 1 or < -1
+        before clamping (not just tokens that happen to be at boundary values).
+        """
+        overflow_set = getattr(self, '_pre_clamp_bit_overflow', set())
+        if overflow_set:
+            for idx in overflow_set:
+                self._bit_overflow_counts[idx] = self._bit_overflow_counts.get(idx, 0) + 1
+            # Clear for next interval
+            self._pre_clamp_bit_overflow = set()
 
     def set_rule_biases(self, biases: torch.Tensor | None):
         # Sets static component (e.g., ♥ID_*)
@@ -492,6 +540,12 @@ class SignamancyEngine:
                 _t5 = _t.perf_counter(); self._prof_total_ms += (_t5 - _t0) * 1000.0
             self._prof_count += 1
 
+        # 6. Periodic BIT escalation check (every N steps, ~0% overhead)
+        self._escalation_step_counter += 1
+        if self._escalation_check_interval > 0 and self._escalation_step_counter >= self._escalation_check_interval:
+            self._escalation_step_counter = 0
+            self._check_bit_escalation()
+
     def _check_validity(self) -> torch.Tensor:
         """
         Check inputs per-token, not per-sum.
@@ -858,6 +912,17 @@ class SignamancyEngine:
                         state_block = torch.clamp(state_block, min=0)
                         self.state[BlockType.BYTE] = state_block.to(torch.int16)
                     elif bt == BlockType.BIT:
+                        # Detect overflow before clamping (for escalation tracking)
+                        if self._escalation_check_interval > 0:
+                            overflow_mask = (state_block > 1) | (state_block < -1)
+                            if overflow_mask.any():
+                                # Find which token columns overflowed
+                                overflow_cols = overflow_mask.any(dim=0)
+                                if overflow_cols.any():
+                                    if not hasattr(self, '_pre_clamp_bit_overflow'):
+                                        self._pre_clamp_bit_overflow = set()
+                                    for idx in torch.nonzero(overflow_cols, as_tuple=False).squeeze(1).tolist():
+                                        self._pre_clamp_bit_overflow.add(idx)
                         self.state[bt] = torch.clamp(state_block, -1, 1).to(torch.int8)
                     else:
                         self.state[bt] = torch.clamp(state_block, min=0)
@@ -938,6 +1003,17 @@ class SignamancyEngine:
                     new_val = torch.clamp(new_val, min=0)
                     self.state[BlockType.BYTE] = new_val.to(torch.int16)
                 elif bt == BlockType.BIT:
+                    # Detect overflow before clamping (for escalation tracking)
+                    if self._escalation_check_interval > 0:
+                        overflow_mask = (new_val > 1) | (new_val < -1)
+                        if overflow_mask.any():
+                            # Find which token columns overflowed
+                            overflow_cols = overflow_mask.any(dim=0)
+                            if overflow_cols.any():
+                                if not hasattr(self, '_pre_clamp_bit_overflow'):
+                                    self._pre_clamp_bit_overflow = set()
+                                for idx in torch.nonzero(overflow_cols, as_tuple=False).squeeze(1).tolist():
+                                    self._pre_clamp_bit_overflow.add(idx)
                     # Clamp immediately
                     self.state[bt] = torch.clamp(new_val, -1, 1).to(torch.int8)
                 else:

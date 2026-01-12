@@ -77,6 +77,12 @@ def build_engine_from_kernel(kernel: KernelData, registry: TokenRegistry, batch_
     cfg = SimulationConfig(batch_size=batch_size, device=device)
     engine = SignamancyEngine(kernel, cfg)
     bridge = SignamancyBridge(engine, registry)
+    # Register BIT token names for escalation reporting
+    bit_names: dict[int, str] = {}
+    for _, meta in registry._tokens.items():
+        if meta.block_type == BlockType.BIT and meta.local_id is not None:
+            bit_names[meta.local_id] = meta.original_text
+    engine.register_bit_token_names(bit_names)
     return engine, bridge
 
 
@@ -1371,6 +1377,14 @@ def cem_optimize(csv_path: Path, device: str):
     print("\n--- Final Snapshot (first 20 tokens) ---")
     print(json.dumps({k: snap[k] for k in list(snap)[:20]}, indent=2, ensure_ascii=False))
     print(f"Best score={best_score:.3f}")
+    # Report BIT tokens that overflowed and need BYTE escalation
+    escalation_report = engine.get_escalation_report()
+    if escalation_report:
+        print("\n--- BIT Escalation Report ---")
+        print("Tokens that exceeded BIT bounds (should be BYTE):")
+        for name, count in sorted(escalation_report.items(), key=lambda x: -x[1]):
+            print(f"  {name}: {count} overflow events")
+        print("Consider marking these tokens as BYTE in the parser/rules.")
     # Export emoji policy sheet if requested
     if policy_export:
         try:
