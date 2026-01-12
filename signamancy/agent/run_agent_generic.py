@@ -67,6 +67,9 @@ def load_rules_with_ids(csv_path: Path) -> tuple[list[Rule], dict[int, str], Tok
                 for k, idx in enumerate(range(before, after)):
                     label = rule_id if k == 0 else f"{rule_id}#{k}"
                     idx_to_id[idx] = label
+    # Post-process: escalate accumulator tokens after all rules are loaded
+    # (needed because CSV loads row-by-row, so parse_text doesn't see all rules)
+    parser._escalate_accumulator_tokens(rules)
     return rules, idx_to_id, registry
 
 
