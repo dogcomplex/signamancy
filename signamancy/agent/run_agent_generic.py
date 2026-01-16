@@ -67,9 +67,6 @@ def load_rules_with_ids(csv_path: Path) -> tuple[list[Rule], dict[int, str], Tok
                 for k, idx in enumerate(range(before, after)):
                     label = rule_id if k == 0 else f"{rule_id}#{k}"
                     idx_to_id[idx] = label
-    # Post-process: escalate accumulator tokens after all rules are loaded
-    # (needed because CSV loads row-by-row, so parse_text doesn't see all rules)
-    parser._escalate_accumulator_tokens(rules)
     return rules, idx_to_id, registry
 
 
@@ -77,12 +74,6 @@ def build_engine_from_kernel(kernel: KernelData, registry: TokenRegistry, batch_
     cfg = SimulationConfig(batch_size=batch_size, device=device)
     engine = SignamancyEngine(kernel, cfg)
     bridge = SignamancyBridge(engine, registry)
-    # Register BIT token names for escalation reporting
-    bit_names: dict[int, str] = {}
-    for _, meta in registry._tokens.items():
-        if meta.block_type == BlockType.BIT and meta.local_id is not None:
-            bit_names[meta.local_id] = meta.original_text
-    engine.register_bit_token_names(bit_names)
     return engine, bridge
 
 
@@ -699,6 +690,11 @@ def cem_optimize(csv_path: Path, device: str):
             elite = torch.stack([candidates[i] for i in top_idx], dim=0)
             mean = elite.mean(dim=0)
             std = elite.std(dim=0) + 1e-6
+            # Guard against NaN propagation
+            if torch.isnan(mean).any() or torch.isnan(std).any():
+                print(f"[CEM] WARNING: NaN detected in mean/std, resetting to zero-mean")
+                mean = torch.zeros_like(mean)
+                std = torch.ones_like(std) * 0.5
             # Log top-weighted rules (IDs if available)
             top_weights_idx = torch.topk(mean.abs(), k=10).indices.tolist()
             labels = [idx_to_id.get(i, f"Rule#{i}") for i in top_weights_idx]
@@ -1377,14 +1373,6 @@ def cem_optimize(csv_path: Path, device: str):
     print("\n--- Final Snapshot (first 20 tokens) ---")
     print(json.dumps({k: snap[k] for k in list(snap)[:20]}, indent=2, ensure_ascii=False))
     print(f"Best score={best_score:.3f}")
-    # Report BIT tokens that overflowed and need BYTE escalation
-    escalation_report = engine.get_escalation_report()
-    if escalation_report:
-        print("\n--- BIT Escalation Report ---")
-        print("Tokens that exceeded BIT bounds (should be BYTE):")
-        for name, count in sorted(escalation_report.items(), key=lambda x: -x[1]):
-            print(f"  {name}: {count} overflow events")
-        print("Consider marking these tokens as BYTE in the parser/rules.")
     # Export emoji policy sheet if requested
     if policy_export:
         try:

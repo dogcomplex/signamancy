@@ -52,41 +52,7 @@ class SignamancyParser:
             for exp in expanded:
                 new_rules = self._parse_rule_logic(exp, original=line)
                 rules.extend(new_rules)
-
-        # Post-process: Detect accumulator tokens (output-only, produced by multiple rules)
-        # These should be BYTE, not BIT, to allow counting
-        self._escalate_accumulator_tokens(rules)
-
         return rules
-
-    def _escalate_accumulator_tokens(self, rules: List[Rule]) -> None:
-        """
-        Find tokens that are only produced (never consumed) by multiple rules.
-        These are "accumulator" tokens that should be BYTE to allow counting.
-        Example: 👑 (crown) is produced by each rent payment and should accumulate.
-        """
-        from collections import defaultdict
-
-        input_tokens = set()
-        output_counts = defaultdict(int)
-
-        for rule in rules:
-            # Track all input tokens (consumed)
-            for inp in rule.inputs:
-                if not inp.is_inhibitor:  # Inhibitors don't consume
-                    input_tokens.add(inp.token_id)
-
-            # Track output token production counts
-            for out in rule.outputs:
-                output_counts[out.token_id] += 1
-
-        # Find tokens that are output-only AND produced by multiple rules
-        for token_id, count in output_counts.items():
-            if token_id not in input_tokens and count >= 2:
-                # This is an accumulator token - escalate to BYTE
-                meta = self.registry.get_metadata(token_id)
-                if meta and meta.block_type == BlockType.BIT:
-                    meta.block_type = BlockType.BYTE
 
     def _expand_sugar(self, line: str) -> List[str]:
         if "<=>" in line:
@@ -317,13 +283,9 @@ class SignamancyParser:
             symbol = symbol[:-1].strip()
         
         # Quantity Parsing (remaining part may be empty or a range/number)
-        # Track if quantity was explicitly specified (even "1") vs bare token
-        has_explicit_quantity = bool(quant_str.strip())
         quantity = self._parse_quantity(quant_str)
-
+        
         # Type Inference
-        # Rule of thumb: Only default to BIT if NO explicit quantity was given.
-        # Any explicit quantity (even "1") → BYTE, since it signals intent to count.
         is_range = isinstance(quantity, tuple)
         type_hint = BlockType.BYTE
         if is_range or (isinstance(quantity, float) and quantity % 1 != 0):
@@ -336,8 +298,7 @@ class SignamancyParser:
                     type_hint = BlockType.FLOAT
             except:
                 pass
-            # Only BIT if: bare token (no explicit quantity), quantity resolves to 1, not inhibitor
-            if quantity == 1 and not is_inhibitor and not has_explicit_quantity:
+            if quantity == 1 and not is_inhibitor:
                 type_hint = BlockType.BIT
             
         token_id = self.registry.register(symbol, type_hint)
