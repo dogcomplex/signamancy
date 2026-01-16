@@ -145,6 +145,17 @@ def _build_prefix_indices(registry: TokenRegistry, prefixes: list[str]) -> dict[
     return out
 
 
+def _build_bit_token_names(registry: TokenRegistry) -> dict[int, str]:
+    """Build a mapping from BIT local_id to token name for escalation reporting."""
+    names: dict[int, str] = {}
+    for _, meta in registry._tokens.items():  # type: ignore[attr-defined]
+        if meta.block_type == BlockType.BIT:
+            li = getattr(meta, "local_id", None)
+            if li is not None:
+                names[int(li)] = meta.original_text
+    return names
+
+
 def _score_universes(engine: SignamancyEngine, idx_by_block: dict[BlockType, torch.Tensor]) -> torch.Tensor:
     # Sum selected tokens across blocks per universe. BIT: count positives only.
     device = engine.device
@@ -440,6 +451,8 @@ def cem_optimize(csv_path: Path, device: str):
         engine_train.cfg.single_action_mode = single_action
         # Attach rule IDs once
         engine_train.rule_ids = [idx_to_id.get(i2, f"Rule#{i2}") for i2 in range(num_rules)]
+        # Register BIT token names for escalation detection
+        engine_train.register_bit_token_names(_build_bit_token_names(registry))
         # Seed once to baseline (physics + policy start)
         bridge_train.inject_signal("🎬")
         bridge_train.inject_signal("💫")
@@ -722,6 +735,8 @@ def cem_optimize(csv_path: Path, device: str):
             torch.cuda.manual_seed_all(12345)
     # Attach rule IDs before any steps (for one-shot bases masking)
     engine.rule_ids = [idx_to_id.get(i, f"Rule#{i}") for i in range(num_rules)]
+    # Register BIT token names for escalation detection
+    engine.register_bit_token_names(_build_bit_token_names(registry))
     bridge.inject_signal("🎬"); bridge.inject_signal("💫"); engine.step(); engine.step()
     last_hb_t = time.perf_counter()
     # Optional debug: check if any rules are valid after seeding
@@ -1373,6 +1388,17 @@ def cem_optimize(csv_path: Path, device: str):
     print("\n--- Final Snapshot (first 20 tokens) ---")
     print(json.dumps({k: snap[k] for k in list(snap)[:20]}, indent=2, ensure_ascii=False))
     print(f"Best score={best_score:.3f}")
+
+    # Report BIT escalations (tokens that overflowed and should be BYTE)
+    escalations = engine.get_escalation_report()
+    if escalations:
+        sorted_esc = sorted(escalations.items(), key=lambda x: -x[1])[:20]  # Top 20 by overflow count
+        print("\n--- BIT→BYTE Escalation Report ---")
+        print(f"Detected {len(escalations)} BIT tokens that overflowed during simulation:")
+        for name, count in sorted_esc:
+            print(f"  {name}: {count} overflow(s)")
+        print("Consider marking these as BYTE in rules (e.g., use explicit quantity '1' or higher).")
+
     # Export emoji policy sheet if requested
     if policy_export:
         try:
