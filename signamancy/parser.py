@@ -283,9 +283,13 @@ class SignamancyParser:
             symbol = symbol[:-1].strip()
         
         # Quantity Parsing (remaining part may be empty or a range/number)
+        # Track if quantity was explicitly specified (even "1") vs bare token
+        has_explicit_quantity = bool(quant_str.strip())
         quantity = self._parse_quantity(quant_str)
-        
+
         # Type Inference
+        # Rule: Only default to BIT if NO explicit quantity was given.
+        # Any explicit quantity (even "1") → BYTE, since it signals intent to count.
         is_range = isinstance(quantity, tuple)
         type_hint = BlockType.BYTE
         if is_range or (isinstance(quantity, float) and quantity % 1 != 0):
@@ -298,7 +302,8 @@ class SignamancyParser:
                     type_hint = BlockType.FLOAT
             except:
                 pass
-            if quantity == 1 and not is_inhibitor:
+            # Only BIT if: bare token (no explicit quantity), quantity resolves to 1, not inhibitor
+            if quantity == 1 and not is_inhibitor and not has_explicit_quantity:
                 type_hint = BlockType.BIT
             
         token_id = self.registry.register(symbol, type_hint)
