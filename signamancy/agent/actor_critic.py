@@ -57,6 +57,32 @@ class ActorCriticConfig:
     checkpoint_path: str = "value_net.pt"
 
 
+def load_type_overrides_from_checkpoint(path: str) -> Dict[str, str]:
+    """
+    Load type overrides from a checkpoint file without loading the full model.
+
+    This can be called BEFORE creating the registry/engine to apply type
+    escalations discovered in previous runs. Use with registry.apply_type_overrides().
+
+    Args:
+        path: Path to checkpoint file
+
+    Returns:
+        Dict mapping token name -> target block type ("BYTE" or "FLOAT")
+    """
+    if not os.path.exists(path):
+        return {}
+    try:
+        checkpoint = torch.load(path, map_location='cpu', weights_only=False)
+        overrides = checkpoint.get('type_overrides', {})
+        if overrides:
+            print(f"[Checkpoint] Loaded {len(overrides)} type overrides from {path}")
+        return overrides
+    except Exception as e:
+        print(f"[Checkpoint] Failed to load type overrides: {e}")
+        return {}
+
+
 class ActorCriticTrainer:
     """
     Trainer for the value network using actor-critic style updates.
@@ -131,6 +157,10 @@ class ActorCriticTrainer:
         self.best_survival = 0.0
         self.best_iteration = 0
 
+        # Type escalation overrides (BIT tokens that should be BYTE)
+        # Dict[str, str] mapping token name -> target block type name ("BYTE" or "FLOAT")
+        self.type_overrides: Dict[str, str] = {}
+
     def _ensure_rule_outputs(self):
         """Lazily compute and cache rule net outputs."""
         if self._rule_net_outputs is None:
@@ -199,6 +229,21 @@ class ActorCriticTrainer:
     def clear_advantages(self):
         """Clear advantage biases from engine."""
         self.engine.clear_advantage_biases()
+
+    def update_type_overrides_from_engine(self):
+        """
+        Update type overrides based on engine's escalation report.
+
+        Tokens that have overflowed BIT bounds during simulation are marked
+        for BYTE escalation. These overrides are saved in checkpoints and
+        can be used to pre-configure the registry on next compile.
+        """
+        escalations = self.engine.get_escalation_report()
+        if escalations:
+            for token_name in escalations.keys():
+                if token_name not in self.type_overrides:
+                    self.type_overrides[token_name] = "BYTE"
+            print(f"[ActorCritic] Updated type overrides: {len(self.type_overrides)} tokens marked for BYTE")
 
     def collect_trajectory(
         self,
@@ -388,7 +433,8 @@ class ActorCriticTrainer:
             'float_dim': self.float_dim,
             'best_score': self.best_score,
             'best_survival': self.best_survival,
-            'best_iteration': self.best_iteration
+            'best_iteration': self.best_iteration,
+            'type_overrides': self.type_overrides  # BIT→BYTE escalation map
         }, path)
         print(f"[ActorCritic] Saved checkpoint to {path}")
 
@@ -412,7 +458,8 @@ class ActorCriticTrainer:
             'float_dim': self.float_dim,
             'best_score': self.best_score,
             'best_survival': self.best_survival,
-            'best_iteration': self.best_iteration
+            'best_iteration': self.best_iteration,
+            'type_overrides': self.type_overrides  # BIT→BYTE escalation map
         }, best_path)
         print(f"[ActorCritic] Saved BEST checkpoint to {best_path} (score={self.best_score:.1f}, survival={self.best_survival:.1%})")
 
@@ -463,8 +510,12 @@ class ActorCriticTrainer:
         self.best_score = checkpoint.get('best_score', float('-inf'))
         self.best_survival = checkpoint.get('best_survival', 0.0)
         self.best_iteration = checkpoint.get('best_iteration', 0)
+        # Restore type overrides
+        self.type_overrides = checkpoint.get('type_overrides', {})
 
         print(f"[ActorCritic] Loaded checkpoint from {path} (iteration {self.iteration}, best_survival={self.best_survival:.1%})")
+        if self.type_overrides:
+            print(f"[ActorCritic] Loaded {len(self.type_overrides)} type overrides from checkpoint")
         return True
 
     def get_training_summary(self) -> str:

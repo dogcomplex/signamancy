@@ -136,3 +136,52 @@ class TokenRegistry:
         child_meta = self._tokens[child_id]
         child_meta.parent_unit_id = parent_id
         child_meta.overflow_threshold = int(threshold)
+
+    def apply_type_overrides(self, overrides: Dict[str, str]) -> int:
+        """
+        Apply type overrides from checkpoint to escalate tokens to higher types.
+
+        This should be called AFTER parsing rules but BEFORE compile_layout().
+        Tokens that were detected as needing BYTE (via runtime overflow) will be
+        upgraded from BIT to BYTE.
+
+        Args:
+            overrides: Dict mapping token name -> target type ("BYTE" or "FLOAT")
+
+        Returns:
+            Number of tokens successfully upgraded
+        """
+        if self._is_compiled:
+            raise RuntimeError("Cannot apply type overrides after compile_layout()")
+
+        type_map = {
+            "BYTE": BlockType.BYTE,
+            "FLOAT": BlockType.FLOAT,
+            "BIT": BlockType.BIT
+        }
+
+        upgraded = 0
+        for token_name, target_type_str in overrides.items():
+            target_type = type_map.get(target_type_str.upper())
+            if target_type is None:
+                continue
+
+            # Find token by name
+            global_id = self._lookup.get(token_name)
+            if global_id is None:
+                # Token not registered yet - this is fine, it may not be in this ruleset
+                continue
+
+            meta = self._tokens.get(global_id)
+            if meta is None:
+                continue
+
+            # Only upgrade, never downgrade
+            if target_type.value > meta.block_type.value:
+                old_type = meta.block_type.name
+                meta.block_type = target_type
+                upgraded += 1
+
+        if upgraded:
+            print(f"[Registry] Applied {upgraded} type overrides from checkpoint")
+        return upgraded

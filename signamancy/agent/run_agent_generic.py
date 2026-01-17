@@ -20,7 +20,7 @@ from signamancy.agent.cem_improved import (
     create_improved_sampler,
     RuleGrouper,
 )
-from signamancy.agent.actor_critic import ActorCriticTrainer, ActorCriticConfig, create_trainer_from_env
+from signamancy.agent.actor_critic import ActorCriticTrainer, ActorCriticConfig, create_trainer_from_env, load_type_overrides_from_checkpoint
 from signamancy.agent.replay_buffer import Transition
 
 
@@ -282,6 +282,19 @@ def cem_optimize(csv_path: Path, device: str):
                     print(f"[Policy] appended {policy_rules_appended} policy rules into physics")
         except Exception as e:
             print(f"[Policy] append rules failed: {e}")
+
+    # Load type overrides from checkpoint (BIT→BYTE escalations from previous runs)
+    # Only apply if APPLY_TYPE_OVERRIDES=1 - changing types changes dimensions!
+    # Set APPLY_TYPE_OVERRIDES=1 to migrate checkpoint to new dimensions (loses trained weights)
+    value_net_path = os.environ.get("VALUE_NET_PATH", "value_net.pt")
+    apply_type_overrides = int(os.environ.get("APPLY_TYPE_OVERRIDES", "0")) == 1
+    type_overrides = load_type_overrides_from_checkpoint(value_net_path)
+    if type_overrides and apply_type_overrides:
+        registry.apply_type_overrides(type_overrides)
+        print(f"[TypeOverrides] Applied {len(type_overrides)} overrides - checkpoint weights will NOT load!")
+    elif type_overrides:
+        print(f"[TypeOverrides] Found {len(type_overrides)} overrides but NOT applying (set APPLY_TYPE_OVERRIDES=1 to migrate)")
+
     compiler = SignamancyCompiler(registry)
     kernel = compiler.compile(rules)
     num_rules = kernel.num_rules
@@ -1373,6 +1386,9 @@ def cem_optimize(csv_path: Path, device: str):
                     final_survival = valid_count / engine.cfg.batch_size
             except Exception:
                 pass
+
+            # Update type overrides from runtime escalation detection
+            value_trainer.update_type_overrides_from_engine()
 
             # Check if this is a new best and save best checkpoint if so
             is_new_best = value_trainer.update_best(final_score, final_survival)
