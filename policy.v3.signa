@@ -1,0 +1,42 @@
+🎬 => 💫 ♥ ⛳ ♥THUR ♥FRI ♥SAT ♥POST_R1 ♥POST_R2
+
+// ═══════════════════════════════════════════════════════════════
+// POLICY V3: BALANCED ECONOMY
+// Keep strong extraction early, gradual fishing pivot
+// Remove negative weights that killed extraction too early
+// ═══════════════════════════════════════════════════════════════
+
+// ──────────────────────────────────────────────────────────────
+// BASE POLICY - Strong on all fronts
+// High fish values but don't penalize extraction
+// ──────────────────────────────────────────────────────────────
+❗ ♥ => ♥ID_Sell_Sturgeon_48.0 ♥ID_Sell_Red_Mullet_46.0 ♥ID_Sell_Carp_44.0 ♥ID_Sell_Bullhead_42.0 ♥ID_Sell_Halibut_41.0 ♥ID_Sell_Sardine_40.0 ♥ID_Sell_Wood_42.0 ♥ID_Sell_Stone_42.0 ♥ID_Sell_Apple_42.0 ♥ID_Sell_Berry_42.0 ♥ID_Sell_Orange_42.0 ♥ID_Sell_Copper_Ore_40.0 ♥ID_Sell_Iron_Ore_40.0 ♥ID_Sell_Gold_Ore_40.0 ♥ID_Sell_Coal_40.0 ♥ID_Sell_Grass_35.0 ♥ID_Day_38.0 ♥ID_Rent1_55.0 ♥ID_Rent2_55.0 ♥ID_Rent3_55.0 ♥ID_Rent4_55.0 ♥ID_Rent5_55.0 ♥ID_Chop_Axe_30.0 ♥ID_Chop_Axe_Copper_30.0 ♥ID_Chop_Axe_Iron_30.0 ♥ID_Chop_Axe_Gold_30.0 ♥ID_Pick_Pickaxe_30.0 ♥ID_Pick_Pickaxe_Copper_30.0 ♥ID_Pick_Pickaxe_Iron_30.0 ♥ID_Pick_Pickaxe_Gold_30.0 ♥ID_Chop_Tree_28.0 ♥ID_Chop_Apple_Tree_28.0 ♥ID_Chop_Orange_Tree_28.0 ♥ID_Chop_Stump_26.0 ♥ID_Chop_Bush_26.0 ♥ID_Chop_Bush_Apple_26.0 ♥ID_Chop_Bush_Berry_26.0 ♥ID_Chop_Bush_Orange_26.0 ♥ID_Pick_Stone_25.0 ♥ID_Pick_Stone_Small_25.0 ♥ID_Pick_Stone_Large_25.0 ♥ID_Pick_Copper_24.0 ♥ID_Pick_Copper_Large_24.0 ♥ID_Pick_Iron_24.0 ♥ID_Pick_Iron_Large_24.0 ♥ID_Pick_Gold_24.0 ♥ID_Pick_Gold_Large_24.0 ♥ID_Pick_Coal_24.0 ♥ID_Pick_Coal_Large_24.0 ♥ID_Rod_Fish_28.0 ♥ID_Rod_Fish_Copper_28.0 ♥ID_Rod_Fish_Iron_28.0 ♥ID_Rod_Fish_Gold_28.0 ♥ID_Sell_Copper_Bar_42.0 ♥ID_Sell_Iron_42.0 ♥ID_Sell_Gold_42.0 ♥ID_Build_Furnace_22.0 ♥ID_Day_Baked_Copper_24.0 ♥ID_Day_Baked_Iron_24.0 ♥ID_Day_Baked_Gold_24.0 ♥ID_Sell_Baked_Fish_Sardine_44.0 ♥ID_Sell_Baked_Fish_Halibut_45.0 ♥ID_Sell_Baked_Fish_Bullhead_46.0 ♥ID_Sell_Baked_Fish_Carp_47.0 ♥ID_Sell_Baked_Fish_Red_Mullet_48.0 ♥ID_Sell_Baked_Fish_Sturgeon_50.0 ♥ID_Day_Baked_Fish_Sardine_24.0 ♥ID_Day_Baked_Fish_Halibut_24.0 ♥ID_Day_Baked_Fish_Bullhead_24.0 ♥ID_Day_Baked_Fish_Carp_24.0 ♥ID_Day_Baked_Fish_Red_Mullet_24.0 ♥ID_Day_Baked_Fish_Sturgeon_26.0
+
+// ──────────────────────────────────────────────────────────────
+// CONDITIONAL RULES - Late-week urgency (Thu/Fri/Sat)
+// ──────────────────────────────────────────────────────────────
+
+// Thursday: Moderate urgency
+☀4️⃣ ♥THUR => ☀4️⃣ ♥ID_Sell_Wood_12.0 ♥ID_Sell_Stone_12.0 ♥ID_Sell_Sardine_12.0 ♥ID_Sell_Halibut_12.0 ♥ID_Day_10.0
+
+// Friday: High urgency
+☀5️⃣ ♥FRI => ☀5️⃣ ♥ID_Sell_Wood_18.0 ♥ID_Sell_Stone_18.0 ♥ID_Sell_Sardine_18.0 ♥ID_Sell_Halibut_18.0 ♥ID_Sell_Sturgeon_15.0 ♥ID_Day_15.0
+
+// Saturday: Critical - maximize all selling
+☀6️⃣ ♥SAT => ☀6️⃣ ♥ID_Sell_Wood_25.0 ♥ID_Sell_Stone_25.0 ♥ID_Sell_Sardine_25.0 ♥ID_Sell_Halibut_25.0 ♥ID_Sell_Sturgeon_25.0 ♥ID_Sell_Apple_20.0 ♥ID_Sell_Berry_20.0 ♥ID_Sell_Orange_20.0 ♥ID_Day_20.0 ♥ID_Rent1_30.0 ♥ID_Rent2_30.0 ♥ID_Rent3_30.0
+
+// ──────────────────────────────────────────────────────────────
+// CONDITIONAL RULES - Post-Rent pivots (additive boosts only)
+// ──────────────────────────────────────────────────────────────
+
+// After Rent1: Add fishing boost (don't remove extraction)
+🏦2️⃣ ♥POST_R1 => 🏦2️⃣ ♥ID_Rod_Fish_18.0 ♥ID_Rod_Fish_Copper_18.0 ♥ID_Rod_Fish_Iron_18.0 ♥ID_Rod_Fish_Gold_18.0 ♥ID_Sell_Sardine_15.0 ♥ID_Sell_Halibut_15.0 ♥ID_Sell_Bullhead_15.0 ♥ID_Sell_Carp_15.0 ♥ID_Sell_Red_Mullet_15.0 ♥ID_Sell_Sturgeon_18.0 ♥ID_Build_Furnace_15.0
+
+// After Rent2: Strong fishing + processing push
+🏦3️⃣ ♥POST_R2 => 🏦3️⃣ ♥ID_Rod_Fish_22.0 ♥ID_Rod_Fish_Copper_22.0 ♥ID_Rod_Fish_Iron_22.0 ♥ID_Rod_Fish_Gold_22.0 ♥ID_Sell_Sturgeon_22.0 ♥ID_Sell_Red_Mullet_20.0 ♥ID_Day_Baked_Fish_Sturgeon_22.0 ♥ID_Day_Baked_Fish_Red_Mullet_20.0 ♥ID_Sell_Baked_Fish_Sturgeon_25.0 ♥ID_Sell_Baked_Fish_Red_Mullet_22.0
+
+// ──────────────────────────────────────────────────────────────
+// OBJECTIVE: BALANCED with slight crown preference
+// ──────────────────────────────────────────────────────────────
+
+⛳ => ⛳👑30.0 ⛳💰25.0

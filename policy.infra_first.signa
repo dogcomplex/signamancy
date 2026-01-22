@@ -1,0 +1,25 @@
+🎬 => 💫 ♥ ⛳
+
+// ═══════════════════════════════════════════════════════════════
+// POLICY: INFRASTRUCTURE FIRST
+//
+// Key insight: Week 2 needs ~2500g but resources deplete.
+// Solution: Build fishtrap + furnace in Week 1 for sustainable income.
+//
+// Fishtrap: 🤎5 + 👕2 + 🔨🎯2 → gives free fishing action daily
+// Furnace: 🥌5 + 🔨🎯2 → enables baked fish (2-4x value)
+// ═══════════════════════════════════════════════════════════════
+
+// ──────────────────────────────────────────────────────────────
+// PRIORITIES:
+// 1. INFRASTRUCTURE - Build furnace and fishtrap ASAP (highest)
+// 2. FISHING - Fish for sustainable income
+// 3. EXTRACTION - Wood/stone only to fund infrastructure
+// 4. SELLING - Convert to gold
+// 5. RENT - Pay when able
+// ──────────────────────────────────────────────────────────────
+
+❗ ♥ => ♥ID_Build_Furnace_50.0 ♥ID_Build_Fishtrap_48.0 ♥ID_Rod_Fish_38.0 ♥ID_Rod_Fish_Copper_38.0 ♥ID_Rod_Fish_Iron_38.0 ♥ID_Rod_Fish_Gold_38.0 ♥ID_Day_Fishtrap_Fish_40.0 ♥ID_Day_Baked_Fish_Sturgeon_42.0 ♥ID_Day_Baked_Fish_Red_Mullet_40.0 ♥ID_Day_Baked_Fish_Carp_38.0 ♥ID_Day_Baked_Fish_Bullhead_36.0 ♥ID_Day_Baked_Fish_Halibut_34.0 ♥ID_Day_Baked_Fish_Sardine_32.0 ♥ID_Sell_Baked_Fish_Sturgeon_48.0 ♥ID_Sell_Baked_Fish_Red_Mullet_46.0 ♥ID_Sell_Baked_Fish_Carp_44.0 ♥ID_Sell_Baked_Fish_Bullhead_42.0 ♥ID_Sell_Baked_Fish_Halibut_40.0 ♥ID_Sell_Baked_Fish_Sardine_38.0 ♥ID_Sell_Sturgeon_38.0 ♥ID_Sell_Red_Mullet_36.0 ♥ID_Sell_Carp_34.0 ♥ID_Sell_Bullhead_32.0 ♥ID_Sell_Halibut_30.0 ♥ID_Sell_Sardine_28.0 ♥ID_Sell_Wood_32.0 ♥ID_Sell_Stone_32.0 ♥ID_Sell_Apple_30.0 ♥ID_Sell_Berry_30.0 ♥ID_Sell_Orange_30.0 ♥ID_Sell_Copper_Ore_28.0 ♥ID_Sell_Iron_Ore_28.0 ♥ID_Sell_Gold_Ore_28.0 ♥ID_Sell_Coal_26.0 ♥ID_Day_35.0 ♥ID_Rent1_35.0 ♥ID_Rent2_35.0 ♥ID_Rent3_35.0 ♥ID_Rent4_35.0 ♥ID_Rent5_35.0 ♥ID_Chop_Axe_26.0 ♥ID_Chop_Axe_Copper_26.0 ♥ID_Chop_Axe_Iron_26.0 ♥ID_Chop_Axe_Gold_26.0 ♥ID_Pick_Pickaxe_26.0 ♥ID_Pick_Pickaxe_Copper_26.0 ♥ID_Pick_Pickaxe_Iron_26.0 ♥ID_Pick_Pickaxe_Gold_26.0 ♥ID_Chop_Tree_24.0 ♥ID_Chop_Apple_Tree_24.0 ♥ID_Chop_Orange_Tree_24.0 ♥ID_Chop_Stump_22.0 ♥ID_Chop_Bush_22.0 ♥ID_Chop_Bush_Apple_22.0 ♥ID_Chop_Bush_Berry_22.0 ♥ID_Chop_Bush_Orange_22.0 ♥ID_Pick_Stone_22.0 ♥ID_Pick_Stone_Small_22.0 ♥ID_Pick_Stone_Large_22.0 ♥ID_Pick_Copper_18.0 ♥ID_Pick_Iron_18.0 ♥ID_Pick_Gold_18.0 ♥ID_Pick_Coal_18.0
+
+// OBJECTIVE: Crown-focused (survival = paying rent)
+⛳ => ⛳👑30.0 ⛳💰20.0

@@ -1,0 +1,53 @@
+🎬 => 💫 ♥ ⛳ ♥THUR ♥FRI ♥SAT ♥POST_R1 ♥POST_R2 ♥W2_FISH ♥W3_PROC
+
+// ═══════════════════════════════════════════════════════════════
+// POLICY V2: SUSTAINABLE ECONOMY
+// Phase 1: Rush extraction for Rent1 (Week 1)
+// Phase 2: Pivot to fishing after Rent1/Week2
+// Phase 3: Fish processing for Rent3+
+// ═══════════════════════════════════════════════════════════════
+
+// ──────────────────────────────────────────────────────────────
+// BASE POLICY - Always active priorities
+// Prioritize high-value fish (sturgeon/red mullet) over raw materials
+// ──────────────────────────────────────────────────────────────
+❗ ♥ => ♥ID_Sell_Sturgeon_45.0 ♥ID_Sell_Red_Mullet_43.0 ♥ID_Sell_Carp_41.0 ♥ID_Sell_Bullhead_40.0 ♥ID_Sell_Halibut_39.0 ♥ID_Sell_Sardine_38.0 ♥ID_Sell_Wood_38.0 ♥ID_Sell_Stone_38.0 ♥ID_Sell_Apple_38.0 ♥ID_Sell_Berry_38.0 ♥ID_Sell_Orange_38.0 ♥ID_Sell_Copper_Ore_36.0 ♥ID_Sell_Iron_Ore_36.0 ♥ID_Sell_Gold_Ore_36.0 ♥ID_Sell_Coal_36.0 ♥ID_Sell_Grass_32.0 ♥ID_Day_35.0 ♥ID_Rent1_50.0 ♥ID_Rent2_50.0 ♥ID_Rent3_50.0 ♥ID_Rent4_50.0 ♥ID_Rent5_50.0 ♥ID_Chop_Axe_28.0 ♥ID_Chop_Axe_Copper_28.0 ♥ID_Chop_Axe_Iron_28.0 ♥ID_Chop_Axe_Gold_28.0 ♥ID_Pick_Pickaxe_28.0 ♥ID_Pick_Pickaxe_Copper_28.0 ♥ID_Pick_Pickaxe_Iron_28.0 ♥ID_Pick_Pickaxe_Gold_28.0 ♥ID_Chop_Tree_25.0 ♥ID_Chop_Apple_Tree_25.0 ♥ID_Chop_Orange_Tree_25.0 ♥ID_Chop_Stump_25.0 ♥ID_Chop_Bush_25.0 ♥ID_Chop_Bush_Apple_25.0 ♥ID_Chop_Bush_Berry_25.0 ♥ID_Chop_Bush_Orange_25.0 ♥ID_Pick_Stone_22.0 ♥ID_Pick_Stone_Small_22.0 ♥ID_Pick_Stone_Large_22.0 ♥ID_Pick_Copper_20.0 ♥ID_Pick_Copper_Large_20.0 ♥ID_Pick_Iron_20.0 ♥ID_Pick_Iron_Large_20.0 ♥ID_Pick_Gold_20.0 ♥ID_Pick_Gold_Large_20.0 ♥ID_Pick_Coal_20.0 ♥ID_Pick_Coal_Large_20.0 ♥ID_Rod_Fish_25.0 ♥ID_Rod_Fish_Copper_25.0 ♥ID_Rod_Fish_Iron_25.0 ♥ID_Rod_Fish_Gold_25.0 ♥ID_Sell_Copper_Bar_38.0 ♥ID_Sell_Iron_38.0 ♥ID_Sell_Gold_38.0 ♥ID_Build_Furnace_20.0 ♥ID_Day_Baked_Copper_22.0 ♥ID_Day_Baked_Iron_22.0 ♥ID_Day_Baked_Gold_22.0 ♥ID_Sell_Baked_Fish_Sardine_40.0 ♥ID_Sell_Baked_Fish_Halibut_40.0 ♥ID_Sell_Baked_Fish_Bullhead_40.0 ♥ID_Sell_Baked_Fish_Carp_40.0 ♥ID_Sell_Baked_Fish_Red_Mullet_42.0 ♥ID_Sell_Baked_Fish_Sturgeon_44.0 ♥ID_Day_Baked_Fish_Sardine_22.0 ♥ID_Day_Baked_Fish_Halibut_22.0 ♥ID_Day_Baked_Fish_Bullhead_22.0 ♥ID_Day_Baked_Fish_Carp_22.0 ♥ID_Day_Baked_Fish_Red_Mullet_22.0 ♥ID_Day_Baked_Fish_Sturgeon_22.0
+
+// ──────────────────────────────────────────────────────────────
+// CONDITIONAL RULES - Late-week urgency (Thu/Fri/Sat)
+// ──────────────────────────────────────────────────────────────
+
+// Thursday: Moderate urgency
+☀4️⃣ ♥THUR => ☀4️⃣ ♥ID_Sell_Wood_10.0 ♥ID_Sell_Stone_10.0 ♥ID_Sell_Sardine_10.0 ♥ID_Sell_Halibut_10.0 ♥ID_Day_8.0
+
+// Friday: High urgency
+☀5️⃣ ♥FRI => ☀5️⃣ ♥ID_Sell_Wood_15.0 ♥ID_Sell_Stone_15.0 ♥ID_Sell_Sardine_15.0 ♥ID_Sell_Halibut_15.0 ♥ID_Day_12.0
+
+// Saturday: Critical - maximize selling
+☀6️⃣ ♥SAT => ☀6️⃣ ♥ID_Sell_Wood_20.0 ♥ID_Sell_Stone_20.0 ♥ID_Sell_Sardine_20.0 ♥ID_Sell_Halibut_20.0 ♥ID_Sell_Sturgeon_20.0 ♥ID_Day_18.0 ♥ID_Rent1_25.0 ♥ID_Rent2_25.0
+
+// ──────────────────────────────────────────────────────────────
+// CONDITIONAL RULES - Post-Rent pivots
+// ──────────────────────────────────────────────────────────────
+
+// After Rent1: Boost fishing significantly
+🏦2️⃣ ♥POST_R1 => 🏦2️⃣ ♥ID_Rod_Fish_20.0 ♥ID_Rod_Fish_Copper_20.0 ♥ID_Rod_Fish_Iron_20.0 ♥ID_Rod_Fish_Gold_20.0 ♥ID_Sell_Sardine_12.0 ♥ID_Sell_Halibut_12.0 ♥ID_Sell_Bullhead_12.0 ♥ID_Sell_Carp_12.0 ♥ID_Sell_Red_Mullet_12.0 ♥ID_Sell_Sturgeon_15.0 ♥ID_Build_Furnace_15.0
+
+// After Rent2: Go all-in on fishing + processing
+🏦3️⃣ ♥POST_R2 => 🏦3️⃣ ♥ID_Rod_Fish_25.0 ♥ID_Rod_Fish_Copper_25.0 ♥ID_Rod_Fish_Iron_25.0 ♥ID_Rod_Fish_Gold_25.0 ♥ID_Sell_Sturgeon_20.0 ♥ID_Sell_Red_Mullet_18.0 ♥ID_Day_Baked_Fish_Sturgeon_20.0 ♥ID_Day_Baked_Fish_Red_Mullet_18.0 ♥ID_Sell_Baked_Fish_Sturgeon_22.0 ♥ID_Sell_Baked_Fish_Red_Mullet_20.0
+
+// ──────────────────────────────────────────────────────────────
+// CONDITIONAL RULES - Week-based transitions (📅 = week counter)
+// ──────────────────────────────────────────────────────────────
+
+// Week 2: Fishing pivot begins (📅 produced after first Sunday)
+📅 ♥W2_FISH => 📅 ♥ID_Rod_Fish_15.0 ♥ID_Rod_Fish_Copper_15.0 ♥ID_Rod_Fish_Iron_15.0 ♥ID_Rod_Fish_Gold_15.0 ♥ID_Build_Furnace_12.0 ♥ID_Chop_Tree_-5.0 ♥ID_Pick_Stone_-5.0
+
+// Week 3+: Full processing economy
+📅2 ♥W3_PROC => 📅2 ♥ID_Day_Baked_Fish_Sardine_20.0 ♥ID_Day_Baked_Fish_Halibut_20.0 ♥ID_Day_Baked_Fish_Sturgeon_25.0 ♥ID_Sell_Baked_Fish_Sardine_18.0 ♥ID_Sell_Baked_Fish_Halibut_18.0 ♥ID_Sell_Baked_Fish_Sturgeon_22.0 ♥ID_Rod_Fish_20.0 ♥ID_Rod_Fish_Copper_20.0
+
+// ──────────────────────────────────────────────────────────────
+// OBJECTIVE: CROWN-FOCUSED (prioritize rent payment over raw gold)
+// ──────────────────────────────────────────────────────────────
+
+⛳ => ⛳👑35.0 ⛳💰20.0

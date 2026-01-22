@@ -1,0 +1,14 @@
+🎬 => 💫 ♥ ⛳
+
+// ═══════════════════════════════════════════════════════════════
+// BASELINE + BOOSTED FISH
+//
+// Take exact baseline structure, just boost fishing weights
+// No conditional rules to confuse CEM
+// ═══════════════════════════════════════════════════════════════
+
+// Same as baseline but with higher fishing priorities
+❗ ♥ => ♥ID_Sell_Wood_40.0 ♥ID_Sell_Stone_40.0 ♥ID_Sell_Apple_40.0 ♥ID_Sell_Berry_40.0 ♥ID_Sell_Orange_40.0 ♥ID_Sell_Copper_Ore_38.0 ♥ID_Sell_Iron_Ore_38.0 ♥ID_Sell_Gold_Ore_38.0 ♥ID_Sell_Coal_38.0 ♥ID_Sell_Grass_35.0 ♥ID_Sell_Sardine_40.0 ♥ID_Sell_Halibut_40.0 ♥ID_Sell_Bullhead_40.0 ♥ID_Sell_Carp_42.0 ♥ID_Sell_Red_Mullet_42.0 ♥ID_Sell_Sturgeon_44.0 ♥ID_Day_35.0 ♥ID_Rent1_35.0 ♥ID_Chop_Axe_28.0 ♥ID_Chop_Axe_Copper_28.0 ♥ID_Chop_Axe_Iron_28.0 ♥ID_Chop_Axe_Gold_28.0 ♥ID_Pick_Pickaxe_28.0 ♥ID_Pick_Pickaxe_Copper_28.0 ♥ID_Pick_Pickaxe_Iron_28.0 ♥ID_Pick_Pickaxe_Gold_28.0 ♥ID_Chop_Tree_25.0 ♥ID_Chop_Apple_Tree_25.0 ♥ID_Chop_Orange_Tree_25.0 ♥ID_Chop_Stump_25.0 ♥ID_Chop_Bush_25.0 ♥ID_Chop_Bush_Apple_25.0 ♥ID_Chop_Bush_Berry_25.0 ♥ID_Chop_Bush_Orange_25.0 ♥ID_Pick_Stone_22.0 ♥ID_Pick_Stone_Small_22.0 ♥ID_Pick_Stone_Large_22.0 ♥ID_Pick_Copper_20.0 ♥ID_Pick_Copper_Large_20.0 ♥ID_Pick_Iron_20.0 ♥ID_Pick_Iron_Large_20.0 ♥ID_Pick_Gold_20.0 ♥ID_Pick_Gold_Large_20.0 ♥ID_Pick_Coal_20.0 ♥ID_Pick_Coal_Large_20.0 ♥ID_Rod_Fish_26.0 ♥ID_Rod_Fish_Copper_26.0 ♥ID_Rod_Fish_Iron_26.0 ♥ID_Rod_Fish_Gold_26.0 ♥ID_Rent2_30.0 ♥ID_Rent3_28.0 ♥ID_Rent4_26.0 ♥ID_Rent5_24.0 ♥ID_Build_Furnace_20.0 ♥ID_Build_Fishtrap_18.0 ♥ID_Day_Baked_Fish_Sardine_22.0 ♥ID_Day_Baked_Fish_Halibut_22.0 ♥ID_Day_Baked_Fish_Bullhead_22.0 ♥ID_Day_Baked_Fish_Carp_24.0 ♥ID_Day_Baked_Fish_Red_Mullet_24.0 ♥ID_Day_Baked_Fish_Sturgeon_26.0 ♥ID_Sell_Baked_Fish_Sardine_42.0 ♥ID_Sell_Baked_Fish_Halibut_42.0 ♥ID_Sell_Baked_Fish_Bullhead_42.0 ♥ID_Sell_Baked_Fish_Carp_44.0 ♥ID_Sell_Baked_Fish_Red_Mullet_44.0 ♥ID_Sell_Baked_Fish_Sturgeon_46.0 ♥ID_Day_Fishtrap_Fish_22.0
+
+// OBJECTIVE: GOLD AND CROWNS EQUAL PRIORITY (from baseline)
+⛳ => ⛳👑25.0 ⛳💰25.0

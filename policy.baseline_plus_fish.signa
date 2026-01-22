@@ -1,0 +1,14 @@
+🎬 => 💫 ♥ ⛳
+
+// ═══════════════════════════════════════════════════════════════
+// BASELINE + FISH BOOST
+// Start from working baseline (97% Rent1, 87% Rent2)
+// Add fishing emphasis for sustainable late-game income
+// ═══════════════════════════════════════════════════════════════
+
+// SELLING - Highest priority (convert resources to gold)
+// Added higher fish sell values for sustainable income
+❗ ♥ => ♥ID_Sell_Wood_40.0 ♥ID_Sell_Stone_40.0 ♥ID_Sell_Apple_40.0 ♥ID_Sell_Berry_40.0 ♥ID_Sell_Orange_40.0 ♥ID_Sell_Copper_Ore_38.0 ♥ID_Sell_Iron_Ore_38.0 ♥ID_Sell_Gold_Ore_38.0 ♥ID_Sell_Coal_38.0 ♥ID_Sell_Grass_35.0 ♥ID_Sell_Sardine_42.0 ♥ID_Sell_Halibut_42.0 ♥ID_Sell_Bullhead_42.0 ♥ID_Sell_Carp_44.0 ♥ID_Sell_Red_Mullet_44.0 ♥ID_Sell_Sturgeon_46.0 ♥ID_Day_35.0 ♥ID_Rent1_38.0 ♥ID_Chop_Axe_28.0 ♥ID_Chop_Axe_Copper_28.0 ♥ID_Chop_Axe_Iron_28.0 ♥ID_Chop_Axe_Gold_28.0 ♥ID_Pick_Pickaxe_28.0 ♥ID_Pick_Pickaxe_Copper_28.0 ♥ID_Pick_Pickaxe_Iron_28.0 ♥ID_Pick_Pickaxe_Gold_28.0 ♥ID_Chop_Tree_25.0 ♥ID_Chop_Apple_Tree_25.0 ♥ID_Chop_Orange_Tree_25.0 ♥ID_Chop_Stump_25.0 ♥ID_Chop_Bush_25.0 ♥ID_Chop_Bush_Apple_25.0 ♥ID_Chop_Bush_Berry_25.0 ♥ID_Chop_Bush_Orange_25.0 ♥ID_Pick_Stone_22.0 ♥ID_Pick_Stone_Small_22.0 ♥ID_Pick_Stone_Large_22.0 ♥ID_Pick_Copper_20.0 ♥ID_Pick_Copper_Large_20.0 ♥ID_Pick_Iron_20.0 ♥ID_Pick_Iron_Large_20.0 ♥ID_Pick_Gold_20.0 ♥ID_Pick_Gold_Large_20.0 ♥ID_Pick_Coal_20.0 ♥ID_Pick_Coal_Large_20.0 ♥ID_Rod_Fish_24.0 ♥ID_Rod_Fish_Copper_24.0 ♥ID_Rod_Fish_Iron_24.0 ♥ID_Rod_Fish_Gold_24.0 ♥ID_Rent2_32.0 ♥ID_Rent3_30.0 ♥ID_Rent4_28.0 ♥ID_Rent5_26.0 ♥ID_Build_Furnace_18.0 ♥ID_Day_Baked_Fish_Sardine_20.0 ♥ID_Day_Baked_Fish_Halibut_20.0 ♥ID_Day_Baked_Fish_Bullhead_20.0 ♥ID_Day_Baked_Fish_Carp_22.0 ♥ID_Day_Baked_Fish_Red_Mullet_22.0 ♥ID_Day_Baked_Fish_Sturgeon_24.0 ♥ID_Sell_Baked_Fish_Sardine_44.0 ♥ID_Sell_Baked_Fish_Halibut_44.0 ♥ID_Sell_Baked_Fish_Bullhead_44.0 ♥ID_Sell_Baked_Fish_Carp_46.0 ♥ID_Sell_Baked_Fish_Red_Mullet_46.0 ♥ID_Sell_Baked_Fish_Sturgeon_48.0 ♥ID_Build_Fishtrap_16.0
+
+// OBJECTIVE: GOLD AND CROWNS EQUAL PRIORITY (from baseline)
+⛳ => ⛳👑25.0 ⛳💰25.0

@@ -1,0 +1,49 @@
+🎬 => 💫 ♥ ⛳ ♥THUR ♥FRI ♥SAT ♥POST_R1 ♥POST_R2
+
+// ═══════════════════════════════════════════════════════════════
+// POLICY: FISH FIRST ECONOMY
+//
+// KEY INSIGHT: Water tiles (🟦) never deplete. ~65 tiles available.
+// Fishing is the ONLY sustainable income source.
+//
+// Strategy:
+// - Week 1: Mixed extraction + fishing for Rent1 (1000g)
+// - Week 2+: Heavy fishing, build fish traps, furnace for baked fish
+// - Late game: Fish processing (baked/preserved) for 2-3x value
+// ═══════════════════════════════════════════════════════════════
+
+// ──────────────────────────────────────────────────────────────
+// BASE POLICY - Fishing emphasized from start
+// Fish value: 🦈92g > 🦐75g > 🦀60g > 🐡45g > 🐠30g > 🐟15g
+// Baked fish: 2x value. Preserved: 3x value.
+// ──────────────────────────────────────────────────────────────
+❗ ♥ => ♥ID_Rod_Fish_35.0 ♥ID_Rod_Fish_Copper_35.0 ♥ID_Rod_Fish_Iron_35.0 ♥ID_Rod_Fish_Gold_35.0 ♥ID_Sell_Sturgeon_50.0 ♥ID_Sell_Red_Mullet_48.0 ♥ID_Sell_Carp_46.0 ♥ID_Sell_Bullhead_44.0 ♥ID_Sell_Halibut_42.0 ♥ID_Sell_Sardine_40.0 ♥ID_Sell_Wood_38.0 ♥ID_Sell_Stone_38.0 ♥ID_Sell_Apple_38.0 ♥ID_Sell_Berry_38.0 ♥ID_Sell_Orange_38.0 ♥ID_Sell_Copper_Ore_36.0 ♥ID_Sell_Iron_Ore_36.0 ♥ID_Sell_Gold_Ore_36.0 ♥ID_Sell_Coal_36.0 ♥ID_Day_38.0 ♥ID_Rent1_55.0 ♥ID_Rent2_55.0 ♥ID_Rent3_55.0 ♥ID_Rent4_55.0 ♥ID_Rent5_55.0 ♥ID_Chop_Axe_28.0 ♥ID_Chop_Axe_Copper_28.0 ♥ID_Chop_Axe_Iron_28.0 ♥ID_Chop_Axe_Gold_28.0 ♥ID_Pick_Pickaxe_26.0 ♥ID_Pick_Pickaxe_Copper_26.0 ♥ID_Pick_Pickaxe_Iron_26.0 ♥ID_Pick_Pickaxe_Gold_26.0 ♥ID_Chop_Tree_26.0 ♥ID_Chop_Apple_Tree_26.0 ♥ID_Chop_Orange_Tree_26.0 ♥ID_Chop_Stump_24.0 ♥ID_Chop_Bush_24.0 ♥ID_Chop_Bush_Apple_24.0 ♥ID_Chop_Bush_Berry_24.0 ♥ID_Chop_Bush_Orange_24.0 ♥ID_Pick_Stone_22.0 ♥ID_Pick_Stone_Small_22.0 ♥ID_Pick_Stone_Large_22.0 ♥ID_Build_Furnace_30.0 ♥ID_Build_Fishtrap_28.0 ♥ID_Day_Baked_Fish_Sardine_32.0 ♥ID_Day_Baked_Fish_Halibut_32.0 ♥ID_Day_Baked_Fish_Bullhead_32.0 ♥ID_Day_Baked_Fish_Carp_32.0 ♥ID_Day_Baked_Fish_Red_Mullet_34.0 ♥ID_Day_Baked_Fish_Sturgeon_36.0 ♥ID_Sell_Baked_Fish_Sardine_45.0 ♥ID_Sell_Baked_Fish_Halibut_46.0 ♥ID_Sell_Baked_Fish_Bullhead_47.0 ♥ID_Sell_Baked_Fish_Carp_48.0 ♥ID_Sell_Baked_Fish_Red_Mullet_50.0 ♥ID_Sell_Baked_Fish_Sturgeon_52.0 ♥ID_Day_Fishtrap_Fish_30.0
+
+// ──────────────────────────────────────────────────────────────
+// LATE WEEK URGENCY - Must pay rent before Saturday night
+// ──────────────────────────────────────────────────────────────
+
+// Thursday: Boost selling
+☀4️⃣ ♥THUR => ☀4️⃣ ♥ID_Sell_Sturgeon_15.0 ♥ID_Sell_Red_Mullet_12.0 ♥ID_Sell_Wood_12.0 ♥ID_Sell_Stone_12.0 ♥ID_Day_10.0 ♥ID_Rent1_15.0 ♥ID_Rent2_15.0
+
+// Friday: High urgency
+☀5️⃣ ♥FRI => ☀5️⃣ ♥ID_Sell_Sturgeon_22.0 ♥ID_Sell_Red_Mullet_18.0 ♥ID_Sell_Carp_15.0 ♥ID_Sell_Wood_18.0 ♥ID_Sell_Stone_18.0 ♥ID_Day_15.0 ♥ID_Rent1_25.0 ♥ID_Rent2_25.0 ♥ID_Rent3_25.0
+
+// Saturday: CRITICAL - sell everything
+☀6️⃣ ♥SAT => ☀6️⃣ ♥ID_Sell_Sturgeon_35.0 ♥ID_Sell_Red_Mullet_30.0 ♥ID_Sell_Carp_28.0 ♥ID_Sell_Bullhead_26.0 ♥ID_Sell_Halibut_24.0 ♥ID_Sell_Sardine_22.0 ♥ID_Sell_Wood_28.0 ♥ID_Sell_Stone_28.0 ♥ID_Sell_Baked_Fish_Sturgeon_35.0 ♥ID_Sell_Baked_Fish_Red_Mullet_30.0 ♥ID_Day_25.0 ♥ID_Rent1_40.0 ♥ID_Rent2_40.0 ♥ID_Rent3_40.0 ♥ID_Rent4_40.0 ♥ID_Rent5_40.0
+
+// ──────────────────────────────────────────────────────────────
+// POST-RENT PIVOTS - Double down on fishing
+// ──────────────────────────────────────────────────────────────
+
+// After Rent1: Infrastructure + fishing priority
+🏦2️⃣ ♥POST_R1 => 🏦2️⃣ ♥ID_Rod_Fish_20.0 ♥ID_Rod_Fish_Copper_20.0 ♥ID_Rod_Fish_Iron_20.0 ♥ID_Rod_Fish_Gold_20.0 ♥ID_Build_Furnace_25.0 ♥ID_Build_Fishtrap_22.0 ♥ID_Day_Baked_Fish_Sturgeon_20.0 ♥ID_Day_Baked_Fish_Red_Mullet_18.0 ♥ID_Sell_Baked_Fish_Sturgeon_22.0 ♥ID_Sell_Baked_Fish_Red_Mullet_20.0 ♥ID_Chop_Tree_-8.0 ♥ID_Pick_Stone_-8.0
+
+// After Rent2: Full fishing economy
+🏦3️⃣ ♥POST_R2 => 🏦3️⃣ ♥ID_Rod_Fish_25.0 ♥ID_Rod_Fish_Copper_25.0 ♥ID_Rod_Fish_Iron_25.0 ♥ID_Rod_Fish_Gold_25.0 ♥ID_Day_Baked_Fish_Sturgeon_28.0 ♥ID_Day_Baked_Fish_Red_Mullet_25.0 ♥ID_Sell_Baked_Fish_Sturgeon_30.0 ♥ID_Sell_Baked_Fish_Red_Mullet_28.0 ♥ID_Sell_Sturgeon_25.0 ♥ID_Sell_Red_Mullet_22.0 ♥ID_Build_Fishtrap_20.0 ♥ID_Day_Fishtrap_Fish_25.0
+
+// ──────────────────────────────────────────────────────────────
+// OBJECTIVE: Crown-focused (survival = paying rent)
+// ──────────────────────────────────────────────────────────────
+
+⛳ => ⛳👑35.0 ⛳💰20.0

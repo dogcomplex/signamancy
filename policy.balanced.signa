@@ -1,0 +1,27 @@
+🎬 => 💫 ♥ ⛳ ♥POST_R1
+
+// ═══════════════════════════════════════════════════════════════
+// POLICY: BALANCED APPROACH
+//
+// Week 1: Aggressive extraction (like baseline) + infrastructure prep
+// Post-Rent1: Heavy fishing pivot with infrastructure
+//
+// Uses conditional rule ♥POST_R1 that activates after Rent1 paid
+// ═══════════════════════════════════════════════════════════════
+
+// ──────────────────────────────────────────────────────────────
+// BASE POLICY - Strong extraction similar to baseline
+// But with moderate infrastructure and fishing weights
+// ──────────────────────────────────────────────────────────────
+
+❗ ♥ => ♥ID_Sell_Wood_40.0 ♥ID_Sell_Stone_40.0 ♥ID_Sell_Apple_40.0 ♥ID_Sell_Berry_40.0 ♥ID_Sell_Orange_40.0 ♥ID_Sell_Copper_Ore_38.0 ♥ID_Sell_Iron_Ore_38.0 ♥ID_Sell_Gold_Ore_38.0 ♥ID_Sell_Coal_36.0 ♥ID_Sell_Sardine_38.0 ♥ID_Sell_Halibut_38.0 ♥ID_Sell_Bullhead_38.0 ♥ID_Sell_Carp_40.0 ♥ID_Sell_Red_Mullet_40.0 ♥ID_Sell_Sturgeon_42.0 ♥ID_Sell_Baked_Fish_Sardine_42.0 ♥ID_Sell_Baked_Fish_Halibut_42.0 ♥ID_Sell_Baked_Fish_Bullhead_42.0 ♥ID_Sell_Baked_Fish_Carp_44.0 ♥ID_Sell_Baked_Fish_Red_Mullet_44.0 ♥ID_Sell_Baked_Fish_Sturgeon_46.0 ♥ID_Day_35.0 ♥ID_Rent1_35.0 ♥ID_Rent2_35.0 ♥ID_Rent3_35.0 ♥ID_Rent4_35.0 ♥ID_Rent5_35.0 ♥ID_Chop_Axe_28.0 ♥ID_Chop_Axe_Copper_28.0 ♥ID_Chop_Axe_Iron_28.0 ♥ID_Chop_Axe_Gold_28.0 ♥ID_Pick_Pickaxe_28.0 ♥ID_Pick_Pickaxe_Copper_28.0 ♥ID_Pick_Pickaxe_Iron_28.0 ♥ID_Pick_Pickaxe_Gold_28.0 ♥ID_Chop_Tree_25.0 ♥ID_Chop_Apple_Tree_25.0 ♥ID_Chop_Orange_Tree_25.0 ♥ID_Chop_Stump_25.0 ♥ID_Chop_Bush_25.0 ♥ID_Chop_Bush_Apple_25.0 ♥ID_Chop_Bush_Berry_25.0 ♥ID_Chop_Bush_Orange_25.0 ♥ID_Pick_Stone_22.0 ♥ID_Pick_Stone_Small_22.0 ♥ID_Pick_Stone_Large_22.0 ♥ID_Pick_Copper_20.0 ♥ID_Pick_Iron_20.0 ♥ID_Pick_Gold_20.0 ♥ID_Pick_Coal_20.0 ♥ID_Rod_Fish_22.0 ♥ID_Rod_Fish_Copper_22.0 ♥ID_Rod_Fish_Iron_22.0 ♥ID_Rod_Fish_Gold_22.0 ♥ID_Build_Furnace_20.0 ♥ID_Build_Fishtrap_18.0 ♥ID_Day_Baked_Fish_Sturgeon_22.0 ♥ID_Day_Baked_Fish_Red_Mullet_20.0 ♥ID_Day_Baked_Fish_Carp_18.0
+
+// ──────────────────────────────────────────────────────────────
+// POST-RENT1: Aggressive fishing pivot
+// Triggered when 🏦2️⃣ token appears (from Rent1 payment)
+// ──────────────────────────────────────────────────────────────
+
+🏦2️⃣ ♥POST_R1 => 🏦2️⃣ ♥ID_Rod_Fish_25.0 ♥ID_Rod_Fish_Copper_25.0 ♥ID_Rod_Fish_Iron_25.0 ♥ID_Rod_Fish_Gold_25.0 ♥ID_Build_Furnace_30.0 ♥ID_Build_Fishtrap_28.0 ♥ID_Day_Fishtrap_Fish_25.0 ♥ID_Day_Baked_Fish_Sturgeon_28.0 ♥ID_Day_Baked_Fish_Red_Mullet_26.0 ♥ID_Day_Baked_Fish_Carp_24.0 ♥ID_Sell_Baked_Fish_Sturgeon_30.0 ♥ID_Sell_Baked_Fish_Red_Mullet_28.0 ♥ID_Sell_Sturgeon_25.0 ♥ID_Sell_Red_Mullet_22.0 ♥ID_Chop_Tree_-5.0 ♥ID_Pick_Stone_-5.0
+
+// OBJECTIVE: Balanced
+⛳ => ⛳👑28.0 ⛳💰22.0

@@ -1,0 +1,45 @@
+=== Signamancy Training Loop ===
+Started: Fri, Jan 16, 2026 12:06:22 AM
+Max passes: 20
+Initial best_survival: 95.2%
+
+Pass 1/20: valid=3910/4096 (95.5%) score=749.555
+  ^^^ NEW CHECKPOINT BEST! ^^^
+Pass 2/20: valid=3487/4096 (85.1%) score=552.005
+Pass 3/20: valid=3421/4096 (83.5%) score=670.199
+Pass 4/20: valid=3376/4096 (82.4%) score=332.403
+Pass 5/20: valid=2222/4096 (54.2%) score=318.025
+Pass 6/20: valid=3564/4096 (87.0%) score=391.114
+Pass 7/20: valid=3384/4096 (82.6%) score=632.252
+Pass 8/20: valid=3563/4096 (87.0%) score=571.872
+Pass 9/20: valid=3920/4096 (95.7%) score=574.542
+  ^^^ NEW CHECKPOINT BEST! ^^^
+Pass 10/20: valid=4041/4096 (98.7%) score=709.445
+  ^^^ NEW CHECKPOINT BEST! ^^^
+
+--- Progress @ Pass 10 ---
+Session best: 4041/4096 (Pass 10)
+New checkpoints saved: 3
+Checkpoint: 98.7% survival, 709.4 score
+
+Pass 11/20: valid=3879/4096 (94.7%) score=837.240
+Pass 12/20: valid=3891/4096 (95.0%) score=640.937
+Pass 13/20: valid=1345/4096 (32.8%) score=236.581
+Pass 14/20: valid=1285/4096 (31.4%) score=267.160
+Pass 15/20: valid=2552/4096 (62.3%) score=442.535
+Pass 16/20: valid=3254/4096 (79.4%) score=673.797
+Pass 17/20: valid=1413/4096 (34.5%) score=207.240
+Pass 18/20: valid=2463/4096 (60.1%) score=382.528
+Pass 19/20: valid=3755/4096 (91.7%) score=782.042
+Pass 20/20: valid=1893/4096 (46.2%) score=302.659
+
+--- Progress @ Pass 20 ---
+Session best: 4041/4096 (Pass 10)
+New checkpoints saved: 3
+Checkpoint: 98.7% survival, 709.4 score
+
+
+=== Training Complete ===
+Finished: Fri, Jan 16, 2026  1:05:31 AM
+Passes: 20 | New bests: 3 | Session peak: 4041/4096 (Pass 10)
+Final checkpoint: 98.7% survival, 709.4 score

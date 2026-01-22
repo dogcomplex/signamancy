@@ -1,0 +1,44 @@
+🎬 => 💫 ♥ ⛳ ♥THUR ♥FRI ♥SAT ♥POST_R1 ♥W2
+
+// ═══════════════════════════════════════════════════════════════
+// POLICY: HYBRID ECONOMY
+//
+// Week 1: AGGRESSIVE extraction (trees exist, fish need catching)
+// Week 2+: PIVOT to fishing (trees depleting, water tiles infinite)
+//
+// Key insight: Extraction is faster early (resources exist),
+// fishing becomes better late (sustainable, 2x with baking)
+// ═══════════════════════════════════════════════════════════════
+
+// ──────────────────────────────────────────────────────────────
+// BASE POLICY - Strong extraction + fishing backup
+// ──────────────────────────────────────────────────────────────
+❗ ♥ => ♥ID_Sell_Wood_45.0 ♥ID_Sell_Stone_45.0 ♥ID_Sell_Apple_45.0 ♥ID_Sell_Berry_45.0 ♥ID_Sell_Orange_45.0 ♥ID_Sell_Copper_Ore_42.0 ♥ID_Sell_Iron_Ore_42.0 ♥ID_Sell_Gold_Ore_42.0 ♥ID_Sell_Coal_40.0 ♥ID_Sell_Sardine_42.0 ♥ID_Sell_Halibut_42.0 ♥ID_Sell_Bullhead_43.0 ♥ID_Sell_Carp_44.0 ♥ID_Sell_Red_Mullet_46.0 ♥ID_Sell_Sturgeon_48.0 ♥ID_Day_38.0 ♥ID_Rent1_60.0 ♥ID_Rent2_60.0 ♥ID_Rent3_60.0 ♥ID_Rent4_60.0 ♥ID_Rent5_60.0 ♥ID_Chop_Axe_32.0 ♥ID_Chop_Axe_Copper_32.0 ♥ID_Chop_Axe_Iron_32.0 ♥ID_Chop_Axe_Gold_32.0 ♥ID_Pick_Pickaxe_30.0 ♥ID_Pick_Pickaxe_Copper_30.0 ♥ID_Pick_Pickaxe_Iron_30.0 ♥ID_Pick_Pickaxe_Gold_30.0 ♥ID_Chop_Tree_30.0 ♥ID_Chop_Apple_Tree_30.0 ♥ID_Chop_Orange_Tree_30.0 ♥ID_Chop_Stump_28.0 ♥ID_Chop_Bush_28.0 ♥ID_Chop_Bush_Apple_28.0 ♥ID_Chop_Bush_Berry_28.0 ♥ID_Chop_Bush_Orange_28.0 ♥ID_Pick_Stone_26.0 ♥ID_Pick_Stone_Small_26.0 ♥ID_Pick_Stone_Large_26.0 ♥ID_Pick_Copper_24.0 ♥ID_Pick_Iron_24.0 ♥ID_Pick_Gold_24.0 ♥ID_Pick_Coal_24.0 ♥ID_Rod_Fish_26.0 ♥ID_Rod_Fish_Copper_26.0 ♥ID_Rod_Fish_Iron_26.0 ♥ID_Rod_Fish_Gold_26.0 ♥ID_Sell_Baked_Fish_Sardine_45.0 ♥ID_Sell_Baked_Fish_Halibut_46.0 ♥ID_Sell_Baked_Fish_Bullhead_47.0 ♥ID_Sell_Baked_Fish_Carp_48.0 ♥ID_Sell_Baked_Fish_Red_Mullet_50.0 ♥ID_Sell_Baked_Fish_Sturgeon_52.0
+
+// ──────────────────────────────────────────────────────────────
+// LATE WEEK URGENCY - Thursday/Friday/Saturday
+// ──────────────────────────────────────────────────────────────
+
+☀4️⃣ ♥THUR => ☀4️⃣ ♥ID_Sell_Wood_15.0 ♥ID_Sell_Stone_15.0 ♥ID_Sell_Apple_12.0 ♥ID_Sell_Sardine_15.0 ♥ID_Sell_Sturgeon_18.0 ♥ID_Day_12.0 ♥ID_Rent1_20.0 ♥ID_Rent2_20.0
+
+☀5️⃣ ♥FRI => ☀5️⃣ ♥ID_Sell_Wood_22.0 ♥ID_Sell_Stone_22.0 ♥ID_Sell_Apple_18.0 ♥ID_Sell_Sardine_22.0 ♥ID_Sell_Sturgeon_25.0 ♥ID_Day_18.0 ♥ID_Rent1_30.0 ♥ID_Rent2_30.0 ♥ID_Rent3_30.0
+
+☀6️⃣ ♥SAT => ☀6️⃣ ♥ID_Sell_Wood_35.0 ♥ID_Sell_Stone_35.0 ♥ID_Sell_Apple_30.0 ♥ID_Sell_Berry_30.0 ♥ID_Sell_Orange_30.0 ♥ID_Sell_Sardine_35.0 ♥ID_Sell_Halibut_35.0 ♥ID_Sell_Sturgeon_40.0 ♥ID_Sell_Copper_Ore_30.0 ♥ID_Sell_Iron_Ore_30.0 ♥ID_Day_25.0 ♥ID_Rent1_45.0 ♥ID_Rent2_45.0 ♥ID_Rent3_45.0 ♥ID_Rent4_45.0
+
+// ──────────────────────────────────────────────────────────────
+// POST-RENT1: Start fishing pivot
+// ──────────────────────────────────────────────────────────────
+
+🏦2️⃣ ♥POST_R1 => 🏦2️⃣ ♥ID_Rod_Fish_18.0 ♥ID_Rod_Fish_Copper_18.0 ♥ID_Rod_Fish_Iron_18.0 ♥ID_Rod_Fish_Gold_18.0 ♥ID_Build_Furnace_20.0 ♥ID_Day_Baked_Fish_Sturgeon_18.0 ♥ID_Day_Baked_Fish_Red_Mullet_16.0 ♥ID_Sell_Sturgeon_15.0 ♥ID_Sell_Baked_Fish_Sturgeon_18.0
+
+// ──────────────────────────────────────────────────────────────
+// WEEK 2+: Heavy fishing pivot (uses 📅 from Sunday night)
+// ──────────────────────────────────────────────────────────────
+
+📅 ♥W2 => 📅 ♥ID_Rod_Fish_22.0 ♥ID_Rod_Fish_Copper_22.0 ♥ID_Rod_Fish_Iron_22.0 ♥ID_Rod_Fish_Gold_22.0 ♥ID_Build_Furnace_18.0 ♥ID_Build_Fishtrap_15.0 ♥ID_Day_Baked_Fish_Sturgeon_22.0 ♥ID_Day_Baked_Fish_Red_Mullet_20.0 ♥ID_Day_Baked_Fish_Carp_18.0 ♥ID_Sell_Baked_Fish_Sturgeon_25.0 ♥ID_Sell_Baked_Fish_Red_Mullet_22.0 ♥ID_Chop_Tree_-10.0 ♥ID_Pick_Stone_-10.0
+
+// ──────────────────────────────────────────────────────────────
+// OBJECTIVE: Crown-focused
+// ──────────────────────────────────────────────────────────────
+
+⛳ => ⛳👑35.0 ⛳💰22.0

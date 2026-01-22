@@ -1,44 +1,16 @@
-🎬 => 💫 ♥ ⛳ ♥THUR ♥FRI ♥SAT ♥POST_R1
+🎬 => 💫 ♥ ⛳
 
 // ═══════════════════════════════════════════════════════════════
-// CONDITIONAL ECONOMY POLICY
-// Phase 1: Rush raw resources for Rent1
-// Phase 2: Transition to sustainable income (fishing, farming)
-// ═══════════════════════════════════════════════════════════════
+// LLM BALANCED POLICY
 //
-// Current best: 97% Rent1, 87% Rent2, 10% Rent3 with GPU planner
-// NEW: Conditional rules for late-week urgency and post-rent pivot
+// Based on max_fish + smelting value multipliers
+// Key insight: Don't over-weight water-expensive tool activations!
+// - Hammer uses 8 water - keep weight very low (2.0)
+// - Focus on income multipliers (smelting, baking)
 // ═══════════════════════════════════════════════════════════════
 
-// ──────────────────────────────────────────────────────────────
-// BASE POLICY - Always active priorities
-// ──────────────────────────────────────────────────────────────
-❗ ♥ => ♥ID_Sell_Wood_40.0 ♥ID_Sell_Stone_40.0 ♥ID_Sell_Apple_40.0 ♥ID_Sell_Berry_40.0 ♥ID_Sell_Orange_40.0 ♥ID_Sell_Copper_Ore_38.0 ♥ID_Sell_Iron_Ore_38.0 ♥ID_Sell_Gold_Ore_38.0 ♥ID_Sell_Coal_38.0 ♥ID_Sell_Grass_35.0 ♥ID_Sell_Sardine_38.0 ♥ID_Sell_Halibut_38.0 ♥ID_Sell_Bullhead_38.0 ♥ID_Sell_Carp_38.0 ♥ID_Sell_Red_Mullet_38.0 ♥ID_Sell_Sturgeon_38.0 ♥ID_Day_35.0 ♥ID_Rent1_45.0 ♥ID_Rent2_45.0 ♥ID_Rent3_45.0 ♥ID_Rent4_45.0 ♥ID_Rent5_45.0 ♥ID_Chop_Axe_28.0 ♥ID_Chop_Axe_Copper_28.0 ♥ID_Chop_Axe_Iron_28.0 ♥ID_Chop_Axe_Gold_28.0 ♥ID_Pick_Pickaxe_28.0 ♥ID_Pick_Pickaxe_Copper_28.0 ♥ID_Pick_Pickaxe_Iron_28.0 ♥ID_Pick_Pickaxe_Gold_28.0 ♥ID_Chop_Tree_25.0 ♥ID_Chop_Apple_Tree_25.0 ♥ID_Chop_Orange_Tree_25.0 ♥ID_Chop_Stump_25.0 ♥ID_Chop_Bush_25.0 ♥ID_Chop_Bush_Apple_25.0 ♥ID_Chop_Bush_Berry_25.0 ♥ID_Chop_Bush_Orange_25.0 ♥ID_Pick_Stone_22.0 ♥ID_Pick_Stone_Small_22.0 ♥ID_Pick_Stone_Large_22.0 ♥ID_Pick_Copper_20.0 ♥ID_Pick_Copper_Large_20.0 ♥ID_Pick_Iron_20.0 ♥ID_Pick_Iron_Large_20.0 ♥ID_Pick_Gold_20.0 ♥ID_Pick_Gold_Large_20.0 ♥ID_Pick_Coal_20.0 ♥ID_Pick_Coal_Large_20.0 ♥ID_Rod_Fish_22.0 ♥ID_Rod_Fish_Copper_22.0 ♥ID_Rod_Fish_Iron_22.0 ♥ID_Rod_Fish_Gold_22.0 ♥ID_Sell_Copper_Bar_35.0 ♥ID_Sell_Iron_35.0 ♥ID_Sell_Gold_35.0 ♥ID_Build_Furnace_18.0 ♥ID_Day_Baked_Copper_20.0 ♥ID_Day_Baked_Iron_20.0 ♥ID_Day_Baked_Gold_20.0 ♥ID_Sell_Baked_Fish_Sardine_35.0 ♥ID_Sell_Baked_Fish_Halibut_35.0 ♥ID_Sell_Baked_Fish_Bullhead_35.0 ♥ID_Sell_Baked_Fish_Carp_35.0 ♥ID_Sell_Baked_Fish_Red_Mullet_35.0 ♥ID_Sell_Baked_Fish_Sturgeon_35.0 ♥ID_Day_Baked_Fish_Sardine_18.0 ♥ID_Day_Baked_Fish_Halibut_18.0 ♥ID_Day_Baked_Fish_Bullhead_18.0 ♥ID_Day_Baked_Fish_Carp_18.0 ♥ID_Day_Baked_Fish_Red_Mullet_18.0 ♥ID_Day_Baked_Fish_Sturgeon_18.0
+// Sustainable infrastructure (renewable income) - high priority for long-term survival
+❗ ♥ => ♥ID_Build_Beehive_32.0 ♥ID_Build_Fishtrap_32.0 ♥ID_Day_Beehive_Honey_34.0 ♥ID_Sell_Honey_40.0 ♥ID_Rod_Fish_35.0 ♥ID_Rod_Fish_Copper_35.0 ♥ID_Rod_Fish_Iron_35.0 ♥ID_Rod_Fish_Gold_35.0 ♥ID_Day_Fishtrap_Fish_34.0 ♥ID_Day_Baked_Fish_Sturgeon_34.0 ♥ID_Day_Baked_Fish_Red_Mullet_32.0 ♥ID_Day_Baked_Fish_Carp_30.0 ♥ID_Day_Baked_Fish_Bullhead_28.0 ♥ID_Day_Baked_Fish_Halibut_26.0 ♥ID_Day_Baked_Fish_Sardine_24.0 ♥ID_Sell_Baked_Fish_Sturgeon_48.0 ♥ID_Sell_Baked_Fish_Red_Mullet_46.0 ♥ID_Sell_Baked_Fish_Carp_44.0 ♥ID_Sell_Baked_Fish_Bullhead_42.0 ♥ID_Sell_Baked_Fish_Halibut_40.0 ♥ID_Sell_Baked_Fish_Sardine_38.0 ♥ID_Sell_Sturgeon_44.0 ♥ID_Sell_Red_Mullet_42.0 ♥ID_Sell_Carp_40.0 ♥ID_Sell_Bullhead_38.0 ♥ID_Sell_Halibut_36.0 ♥ID_Sell_Sardine_34.0 ♥ID_Sell_Wood_38.0 ♥ID_Sell_Stone_38.0 ♥ID_Sell_Apple_38.0 ♥ID_Sell_Berry_38.0 ♥ID_Sell_Orange_38.0 ♥ID_Sell_Copper_Ore_36.0 ♥ID_Sell_Iron_Ore_36.0 ♥ID_Sell_Gold_Ore_36.0 ♥ID_Sell_Coal_34.0 ♥ID_Day_35.0 ♥ID_Rent1_35.0 ♥ID_Rent2_32.0 ♥ID_Rent3_30.0 ♥ID_Rent4_28.0 ♥ID_Rent5_26.0 ♥ID_Chop_Axe_26.0 ♥ID_Chop_Axe_Copper_26.0 ♥ID_Chop_Axe_Iron_26.0 ♥ID_Chop_Axe_Gold_26.0 ♥ID_Pick_Pickaxe_26.0 ♥ID_Pick_Pickaxe_Copper_26.0 ♥ID_Pick_Pickaxe_Iron_26.0 ♥ID_Pick_Pickaxe_Gold_26.0 ♥ID_Chop_Tree_22.0 ♥ID_Chop_Apple_Tree_22.0 ♥ID_Chop_Orange_Tree_22.0 ♥ID_Chop_Stump_20.0 ♥ID_Chop_Bush_20.0 ♥ID_Chop_Bush_Apple_20.0 ♥ID_Chop_Bush_Berry_20.0 ♥ID_Chop_Bush_Orange_20.0 ♥ID_Pick_Stone_18.0 ♥ID_Pick_Stone_Small_18.0 ♥ID_Pick_Stone_Large_18.0 ♥ID_Pick_Copper_16.0 ♥ID_Pick_Iron_16.0 ♥ID_Pick_Gold_16.0 ♥ID_Pick_Coal_16.0 ♥ID_Build_Furnace_28.0 ♥ID_Sell_Gold_40.0 ♥ID_Sell_Iron_38.0 ♥ID_Sell_Copper_Bar_36.0 ♥ID_Day_Baked_Gold_32.0 ♥ID_Day_Baked_Iron_30.0 ♥ID_Day_Baked_Copper_28.0 ♥ID_Hammer_Hit_2.0 ♥ID_Hammer_Hit_Copper_3.0 ♥ID_Hammer_Hit_Iron_4.0 ♥ID_Hammer_Hit_Gold_5.0
 
-// ──────────────────────────────────────────────────────────────
-// CONDITIONAL RULES - Late-week urgency (Thu/Fri/Sat)
-// Catalyst pattern: day token on both sides, consume charge token
-// ──────────────────────────────────────────────────────────────
-
-// Thursday (☀4️⃣): Moderate urgency - boost selling and day transitions
-☀4️⃣ ♥THUR => ☀4️⃣ ♥ID_Sell_Wood_10.0 ♥ID_Sell_Stone_10.0 ♥ID_Sell_Apple_5.0 ♥ID_Sell_Berry_5.0 ♥ID_Sell_Orange_5.0 ♥ID_Sell_Sardine_8.0 ♥ID_Sell_Halibut_8.0 ♥ID_Day_5.0
-
-// Friday (☀5️⃣): High urgency - significantly boost selling
-☀5️⃣ ♥FRI => ☀5️⃣ ♥ID_Sell_Wood_15.0 ♥ID_Sell_Stone_15.0 ♥ID_Sell_Apple_8.0 ♥ID_Sell_Berry_8.0 ♥ID_Sell_Orange_8.0 ♥ID_Sell_Sardine_12.0 ♥ID_Sell_Halibut_12.0 ♥ID_Day_10.0
-
-// Saturday (☀6️⃣): Critical urgency - maximize selling and day end
-☀6️⃣ ♥SAT => ☀6️⃣ ♥ID_Sell_Wood_20.0 ♥ID_Sell_Stone_20.0 ♥ID_Sell_Apple_12.0 ♥ID_Sell_Berry_12.0 ♥ID_Sell_Orange_12.0 ♥ID_Sell_Sardine_15.0 ♥ID_Sell_Halibut_15.0 ♥ID_Day_15.0 ♥ID_Rent1_20.0
-
-// ──────────────────────────────────────────────────────────────
-// CONDITIONAL RULES - Post-Rent1 sustainable pivot
-// Once 🏦2️⃣ exists (Rent1 paid), boost fishing for sustainable income
-// ──────────────────────────────────────────────────────────────
-
-// After Rent1: Pivot to sustainable income (fishing, since water tiles persist)
-🏦2️⃣ ♥POST_R1 => 🏦2️⃣ ♥ID_Rod_Fish_15.0 ♥ID_Rod_Fish_Copper_15.0 ♥ID_Rod_Fish_Iron_15.0 ♥ID_Rod_Fish_Gold_15.0 ♥ID_Sell_Sardine_10.0 ♥ID_Sell_Halibut_10.0 ♥ID_Sell_Bullhead_10.0 ♥ID_Sell_Carp_10.0 ♥ID_Sell_Red_Mullet_10.0 ♥ID_Sell_Sturgeon_10.0
-
-// ──────────────────────────────────────────────────────────────
-// OBJECTIVE: GOLD AND CROWNS EQUAL PRIORITY
-// ──────────────────────────────────────────────────────────────
-
-⛳ => ⛳👑25.0 ⛳💰25.0
+// OBJECTIVE: Crown-weighted (crowns 3x gold to push for Rent2+)
+⛳ => ⛳👑75.0 ⛳💰25.0
