@@ -52,7 +52,23 @@
       "Bash(PYTHONIOENCODING=utf-8 POLICY_FILE=policy.best.signa TARGET_RESOURCE_PREFIXES=\"👑,💰\" AGENT_BATCH=4096 CEM_TRAIN_BATCH=2048 CEM_TRAIN_HORIZON=200 CEM_EVAL_EVERY=10 CEM_OBJECTIVE=max CEM_POP=16 CEM_ITERS=8 AGENT_HORIZON=800 DECISION_ONLY=1 PHYSICS_BURST_MAX=128 FINAL_HEARTBEAT_EVERY=100 PLANNER_ENABLE=1 PLANNER_AGGREGATED=1 PLANNER_EVERY=5 PLANNER_GAIN=0.8 \"signamancy\\\\.venv\\\\Scripts\\\\python.exe\" -X utf8 -m signamancy.agent.run_agent_generic:*)",
       "Bash(copy \"G:\\\\LOKI\\\\LOCUS\\\\SIGNUM\\\\signamancy\\\\policy.best.signa\" \"G:\\\\LOKI\\\\LOCUS\\\\SIGNUM\\\\signamancy\\\\policy.baseline_jan9.signa\")",
       "Bash(PYTHONIOENCODING=utf-8 POLICY_FILE=policy.best.signa TARGET_RESOURCE_PREFIXES=\"👑,💰\" AGENT_BATCH=2048 CEM_TRAIN_BATCH=1024 CEM_TRAIN_HORIZON=100 CEM_EVAL_EVERY=10 CEM_OBJECTIVE=max CEM_POP=8 CEM_ITERS=3 AGENT_HORIZON=400 DECISION_ONLY=1 PHYSICS_BURST_MAX=128 FINAL_HEARTBEAT_EVERY=100 \"signamancy\\\\.venv\\\\Scripts\\\\python.exe\" -X utf8 -m signamancy.agent.run_agent_generic:*)",
-      "Bash(PYTHONIOENCODING=utf-8 POLICY_FILE=policy.best.signa TARGET_RESOURCE_PREFIXES=\"👑,💰\" AGENT_BATCH=4096 CEM_TRAIN_BATCH=2048 CEM_TRAIN_HORIZON=200 CEM_EVAL_EVERY=10 CEM_OBJECTIVE=max CEM_POP=16 CEM_ITERS=8 AGENT_HORIZON=800 DECISION_ONLY=1 PHYSICS_BURST_MAX=128 FINAL_HEARTBEAT_EVERY=100 \"signamancy\\\\.venv\\\\Scripts\\\\python.exe\" -X utf8 -m signamancy.agent.run_agent_generic:*)"
+      "Bash(PYTHONIOENCODING=utf-8 POLICY_FILE=policy.best.signa TARGET_RESOURCE_PREFIXES=\"👑,💰\" AGENT_BATCH=4096 CEM_TRAIN_BATCH=2048 CEM_TRAIN_HORIZON=200 CEM_EVAL_EVERY=10 CEM_OBJECTIVE=max CEM_POP=16 CEM_ITERS=8 AGENT_HORIZON=800 DECISION_ONLY=1 PHYSICS_BURST_MAX=128 FINAL_HEARTBEAT_EVERY=100 \"signamancy\\\\.venv\\\\Scripts\\\\python.exe\" -X utf8 -m signamancy.agent.run_agent_generic:*)",
+      "Bash(for i in {1..10})",
+      "Bash(bash:*)",
+      "Bash(done)",
+      "Bash(python3:*)",
+      "Bash(\"G:/LOKI/LOCUS/SIGNUM/signamancy/.venv/Scripts/python.exe\" test_dreamerv4_features.py)",
+      "Bash(if [ -f value_net.pt ])",
+      "Bash(then mv value_net.pt value_net_pre_dreamerv4.pt)",
+      "Bash(else echo \"No existing model to backup\")",
+      "Bash(fi)",
+      "Bash(\"G:/LOKI/LOCUS/SIGNUM/signamancy/.venv/Scripts/python.exe\":*)",
+      "Bash(\"G:/LOKI/LOCUS/SIGNUM/signamancy/.venv/Scripts/python.exe\" -X utf8 -c:*)",
+      "Bash(\"G:/LOKI/LOCUS/SIGNUM/signamancy/.venv/Scripts/python.exe\" -X utf8 -c \"\nfrom pathlib import Path\nfrom signamancy.agent.policy import PolicyManager\n\nold_pm = PolicyManager\\(\\)\nold_pm.load_sheet\\(Path\\(''policy.max_fish.signa''\\)\\)\n\nnew_pm = PolicyManager\\(\\)\nnew_pm.load_sheet\\(Path\\(''policy.llm_bootstrap.signa''\\)\\)\n\nprint\\(''=== OLD POLICY ===''\\)\nprint\\(f''Rule desires: {len\\(old_pm.rule_desires\\)}''\\)\n\nprint\\(\\)\nprint\\(''=== NEW POLICY ===''\\)\nprint\\(f''Rule desires: {len\\(new_pm.rule_desires\\)}''\\)\n\nprint\\(\\)\nprint\\(''=== RULES IN OLD BUT NOT NEW ===''\\)\nold_rules = set\\(old_pm.rule_desires.keys\\(\\)\\)\nnew_rules = set\\(new_pm.rule_desires.keys\\(\\)\\)\nfor r in sorted\\(old_rules - new_rules\\)[:20]:\n    print\\(f''  {r}: {old_pm.rule_desires[r]}''\\)\n\nprint\\(\\)\nprint\\(''=== RULES IN NEW BUT NOT OLD ===''\\)\nfor r in sorted\\(new_rules - old_rules\\)[:20]:\n    print\\(f''  {r}: {new_pm.rule_desires[r]}''\\)\n\")",
+      "Bash(python train_value_net.py:*)",
+      "Bash(timeout /t 15 /nobreak)",
+      "Bash(ping:*)",
+      "Bash(python -X utf8 train_value_net.py:*)"
     ]
   },
   "outputStyle": "default"

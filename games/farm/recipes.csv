@@ -57,7 +57,8 @@ ID_Shop_Reroll,💰100 🌱💜💳X 🌱🥕💳X 🌱❤💳X 🌱🥬💳X �
 ID_Feat_Roll,❗10 ⭐🎲 ⭐💳💪X ⭐💳🍎X ⭐💳⛏X ⭐💳🐄X ⭐💳🙆‍♂️X ⭐💳X ⭐X => ⭐💳3 ⭐
 ID_Feat_Stock,❗9 ⭐💳 => ⭐💳💪%20 ⭐💳🍎%20 ⭐💳⛏%20 ⭐💳🐄%20 ⭐💳🙆‍♂️%20
 
-
+// TOOLS: 
+// note: 💧 is "energy" (or effort or sweat) not water.  Just semantics though! Spend energy to get output.
 ID_Chop_Axe,🪓 💧4 => 🪓 🪓🎯
 ID_Chop_Axe_Copper,🪓🥉 💧3 => 🪓🥉 🪓🎯
 ID_Chop_Axe_Iron,🪓🥈 💧2 => 🪓🥈 🪓🎯
